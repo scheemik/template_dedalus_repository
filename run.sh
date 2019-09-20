@@ -134,7 +134,7 @@ fi
 if [ $VER -eq 0 ] || [ $VER -eq 1 ] || [ $VER -eq 2 ]
 then
 	cd _experiments/$NAME
-    echo $(ls)
+    #echo $(ls)
     echo ''
 	echo '--Running script--'
 	echo ''
