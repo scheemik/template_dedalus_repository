@@ -38,7 +38,7 @@ DATE=`date +"%m-%d_%Hh%M"`
 NAME="${N_X}x${N_Z}"
 # create a 2 digit version of CORES
 #printf -v CO "%02d" $CORES
-JOBNAME="$DATE-2D_RB-$NAME"
+JOBNAME="${NAME}_${DATE}-2D_RB"
 #JOBNAME="$DATE-2D_RB-n$CO"
 DIRECTORY='Dedalus/Stack_test'
 SUBDIRECT='template_dedalus_repository'
