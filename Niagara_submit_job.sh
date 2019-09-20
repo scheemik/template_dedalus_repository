@@ -52,7 +52,7 @@ cd ${HOME}/${DIRECTORY}/${SUBDIRECT}
 git pull
 # Copy that into the scratch directory
 cp -r ${HOME}/${DIRECTORY}/${SUBDIRECT} ${SCRATCH}/${DIRECTORY}/${RUN_DIR}
-mv ${SCRATCH}/${DIRECTORY}/${RUN_DIR}/$SUBDIRECT} ${SCRATCH}/${DIRECTORY}/${RUN_DIR}/${JOBNAME}
+mv ${SCRATCH}/${DIRECTORY}/${RUN_DIR}/${SUBDIRECT} ${SCRATCH}/${DIRECTORY}/${RUN_DIR}/${JOBNAME}
 cd ${SCRATCH}/${DIRECTORY}/${RUN_DIR}/${JOBNAME}
 
 # Submit the job
