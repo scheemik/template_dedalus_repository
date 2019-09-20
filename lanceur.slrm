@@ -8,20 +8,36 @@
 
 # Optionally takes in arguments:
 #	$ sbatch lanceur.slrm -c <cores>
+#                         -n <name>
+#                         -x <n_x>
+#                         -z <n_z>
 
-while getopts c: option
+while getopts c:n:x:z: option
 do
 	case "${option}"
 		in
 		c) CORES=${OPTARG};;
+		n) NAME=${OPTARG};;
+		x) N_X=${OPTARG};;
+		z) N_Z=${OPTARG};;
 	esac
 done
 
 # check to see if arguments were passed
 if [ -z "$CORES" ]
 then
-	echo "No number of cores specified, using CORES=32"
-	CORES=32
+    CORES=40
+	echo "No number of cores specified, using CORES=${CORES}"
+fi
+if [ -z "$N_X" ]
+then
+    N_X=256
+	echo "No N_X value specified, using N_X=${N_X}"
+fi
+if [ -z "$N_Z" ]
+then
+    N_Z=64
+	echo "No N_Z value specified, using N_Z=${N_Z}"
 fi
 
 module purge
@@ -39,7 +55,7 @@ export MPLBACKEND=pdf
 
 source ${HOME}/Dedalus/Stack_test/venv/bin/activate
 
-sh run.sh -n 256x64 -c $CORES -l 0 -v 1 -k 1
+sh run.sh -n $NAME -c $CORES -l 0 -v 1 -k 1 -x N_X -z N_Z
 
 deactivate
 

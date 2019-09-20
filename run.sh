@@ -6,7 +6,8 @@
 #				-l <local(1) or Niagara(0)>
 #				-v <version: what scripts to run>
 #				-k <keep(1) or allow overwriting(0)>
-#				-t <test parameter>
+#               -x <n_x>
+#               -z <n_z>
 
 code_file='rayleigh_benard.py'
 
@@ -24,7 +25,7 @@ code_file='rayleigh_benard.py'
 # VER = 5
 #	-> plot EF and aux EF
 
-while getopts n:c:l:v:k:t: option
+while getopts n:c:l:v:k:x:z: option
 do
 	case "${option}"
 		in
@@ -33,7 +34,8 @@ do
 		l) LOC=${OPTARG};;
 		v) VER=${OPTARG};;
 		k) KEEP=${OPTARG};;
-		t) TEST_P=${OPTARG};;
+		x) N_X=${OPTARG};;
+		z) N_Z=${OPTARG};;
 	esac
 done
 
