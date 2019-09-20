@@ -42,6 +42,7 @@ JOBNAME="$DATE-2D_RB-$NAME"
 #JOBNAME="$DATE-2D_RB-n$CO"
 DIRECTORY='Dedalus/Stack_test'
 SUBDIRECT='template_dedalus_repository'
+RUN_DIR='runs'
 
 set -x # echos each command as it is executed
 
@@ -50,8 +51,9 @@ cd ${HOME}/${DIRECTORY}/${SUBDIRECT}
 # Pull from github the latest version of that project
 git pull
 # Copy that into the scratch directory
-cp -r ${HOME}/${DIRECTORY}/${SUBDIRECT} ${SCRATCH}/${DIRECTORY}/${SUBDIRECT}
-cd ${SCRATCH}/${DIRECTORY}/${SUBDIRECT}
+cp -r ${HOME}/${DIRECTORY}/${SUBDIRECT} ${SCRATCH}/${DIRECTORY}/${RUN_DIR}
+mv ${SCRATCH}/${DIRECTORY}/${RUN_DIR}/$SUBDIRECT} ${SCRATCH}/${DIRECTORY}/${RUN_DIR}/${JOBNAME}
+cd ${SCRATCH}/${DIRECTORY}/${RUN_DIR}/${JOBNAME}
 
 # Submit the job
 sbatch --job-name=$JOBNAME lanceur.slrm -c $CORES -n $NAME -x $N_X -z $N_Z
