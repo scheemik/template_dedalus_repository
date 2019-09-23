@@ -31,6 +31,9 @@ The simulations should take a few process-minutes to run.
 
 import numpy as np
 from mpi4py import MPI
+comm = MPI.COMM_WORLD
+rank = comm.Get_rank()
+
 import time
 import pathlib
 
@@ -42,20 +45,22 @@ logger = logging.getLogger(__name__)
 
 # Command line arguments
 import sys
-print('Number of command line arguments:')
-print(len(sys.argv))
-print('Argument list:')
-print(str(sys.argv))
 # Arguments must be passed in the correct order
 arg_array = sys.argv
 filename = str(arg_array[0])
-print('filename:',filename)
 exp_name = str(arg_array[1])
-print('exp_name:',exp_name)
 nx       = int(arg_array[2])        # 256
-print('n_x:     ',nx)
 nz       = int(arg_array[3])        # 64
-print('n_z:     ',nz)
+
+if rank==0:
+    print('Number of command line arguments:')
+    print(len(sys.argv))
+    print('Argument list:')
+    print(str(sys.argv))
+    print('filename:',filename)
+    print('exp_name:',exp_name)
+    print('n_x:     ',nx)
+    print('n_z:     ',nz)
 
 # Parameters
 Lx, Lz = (4., 1.)
