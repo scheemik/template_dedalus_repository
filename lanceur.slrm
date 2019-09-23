@@ -55,7 +55,7 @@ export MPLBACKEND=pdf
 
 source ${HOME}/Dedalus/Stack_test/venv/bin/activate
 
-sh run.sh -n $NAME -c $CORES -l 0 -v 1 -k 1 -x N_X -z N_Z
+sh run.sh -n $NAME -c $CORES -l 0 -v 1 -k 1 -x $N_X -z $N_Z
 
 deactivate
 
