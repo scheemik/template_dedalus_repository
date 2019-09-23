@@ -67,10 +67,15 @@ then
 	KEEP=1
 	echo "-k, No 'keep' preference specified, using KEEP=$KEEP"
 fi
-if [ -z "$TEST_P" ]
+if [ -z "$N_X" ]
 then
-	TEST_P=2
-	echo "-t, No test parameter specified, using TEST_P=$TEST_P"
+    N_X=256
+	echo "No N_X value specified, using N_X=${N_X}"
+fi
+if [ -z "$N_Z" ]
+then
+    N_Z=64
+	echo "No N_Z value specified, using N_Z=${N_Z}"
 fi
 
 ###############################################################################
@@ -145,7 +150,7 @@ then
     then
         echo "Running Dedalus script for local pc"
         # mpiexec uses -n flag for number of processes to use
-        mpiexec -n $CORES python3 $code_file $NAME 256 64
+        mpiexec -n $CORES python3 $code_file $NAME $N_X $N_Z
         echo ""
     fi
     # If running on Niagara
@@ -153,7 +158,7 @@ then
     then
         echo "Running Dedalus script for Niagara"
         # mpiexec uses -n flag for number of processes to use
-        mpiexec -n $CORES python3.6 $code_file $NAME 256 64
+        mpiexec -n $CORES python3.6 $code_file $NAME $N_X $N_Z
         echo ""
     fi
 fi
