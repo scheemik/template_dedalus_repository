@@ -6,6 +6,7 @@
 code_file='core_code.py'
 switchboard='switchboard.py'
 run_file='_experiments/_run_exp.sh'
+submit_file='submit_to_Niagara.sh'
 
 # Parse arguments
 while getopts n: option
@@ -73,6 +74,14 @@ then
 	echo "Copied $run_file"
 else
 	echo "No run file found. Aborting script"
+	exit 1
+fi
+if [ -e $submit_file ]
+then
+	cp $submit_file _experiments/${NAME}
+	echo "Copied $submit_file"
+else
+	echo "No submit file found. Aborting script"
 	exit 1
 fi
 
