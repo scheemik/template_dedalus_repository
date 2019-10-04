@@ -79,20 +79,23 @@ then
 	echo ''
 	LOG_FILE=LOG_${NAME}.txt
 	touch $LOG_FILE
-	echo "Log created: ${DATETIME}" >> $LOG_FILE
-	echo "" >> $LOG_FILE
-	echo "--Run options--" >> $LOG_FILE
-	echo "" >> $LOG_FILE
-	echo "-n, Experiment name = ${NAME}" >> $LOG_FILE
-	echo "-c, Number of cores = ${CORES}" >> $LOG_FILE
+	LINE1="Log created: ${DATETIME}"
+	LINE2=""
+	LINE3="--Run options--"
+	LINE4=""
+	LINE5="-n, Experiment name = ${NAME}"
+	LINE6="-c, Number of cores = ${CORES}"
 	if [ $LOC -eq 1 ]
 	then
-		echo "-l, (${LOC}) Simulation run on local pc" >> $LOG_FILE
+		LINE7="-l, (${LOC}) Simulation run on local pc"
 	else
-		echo "-l, (${LOC}) Simulation run on Niagara" >> $LOG_FILE
+		LINE7="-l, (${LOC}) Simulation run on Niagara"
 	fi
-	echo "-v, Version of run = ${VER}" >> $LOG_FILE
-	echo "" >> $LOG_FILE
+	LINE8="-v, Version of run = ${VER}"
+	LINE9=""
+	# This pre-pends the information to the log file
+	#	This way, the most recent run is at the top
+	echo -e "${LINE1}\n${LINE2}\n${LINE3}\n${LINE4}\n${LINE5}\n${LINE6}\n${LINE7}\n${LINE8}\n${LINE9}\n$(cat ${LOG_FILE})" > $LOG_FILE
 	echo 'Done'
 	echo ''
 fi
