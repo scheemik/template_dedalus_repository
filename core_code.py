@@ -49,14 +49,14 @@ import sys
 arg_array = sys.argv
 filename = str(arg_array[0])
 exp_name = str(arg_array[1])
-nx       = int(arg_array[2])        # 256
-nz       = int(arg_array[3])        # 64
+nx =256#      = int(arg_array[2])        # 256
+nz =64#      = int(arg_array[3])        # 64
 
 if rank==0:
-    print('Number of command line arguments:')
-    print(len(sys.argv))
-    print('Argument list:')
-    print(str(sys.argv))
+    #print('Number of command line arguments:')
+    #print(len(sys.argv))
+    #print('Argument list:')
+    #print(str(sys.argv))
     print('filename:',filename)
     print('exp_name:',exp_name)
     print('n_x:     ',nx)
@@ -121,7 +121,7 @@ if not pathlib.Path(restart_file).exists():
 
     # Timestepping and output
     dt = 0.125
-    stop_sim_time = 25
+    stop_sim_time = 10
     fh_mode = 'overwrite'
 
 else:
