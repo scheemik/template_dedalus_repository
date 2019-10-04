@@ -6,16 +6,26 @@
 #				-l <local(1) or Niagara(0)>
 #				-v <version: what scripts to run>
 
+# Name of the core code file
 code_file='core_code.py'
-plot_file='plot_slices.py'
+# Location of the modules-other directory
+modules_o_dir='_modules-other'
+# Location of the modules-physics directory
+modules_p_dir='_modules-physics'
+# Path to snapshot files
+snapshot_path="snapshots"
+# Name of merging file
+merge_file="${modules_o_dir}/merge.py"
+# Name of plotting file
+plot_file="${modules_o_dir}/plot_slices.py"
 
 # if:
 # VER = 0 (Full)
-#	-> run the script, merge, plot frames, create gif, create mp4, etc
+#	-> run the script, plot frames, create gif, create mp4, etc
 # VER = 1
 #	-> run the script
 # VER = 2
-#	-> run the script, merge
+#	-> run the script, plot frames, and create gif
 # VER = 3
 # 	-> merge, plot frames, and create a gif
 # VER = 4
@@ -58,12 +68,11 @@ fi
 
 ###############################################################################
 echo ''
-echo '--Navigating to experiment directory--'
+echo '--Checking experiment directory--'
 echo ''
 if [ -e _experiments/$NAME ]
 then
-	cd _experiments/$NAME
-	echo 'Done'
+	echo 'Experiment directory found'
 	echo ''
 else
 	echo "Experiment directory for $NAME not found. Aborting script."
@@ -71,7 +80,35 @@ else
 fi
 
 ###############################################################################
-# Create log file if version 0, 1, or 2
+# Populate directory with relevant modules
+if [ -e _experiments/${NAME}/${modules_o_dir} ]
+then
+	echo 'Other module files already added'
+else
+	echo ''
+	echo '--Adding module files--'
+	echo ''
+	if [ -e $modules_o_dir ]
+	then
+		cp -r $modules_o_dir _experiments/$NAME
+		echo "Copied $modules_o_dir"
+	else
+		echo "Cannot find other modules"
+	fi
+fi
+
+###############################################################################
+###############################################################################
+echo ''
+echo '--Navigating to experiment directory--'
+echo ''
+cd _experiments/$NAME
+echo 'Done'
+echo ''
+###############################################################################
+###############################################################################
+# Create log file if running code
+#	if (VER = 0, 1, 2)
 if [ $VER -eq 0 ] || [ $VER -eq 1 ] || [ $VER -eq 2 ]
 then
 	echo ''
@@ -94,23 +131,15 @@ then
 	LINE8="-v, Version of run = ${VER}"
 	LINE9=""
 	# This pre-pends the information to the log file
-	#	This way, the most recent run is at the top
+	#	This way, the most recent run's information is at the top
 	echo -e "${LINE1}\n${LINE2}\n${LINE3}\n${LINE4}\n${LINE5}\n${LINE6}\n${LINE7}\n${LINE8}\n${LINE9}\n$(cat ${LOG_FILE})" > $LOG_FILE
-	echo 'Done'
+	echo 'Done creating log file'
 	echo ''
 fi
 
 ###############################################################################
-# Populate directory with relevant auxilary files and modules
-echo ''
-echo '--Adding auxilary files--'
-echo ''
-
-# add plot function if not there already
-# option to update on subsequent runs?
-
-###############################################################################
-# run the script if version 0, 1, or 2
+# run the script
+#	if (VER = 0, 1, 2)
 if [ $VER -eq 0 ] || [ $VER -eq 1 ] || [ $VER -eq 2 ]
 then
 	echo ''
@@ -138,4 +167,54 @@ then
         mpiexec -n $CORES python3.6 $code_file $NAME $N_X $N_Z
         echo ""
     fi
+	echo 'Done running script'
+	echo ''
+fi
+
+###############################################################################
+# merge snapshots
+#	if (VER = 0, 1, 2)
+if [ $VER -eq 0 ] || [ $VER -eq 1 ] || [ $VER -eq 2 ]
+then
+	echo ''
+	echo '--Merging snapshots--'
+	echo ''
+	# Check to make sure snapshots folder exists
+	echo "Checking for snapshots in $snapshot_path"
+	if [ -e $snapshot_path ] || [ $VER -eq 5 ]
+	then
+		echo "Found snapshots"
+	else
+		echo "Cannot find snapshots. Aborting script"
+		exit 1
+	fi
+	# Check if snapshots have already been merged
+	if [ -e $snapshot_path/snapshots_s1.h5 ] || [ $VER -eq 5 ]
+	then
+		echo "Snapshots already merged"
+	else
+		echo "Merging snapshots"
+		mpiexec -n $CORES python3 $merge_file $snapshot_path
+	fi
+	echo 'Done merging snapshots'
+fi
+
+###############################################################################
+# plot frames
+#	if (VER = 0, 2, 3)
+
+if [ $VER -eq 0 ] || [ $VER -eq 2 ] || [ $VER -eq 3 ]
+then
+	echo ''
+	echo '--Plotting frames--'
+	echo ''
+	if [ -e frames ]
+	then
+		echo "Removing old frames"
+		rm -rf frames
+	fi
+	echo "Plotting 2d slices"
+	mpiexec -n $CORES python3 $plot_file $snapshot_path/*.h5
+	echo 'Done plotting frames'
+	echo ''
 fi
