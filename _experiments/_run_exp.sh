@@ -32,7 +32,7 @@ do
 	esac
 done
 
-DATETIME=`date +"%m-%d_%Hh%M"`
+DATETIME=`date +"%Y-%m-%d_%Hh%M"`
 
 # check to see if arguments were passed
 if [ -z "$NAME" ]
@@ -96,6 +96,15 @@ then
 	echo 'Done'
 	echo ''
 fi
+
+###############################################################################
+# Populate directory with relevant auxilary files and modules
+echo ''
+echo '--Adding auxilary files--'
+echo ''
+
+# add plot function if not there already
+# option to update on subsequent runs?
 
 ###############################################################################
 # run the script if version 0, 1, or 2
