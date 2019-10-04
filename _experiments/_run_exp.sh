@@ -6,6 +6,8 @@
 #				-l <local(1) or Niagara(0)>
 #				-v <version: what scripts to run>
 
+# Current datetime
+DATETIME=`date +"%Y-%m-%d_%Hh%M"`
 # Name of the core code file
 code_file='core_code.py'
 # Location of the modules-other directory
@@ -18,6 +20,12 @@ snapshot_path="snapshots"
 merge_file="${modules_o_dir}/merge.py"
 # Name of plotting file
 plot_file="${modules_o_dir}/plot_slices.py"
+# Path to frames
+frames_path='frames'
+# Name of gif creation file
+gif_cre_file="${modules_o_dir}/create_gif.py"
+# Name of output directory
+output_dir='outputs'
 
 # if:
 # VER = 0 (Full)
@@ -42,8 +50,6 @@ do
 	esac
 done
 
-DATETIME=`date +"%Y-%m-%d_%Hh%M"`
-
 # check to see if arguments were passed
 if [ -z "$NAME" ]
 then
@@ -65,6 +71,10 @@ then
 	VER=1
 	echo "-v, No version specified, using VER=$VER"
 fi
+
+# The directory in which this code is being run
+Project_directory="$(pwd)"
+Running_directory="${Project_directory}/_experiments/${NAME}"
 
 ###############################################################################
 echo ''
@@ -116,6 +126,7 @@ then
 	echo ''
 	LOG_FILE=LOG_${NAME}.txt
 	touch $LOG_FILE
+	LINE0="----------------------------------------------"
 	LINE1="Log created: ${DATETIME}"
 	LINE2=""
 	LINE3="--Run options--"
@@ -132,7 +143,7 @@ then
 	LINE9=""
 	# This pre-pends the information to the log file
 	#	This way, the most recent run's information is at the top
-	echo -e "${LINE1}\n${LINE2}\n${LINE3}\n${LINE4}\n${LINE5}\n${LINE6}\n${LINE7}\n${LINE8}\n${LINE9}\n$(cat ${LOG_FILE})" > $LOG_FILE
+	echo -e "${LINE0}\n${LINE1}\n${LINE2}\n${LINE3}\n${LINE4}\n${LINE5}\n${LINE6}\n${LINE7}\n${LINE8}\n${LINE9}\n$(cat ${LOG_FILE})" > $LOG_FILE
 	echo 'Done creating log file'
 	echo ''
 fi
@@ -202,7 +213,6 @@ fi
 ###############################################################################
 # plot frames
 #	if (VER = 0, 2, 3)
-
 if [ $VER -eq 0 ] || [ $VER -eq 2 ] || [ $VER -eq 3 ]
 then
 	echo ''
@@ -217,4 +227,64 @@ then
 	mpiexec -n $CORES python3 $plot_file $snapshot_path/*.h5
 	echo 'Done plotting frames'
 	echo ''
+fi
+
+###############################################################################
+# create gif
+#	if (VER = 0, 2, 3)
+if [ $VER -eq 0 ] || [ $VER -eq 2 ] || [ $VER -eq 3 ]
+then
+	echo ''
+	echo '--Creating gif--'
+	echo ''
+	gif_name="${output_dir}/${DATETIME}_${NAME}.gif"
+	# Check if output directory exists
+	if [ ! -e $output_dir ]
+	then
+		echo "Creating $output_dir directory"
+		mkdir $output_dir
+		echo ""
+	fi
+	# Check if gis already exists
+	if [ -e $gif_name ]
+	then
+		echo "Overwriting $gif_name"
+		rm $gif_name
+		echo ""
+	fi
+	echo "${output_dir}/${DATETIME}_${NAME}.gif"
+	files=/$frames_path/*
+	if [ -e $frames_path ] && [ ${#files[@]} -gt 0 ]
+	then
+		echo "Executing gif script"
+		python3 $gif_cre_file $gif_name $frames_path
+	else
+		echo "No frames found"
+	fi
+	echo 'Done with gif creation'
+fi
+
+###############################################################################
+# create mp4
+#	if (VER = 0, 4)
+if [ $VER -eq 0 ] || [ $VER -eq 4 ]
+then
+	echo ''
+	echo '--Creating mp4--'
+	echo ''
+	mp4_name="${DATETIME}_${NAME}.mp4"
+	# Check if frames exist
+	echo "Checking frames in ${frames_path}"
+	files=/$frames_path/*
+	if [ -e $frames_path ] && [ ${#files[@]} -gt 0 ]
+	then
+		echo "Executing mp4 command"
+		cd $frames_path/
+		ffmpeg -framerate 10 -i write_%06d.png -c:v libx264 -pix_fmt yuv420p $mp4_name
+		cd $Running_directory
+		mv $frames_path/$mp4_name ./$output_dir
+	else
+		echo "No frames found"
+	fi
+	echo 'Done with mp4 creation'
 fi
