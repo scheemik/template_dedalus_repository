@@ -23,12 +23,12 @@ then
 fi
 if [ -z "$N_X" ]
 then
-    N_X=256
+    N_X=280
 	echo "No N_X value specified, using N_X=${N_X}"
 fi
 if [ -z "$N_Z" ]
 then
-    N_Z=64
+    N_Z=80
 	echo "No N_Z value specified, using N_Z=${N_Z}"
 fi
 
