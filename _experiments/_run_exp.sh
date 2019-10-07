@@ -60,7 +60,7 @@ Running_directory="${Project_directory}/_experiments/${NAME}"
 # Name of the core code file
 code_file='core_code.py'
 # Name of switchboard file
-switch_file="switchboard-${NAME}.py"
+switch_file="switchboard-${NAME}"
 # Location of the modules-other directory
 modules_o_dir='_modules-other'
 # Location of the modules-physics directory
