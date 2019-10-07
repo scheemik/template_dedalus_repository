@@ -60,10 +60,13 @@ if rank==0:
     print("")
 
 ###############################################################################
-# Parameters
+# Importing parameters from switchboard
 
-nx =256#      = int(arg_array[2])        # 256
-nz =64#      = int(arg_array[3])        # 64
+# Using wildcard on import is generally a bad idea
+switch_vars = __import__(switchboard)
+
+nx = n_x #256#      = int(arg_array[2])        # 256
+nz = n_z #64#      = int(arg_array[3])        # 64
 
 Lx, Lz = (4., 1.)
 Prandtl = 1.
