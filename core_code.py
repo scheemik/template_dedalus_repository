@@ -63,31 +63,24 @@ if rank==0:
 # Importing parameters from switchboard
 import importlib
 
-# Updating variables to global is generally a bad idea
-#   because you might run into namespace collisions
-switch_vars = importlib.import_module(switchboard)
-globals().update({v: getattr(switch_vars, v)
-                  for v in switch_vars.__dict__
-                  if not v.startswith("_")})
+# Import SwitchBoard Parameters (sbp)
+sbp = importlib.import_module(switchboard)
 
-nx = n_x #256#      = int(arg_array[2])        # 256
-nz = n_z #64#      = int(arg_array[3])        # 64
-
-Lx, Lz = (4., 1.)
-Prandtl = 1.
-Rayleigh = 1e6
+# Call parameters from sbp.some_param. For example:
+nx = sbp.n_x #256
+nz = sbp.n_z #64
 
 ###############################################################################
 # Create bases and domain
-x_basis = de.Fourier('x',   nx, interval=(0, Lx), dealias=3/2)
-z_basis = de.Chebyshev('z', nz, interval=(-Lz/2, Lz/2), dealias=3/2)
+x_basis = de.Fourier('x',   nx, interval=(0, sbp.L_x), dealias=sbp.dealias)
+z_basis = de.Chebyshev('z', nz, interval=(-sbp.L_z/2, sbp.L_z/2), dealias=sbp.dealias)
 domain = de.Domain([x_basis, z_basis], grid_dtype=np.float64)
 
 # 2D Boussinesq hydrodynamics
 problem = de.IVP(domain, variables=['p','b','u','w','bz','uz','wz'])
 problem.meta['p','b','u','w']['z']['dirichlet'] = True
-problem.parameters['P'] = (Rayleigh * Prandtl)**(-1/2)
-problem.parameters['R'] = (Rayleigh / Prandtl)**(-1/2)
+problem.parameters['P'] = (sbp.Rayleigh * sbp.Prandtl)**(-1/2)
+problem.parameters['R'] = (sbp.Rayleigh / sbp.Prandtl)**(-1/2)
 problem.parameters['F'] = F = 1
 problem.add_equation("dx(u) + wz = 0")
 problem.add_equation("dt(b) - P*(dx(dx(b)) + dz(bz)) - F*w       = -(u*dx(b) + w*bz)")
@@ -108,9 +101,9 @@ problem.add_bc("right(p) = 0", condition="(nx == 0)")
 solver = problem.build_solver(de.timesteppers.RK222)
 logger.info('Solver built')
 
-restart_file = 'restart.h5'
+###############################################################################
 # Initial conditions or restart
-if not pathlib.Path(restart_file).exists():
+if not pathlib.Path(sbp.restart_file).exists():
 
     # Initial conditions
     x = domain.grid(0)
@@ -131,8 +124,8 @@ if not pathlib.Path(restart_file).exists():
     b.differentiate('z', out=bz)
 
     # Timestepping and output
-    dt = 0.125
-    stop_sim_time = 10
+    dt = sbp.dt
+    stop_sim_time = sbp.stop_sim_time
     fh_mode = 'overwrite'
 
 else:
@@ -141,28 +134,34 @@ else:
 
     # Timestepping and output
     dt = last_dt
-    stop_sim_time = 50
+    stop_sim_time = sbp.stop_sim_time + sbp.restart_add_time
     fh_mode = 'append'
 
+###############################################################################
 # Integration parameters
-solver.stop_sim_time = stop_sim_time
-solver.stop_wall_time = np.inf
-solver.stop_iteration = np.inf
+solver.stop_sim_time  = stop_sim_time # deliberately not sbp
+solver.stop_wall_time = sbp.stop_wall_time
+solver.stop_iteration = sbp.stop_iteration
 
+###############################################################################
 # Analysis
-snapshots_dir = 'snapshots'
-snapshots = solver.evaluator.add_file_handler(snapshots_dir, sim_dt=0.25, max_writes=50, mode=fh_mode)
+snapshots = solver.evaluator.add_file_handler(sbp.snapshots_dir, sim_dt=sbp.snap_dt, max_writes=sbp.snap_max_writes, mode=fh_mode)
 snapshots.add_system(solver.state)
 
+###############################################################################
 # CFL
-CFL = flow_tools.CFL(solver, initial_dt=dt, cadence=10, safety=1,
-                     max_change=1.5, min_change=0.5, max_dt=0.125, threshold=0.05)
+CFL = flow_tools.CFL(solver, initial_dt=dt, cadence=sbp.CFL_cadence,
+                     safety=sbp.CFL_safety, max_change=sbp.CFL_max_change,
+                     min_change=sbp.CFL_min_change, max_dt=sbp.CFL_max_dt,
+                     threshold=sbp.CFL_threshold)
 CFL.add_velocities(('u', 'w'))
 
+###############################################################################
 # Flow properties
-flow = flow_tools.GlobalFlowProperty(solver, cadence=10)
-flow.add_property("sqrt(u*u + w*w) / R", name='Re')
+flow = flow_tools.GlobalFlowProperty(solver, cadence=sbp.flow_cadence)
+flow.add_property(sbp.flow_property, name=sbp.flow_name)
 
+###############################################################################
 # Main loop
 try:
     logger.info('Sim end time: %e' %(solver.stop_sim_time))
@@ -173,7 +172,7 @@ try:
         dt = solver.step(dt)
         if (solver.iteration-1) % 10 == 0:
             logger.info('Iteration: %i, Time: %e, dt: %e' %(solver.iteration, solver.sim_time, dt))
-            logger.info('Max Re = %f' %flow.max('Re'))
+            logger.info('Max Re = %f' %flow.max(sbp.flow_name))
 except:
     logger.error('Exception raised, triggering end of main loop.')
     raise
