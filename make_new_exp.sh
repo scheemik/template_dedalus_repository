@@ -1,19 +1,21 @@
 #!/bin/bash
 # A bash script to run the Dedalus python code
-# Takes in arguments:
+# Optionally takes in arguments:
 #	$ sh make_new_experiment.sh -n <name of experiment>
+#								-s <name of switchboard>
 
 code_file='core_code.py'
-switchboard='switchboard.py'
+switch_dir='_modules-physics/switchboards'
 run_file='_experiments/_run_exp.sh'
 submit_file='submit_to_Niagara.sh'
 
 # Parse arguments
-while getopts n: option
+while getopts n:s: option
 do
 	case "${option}"
 		in
 		n) NAME=${OPTARG};;
+		s) SWITCH=${OPTARG};;
 	esac
 done
 
@@ -25,6 +27,11 @@ if [ -z "$NAME" ]
 then
 	NAME=$DATETIME
 	echo "-n, No experiment name specified, using $NAME"
+fi
+if [ -z "$SWITCH" ]
+then
+	SWITCH='switchboard-default.py'
+	echo "-s, No switchboard specified, using default switchboard: $SWITCH"
 fi
 
 ###############################################################################
@@ -60,10 +67,11 @@ else
 	rm -rf _experiments/$NAME
 	exit 1
 fi
-if [ -e $switchboard ]
+switch_path=${switch_dir}/${SWITCH}
+if [ -e $switch_path ]
 then
-	cp $switchboard _experiments/$NAME
-	echo "Copied $switchboard"
+	cp $switch_path _experiments/${NAME}/switchboard-${NAME}.py
+	echo "Copied $switch_path"
 else
 	echo "No switchboard file found. Aborting script"
 	exit 1
