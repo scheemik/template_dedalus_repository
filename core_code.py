@@ -43,30 +43,33 @@ from dedalus.extras import flow_tools
 import logging
 logger = logging.getLogger(__name__)
 
+###############################################################################
 # Command line arguments
 import sys
 # Arguments must be passed in the correct order
 arg_array = sys.argv
 filename = str(arg_array[0])
 switchboard = str(arg_array[1])
+
+if rank==0:
+    # Check number of arguments passed in
+    if (len(arg_array) != 2):
+        print("Wrong number of arguments passed to core code")
+    print('Core code filename:', filename)
+    print('Using switchboard:', switchboard)
+    print("")
+
+###############################################################################
+# Parameters
+
 nx =256#      = int(arg_array[2])        # 256
 nz =64#      = int(arg_array[3])        # 64
 
-if rank==0:
-    #print('Number of command line arguments:')
-    #print(len(sys.argv))
-    #print('Argument list:')
-    #print(str(sys.argv))
-    print('filename:',filename)
-    print('switchboard:',switchboard)
-    print('n_x:     ',nx)
-    print('n_z:     ',nz)
-
-# Parameters
 Lx, Lz = (4., 1.)
 Prandtl = 1.
 Rayleigh = 1e6
 
+###############################################################################
 # Create bases and domain
 x_basis = de.Fourier('x',   nx, interval=(0, Lx), dealias=3/2)
 z_basis = de.Chebyshev('z', nz, interval=(-Lz/2, Lz/2), dealias=3/2)
