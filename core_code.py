@@ -61,9 +61,14 @@ if rank==0:
 
 ###############################################################################
 # Importing parameters from switchboard
+import importlib
 
-# Using wildcard on import is generally a bad idea
-switch_vars = __import__(switchboard)
+# Updating variables to global is generally a bad idea
+#   because you might run into namespace collisions
+switch_vars = importlib.import_module(switchboard)
+globals().update({v: getattr(switch_vars, v)
+                  for v in switch_vars.__dict__
+                  if not v.startswith("_")})
 
 nx = n_x #256#      = int(arg_array[2])        # 256
 nz = n_z #64#      = int(arg_array[3])        # 64
