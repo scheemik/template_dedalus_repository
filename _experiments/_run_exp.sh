@@ -32,6 +32,10 @@ do
 	esac
 done
 
+echo ""
+echo "Begin run script"
+echo ""
+
 # check to see if arguments were passed
 if [ -z "$NAME" ]
 then
