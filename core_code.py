@@ -48,7 +48,7 @@ import sys
 # Arguments must be passed in the correct order
 arg_array = sys.argv
 filename = str(arg_array[0])
-exp_name = str(arg_array[1])
+switchboard = str(arg_array[1])
 nx =256#      = int(arg_array[2])        # 256
 nz =64#      = int(arg_array[3])        # 64
 
@@ -58,7 +58,7 @@ if rank==0:
     #print('Argument list:')
     #print(str(sys.argv))
     print('filename:',filename)
-    print('exp_name:',exp_name)
+    print('switchboard:',switchboard)
     print('n_x:     ',nx)
     print('n_z:     ',nz)
 
