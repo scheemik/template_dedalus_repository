@@ -76,12 +76,76 @@ x_basis = de.Fourier('x',   nx, interval=(0, sbp.L_x), dealias=sbp.dealias)
 z_basis = de.Chebyshev('z', nz, interval=(-sbp.L_z/2, sbp.L_z/2), dealias=sbp.dealias)
 domain = de.Domain([x_basis, z_basis], grid_dtype=np.float64)
 
+###############################################################################
 # 2D Boussinesq hydrodynamics
 problem = de.IVP(domain, variables=['p','b','u','w','bz','uz','wz'])
-problem.meta['p','b','u','w']['z']['dirichlet'] = True
+# From Nico: all variables are dirchlet by default, so only need to
+#   specify those that are not dirchlet (variables w/o top & bottom bc's)
+problem.meta['p','bz','uz','wz']['z']['dirichlet'] = False
+# Parameters for the equations of motion
+problem.parameters['NU'] = sbp.nu
+problem.parameters['KA'] = sbp.kappa
+problem.parameters['N0'] = sbp.N_0
+"""
 problem.parameters['P'] = (sbp.Rayleigh * sbp.Prandtl)**(-1/2)
 problem.parameters['R'] = (sbp.Rayleigh / sbp.Prandtl)**(-1/2)
 problem.parameters['F'] = F = 1
+"""
+###############################################################################
+# Forcing from the boundary
+# Polarization relation from Cushman-Roisin and Beckers eq (13.7)
+#   (signs implemented later)
+PolRel = {'u': sbp.A*(sbp.g*sbp.omega*sbp.k_z)/(sbp.N_0**2*sbp.k_x),
+          'w': sbp.A*(sbp.g*sbp.omega)/(sbp.N_0**2),
+          'b': sbp.A*sbp.g}
+# Creating forcing amplitudes
+for fld in ['u', 'w', 'b']:#, 'p']:
+    BF = domain.new_field()
+    BF.meta['x']['constant'] = True  # means the NCC is constant along x
+    BF['g'] = PolRel[fld]
+    problem.parameters['BF' + fld] = BF  # pass function in as a parameter.
+    del BF
+# Parameters for boundary forcing
+problem.parameters['kx'] = sbp.k_x
+problem.parameters['kz'] = sbp.k_z
+problem.parameters['omega'] = sbp.omega
+problem.parameters['grav'] = sbp.g # can't use 'g' because Dedalus already uses that for grid
+problem.parameters['T'] = sbp.T # period of oscillation
+problem.parameters['nT'] = sbp.nT # number of periods for the ramp
+#problem.parameters['z_top'] = sbp.z_t
+problem.substitutions['window'] = "1" # effectively, no window
+# Ramp in time
+problem.substitutions['ramp'] = "(1/2)*(tanh(4*t/(nT*T) - 2) + 1)"
+# Substitutions for boundary forcing (see C-R & B eq 13.7)
+problem.substitutions['fu'] = "-BFu*sin(kx*x + kz*z - omega*t)*window*ramp"
+problem.substitutions['fw'] = " BFw*sin(kx*x + kz*z - omega*t)*window*ramp"
+problem.substitutions['fb'] = "-BFb*cos(kx*x + kz*z - omega*t)*window*ramp"
+#problem.substitutions['fp'] = "-BFp*sin(kx*x + kz*z - omega*t)*window*ramp"
+###############################################################################
+# Sponge Layer (SL) as an NCC
+problem.parameters['SL'] = 1.0
+###############################################################################
+# Background Profile (BP) as an NCC
+problem.parameters['BP'] = 1.0
+###############################################################################
+# Equations of motion (non-linear terms on RHS)
+#   Mass conservation equation
+problem.add_equation("dx(u) + wz = 0")
+#   Equation of state (in terms of buoyancy)
+problem.add_equation("dt(b) - KA*(dx(dx(b)) + dz(bz))"
+                    + "= -((N0*BP)**2)*w - (u*dx(b) + w*bz)")
+#   Horizontal momentum equation
+problem.add_equation("dt(u) -SL*NU*dx(dx(u)) - NU*dz(uz) + dx(p)"
+                    + "= - (u*dx(u) + w*uz)")
+#   Vertical momentum equation
+problem.add_equation("dt(w) -SL*NU*dx(dx(w)) - NU*dz(wz) + dz(p) - b"
+                    + "= - (u*dx(w) + w*wz)")
+
+# Required for solving differential equations in Chebyshev dimension
+problem.add_equation("bz - dz(b) = 0")
+problem.add_equation("uz - dz(u) = 0")
+problem.add_equation("wz - dz(w) = 0")
+"""
 problem.add_equation("dx(u) + wz = 0")
 problem.add_equation("dt(b) - P*(dx(dx(b)) + dz(bz)) - F*w       = -(u*dx(b) + w*bz)")
 problem.add_equation("dt(u) - R*(dx(dx(u)) + dz(uz)) + dx(p)     = -(u*dx(u) + w*uz)")
@@ -89,6 +153,26 @@ problem.add_equation("dt(w) - R*(dx(dx(w)) + dz(wz)) + dz(p) - b = -(u*dx(w) + w
 problem.add_equation("bz - dz(b) = 0")
 problem.add_equation("uz - dz(u) = 0")
 problem.add_equation("wz - dz(w) = 0")
+"""
+###############################################################################
+# Boundary contitions
+#	Using Fourier basis for x automatically enforces periodic bc's
+#   Left is bottom, right is top
+# Solid top/bottom boundaries
+problem.add_bc("left(u) = 0")
+problem.add_bc("right(u) = right(fu)")
+# Free top/bottom boundaries
+#problem.add_bc("left(uz) = 0")
+#problem.add_bc("right(uz) = 0")
+# No-slip top/bottom boundaries?
+problem.add_bc("left(w) = 0", condition="(nx != 0)") # redunant in constant mode (nx==0)
+problem.add_bc("right(w) = right(fw)")
+# Buoyancy = zero at top/bottom
+problem.add_bc("left(b) = 0")
+problem.add_bc("right(b) = right(fb)")
+# Sets gauge pressure to zero in the constant mode
+problem.add_bc("left(p) = 0", condition="(nx == 0)") # required because of above redundancy
+"""
 problem.add_bc("left(b) = 0")
 problem.add_bc("left(u) = 0")
 problem.add_bc("left(w) = 0")
@@ -96,7 +180,8 @@ problem.add_bc("right(b) = 0")
 problem.add_bc("right(u) = 0")
 problem.add_bc("right(w) = 0", condition="(nx != 0)")
 problem.add_bc("right(p) = 0", condition="(nx == 0)")
-
+"""
+###############################################################################
 # Build solver
 solver = problem.build_solver(de.timesteppers.RK222)
 logger.info('Solver built')
@@ -120,7 +205,7 @@ if not pathlib.Path(sbp.restart_file).exists():
     # Linear background + perturbations damped at walls
     zb, zt = z_basis.interval
     pert =  1e-3 * noise * (zt - z) * (z - zb)
-    b['g'] = F * pert
+    b['g'] = pert * 0.0 # F * pert
     b.differentiate('z', out=bz)
 
     # Timestepping and output
@@ -140,7 +225,7 @@ else:
 ###############################################################################
 # Integration parameters
 solver.stop_sim_time  = stop_sim_time # deliberately not sbp
-solver.stop_wall_time = sbp.stop_wall_time
+solver.stop_wall_time = sbp.stop_wall_time * 60.0 # to get minutes
 solver.stop_iteration = sbp.stop_iteration
 
 ###############################################################################
@@ -168,12 +253,15 @@ try:
     logger.info('Starting loop')
     start_time = time.time()
     while solver.ok:
+        # Adaptive time stepping controlled from switchboard
         if (sbp.adapt_dt):
             dt = CFL.compute_dt()
         dt = solver.step(dt)
         if (solver.iteration-1) % 10 == 0:
             logger.info('Iteration: %i, Time: %e, dt: %e' %(solver.iteration, solver.sim_time, dt))
-            logger.info(sbp.flow_log_message %flow.max(sbp.flow_name))
+            logger.info(sbp.flow_log_message.format(flow.max(sbp.flow_name)))
+            if np.isnan(flow.max(sbp.flow_name)):
+                raise NameError('Code blew up it seems')
 except:
     logger.error('Exception raised, triggering end of main loop.')
     raise
