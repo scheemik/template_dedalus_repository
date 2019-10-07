@@ -1,18 +1,18 @@
 """
-Dedalus script for 2D Rayleigh-Benard convection.
+Core code of Dedalus script
 
-This script uses a Fourier basis in the x direction with periodic boundary
-conditions.  The equations are scaled in units of the buoyancy time (Fr = 1).
+Modified by Mikhail Schee from the script for 2D Rayleigh-Benard convection in the Dedalus example files.
 
-This script can be ran serially or in parallel, and uses the built-in analysis
-framework to save data snapshots in HDF5 files.  The `merge_procs` command can
-be used to merge distributed analysis sets from parallel runs, and the
-`plot_slices.py` script can be used to plot the snapshots.
+This script is NOT meant to be run directly.
 
-To run, merge, and plot using 4 processes, for instance, you could use:
-    $ mpiexec -n 4 python3 rayleigh_benard.py
-    $ mpiexec -n 4 python3 -m dedalus merge_procs snapshots
-    $ mpiexec -n 4 python3 plot_slices.py snapshots/*.h5
+The parameters of an experiment are controlled through the switchboard file.
+To start a new experiment, run the `make_new_exp.sh` script using the `-n` flag to specify the experiment's name and the `-s` flag to specify the switchboard file.
+    $ sh make_new_exp.sh -n my_new_exp -s switchboard-default.py
+
+This will create a new directory for your experiment under `_experiments`. Edit the switchboard file in that directory to specify the parameters of the experiment before running.
+
+To run an experiment, run the `run.sh` script with the `-n`, `-c`, `-l`, `-v` flags, as specified in that script's header. Running an experiment again will overwrite the old outputs.
+    $ sh run.sh -n my_new_exp -c 2 -l 1 -v 1
 
 This script can restart the simulation from the last save of the original
 output to extend the integration.  This requires that the output files from
