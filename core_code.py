@@ -168,11 +168,12 @@ try:
     logger.info('Starting loop')
     start_time = time.time()
     while solver.ok:
-        dt = CFL.compute_dt()
+        if (sbp.adapt_dt):
+            dt = CFL.compute_dt()
         dt = solver.step(dt)
         if (solver.iteration-1) % 10 == 0:
             logger.info('Iteration: %i, Time: %e, dt: %e' %(solver.iteration, solver.sim_time, dt))
-            logger.info('Max Re = %f' %flow.max(sbp.flow_name))
+            logger.info(sbp.flow_log_message %flow.max(sbp.flow_name))
 except:
     logger.error('Exception raised, triggering end of main loop.')
     raise

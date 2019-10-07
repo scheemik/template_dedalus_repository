@@ -24,7 +24,7 @@ stop_sim_time  = 15         # [s] to be calculated from stop_n_periods later
 # Time step size
 dt = 0.125
 # Determine whether adaptive time stepping is on or off
-adapt_dt = False            # {T/F}
+adapt_dt = True             # {T/F}
 # Restart simulation parameters
 restart_add_time = stop_sim_time
 restart_file  = 'restart.h5'
@@ -68,3 +68,4 @@ CFL_threshold = 0.05
 flow_cadence = 10
 flow_property = "sqrt(u*u + w*w) / R"
 flow_name = 'Re'
+flow_log_message = 'Max Re = %f'
