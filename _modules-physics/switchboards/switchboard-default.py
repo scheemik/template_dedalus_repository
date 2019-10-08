@@ -37,6 +37,9 @@ L_x = 4.0                   # [m]
 L_z = 1.0                   # [m]
 z_t = 0.0
 
+# not sure why, but this needs to be here, above imports from bf file
+lam_x = L_x / 3.0
+
 # Dimensions of displayed domain (should be leq simulated domain)
 L_xdis = 1.0                # [m]
 L_zdis = 1.0                # [m]
@@ -53,69 +56,78 @@ Rayleigh    = 1e6
 g           = 9.81          # [m/s^2] Acceleration due to gravity
 
 ###############################################################################
-# Preparing physics modules
-from mpi4py import MPI
-comm = MPI.COMM_WORLD
-rank = comm.Get_rank()
-from shutil import copy2
-if rank==0:
-    print('Testing, testing, testing the switchboard')
-    copy2('_modules-physics/boundary_forcing/bf_default.py', '_modules-physics/boundary_forcing.py')
+# Select physics modules
 
-# Add path to _modules-physics so python knows to look there on imports
-import sys
-sys.path.insert(0, './_modules-physics')
-###############################################################################
-# Boundary forcing parameters
+# Boundary forcing
+bf_module       = 'bf_default'
 
-import boundary_forcing as bf
-# Characteristic stratification
-N_0 = bf.N_0 #1.0 # [rad/s]
-# Horizontal wavelength (3 across top boundary)
-lam_x = L_x / 3.0
-# Oscillation frequency = N_0 * cos(theta), from dispersion relation
-omega = 0.7071 # [rad s^-1]
-# Angle of beam w.r.t. the horizontal
-theta = np.arccos(omega/N_0) # [rad]
-# Horizontal wavenumber
-k_x    = 2*np.pi/lam_x # [m^-1] k*cos(theta)
-# Characteristic wavenumber
-k   = k_x*N_0/omega # [m^-1]
-# Vertical wavenumber
-k_z   = k*np.sin(theta) # [m^-1] k*sin(theta)
-
-# Oscillation period = 2pi / omega
-T = 2*np.pi / omega
-# Forcing amplitude modifier
-A = 2.0e-4
-# Forcing amplitude ramp (number of oscillations)
-nT = 3.0
-"""
-###############################################################################
-# Importing parameters from boundary forcing file
-import importlib
-
-# Import SwitchBoard Parameters (sbp)
-sbp = importlib.import_module(switchboard)
-"""
 ###############################################################################
 # Snapshot parameters
-snapshots_dir = 'snapshots'
-snap_dt = 0.25
+snapshots_dir   = 'snapshots'
+snap_dt         = 0.25
 snap_max_writes = 50
 
 ###############################################################################
 # CFL parameters
-CFL_cadence = 10
-CFL_safety  = 1
-CFL_max_change = 1.5
-CFL_min_change = 0.5
-CFL_max_dt = 0.125
-CFL_threshold = 0.05
+CFL_cadence     = 10
+CFL_safety      = 1
+CFL_max_change  = 1.5
+CFL_min_change  = 0.5
+CFL_max_dt      = 0.125
+CFL_threshold   = 0.05
 
 ###############################################################################
 # Flow properties
-flow_cadence = 10
-flow_property = "(kx*u + kz*w)/omega"#"sqrt(u*u + w*w) / R"
-flow_name = 'Lin_Criterion'#'Re'
-flow_log_message = 'Max linear criterion = {0:f}'#'Max Re = %f'
+flow_cadence    = 10
+flow_property   = "(kx*u + kz*w)/omega"
+flow_name       = 'Lin_Criterion'
+flow_log_message= 'Max linear criterion = {0:f}'
+
+###############################################################################
+################    Shouldn't need to edit below here    #####################
+###############################################################################
+# Imports for preparing physics modules
+from mpi4py import MPI
+comm = MPI.COMM_WORLD
+rank = comm.Get_rank()
+from shutil import copy2, rmtree
+import os
+if rank==0:
+    print('Preparing physics modules')
+    print('')
+# Add path to _modules-physics so python knows to look there on imports
+import sys
+p_module_dir = './_modules-physics/'
+sys.path.insert(0, p_module_dir)
+
+###############################################################################
+# Boundary forcing
+
+# Move over boundary forcing file
+bf_path = p_module_dir + 'boundary_forcing/' + bf_module + '.py'
+if os.path.isfile(bf_path):
+    copy2(bf_path, p_module_dir + 'boundary_forcing.py')
+
+import boundary_forcing as bf
+# See boundary forcing file for the meaning of these variables
+N_0     = bf.N_0        # [rad s^-1]
+#lam_x   = L_x / 3.0     # [m]
+omega   = bf.omega      # [rad s^-1]
+theta   = bf.theta      # [rad]
+k_x     = bf.k_x        # [m^-1]
+k       = bf.k          # [m^-1]
+k_z     = bf.k_z        # [m^-1]
+T       = bf.T          # [s]
+A       = bf.A          # []
+nT      = bf.nT         # []
+
+###############################################################################
+# Cleaning up the _modules-physics directory tree
+for some_dir in os.scandir(p_module_dir):
+    # Iterate through subdirectories in _modules-physics
+    if some_dir.is_dir():
+        dir=some_dir.name
+        # If the directory isn't __pycache__, then delete it
+        if dir!='__pycache__':
+            dir_path = p_module_dir + dir
+            rmtree(dir_path, ignore_errors=True)
