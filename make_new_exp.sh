@@ -70,7 +70,7 @@ fi
 switch_path=${switch_dir}/${SWITCH}
 if [ -e $switch_path ]
 then
-	cp $switch_path _experiments/${NAME}/switchboard-${NAME}.py
+	cp $switch_path _experiments/${NAME}/switchboard.py
 	echo "Copied $switch_path"
 else
 	echo "No switchboard file found. Aborting script"
