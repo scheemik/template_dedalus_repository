@@ -53,10 +53,24 @@ Rayleigh    = 1e6
 g           = 9.81          # [m/s^2] Acceleration due to gravity
 
 ###############################################################################
+# Preparing physics modules
+from mpi4py import MPI
+comm = MPI.COMM_WORLD
+rank = comm.Get_rank()
+from shutil import copy2
+if rank==0:
+    print('Testing, testing, testing the switchboard')
+    copy2('_modules-physics/boundary_forcing/bf_default.py', '_modules-physics/boundary_forcing.py')
+
+# Add path to _modules-physics so python knows to look there on imports
+import sys
+sys.path.insert(0, './_modules-physics')
+###############################################################################
 # Boundary forcing parameters
 
+import boundary_forcing as bf
 # Characteristic stratification
-N_0 = 1.0 # [rad/s]
+N_0 = bf.N_0 #1.0 # [rad/s]
 # Horizontal wavelength (3 across top boundary)
 lam_x = L_x / 3.0
 # Oscillation frequency = N_0 * cos(theta), from dispersion relation
@@ -76,7 +90,14 @@ T = 2*np.pi / omega
 A = 2.0e-4
 # Forcing amplitude ramp (number of oscillations)
 nT = 3.0
+"""
+###############################################################################
+# Importing parameters from boundary forcing file
+import importlib
 
+# Import SwitchBoard Parameters (sbp)
+sbp = importlib.import_module(switchboard)
+"""
 ###############################################################################
 # Snapshot parameters
 snapshots_dir = 'snapshots'
