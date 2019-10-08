@@ -64,7 +64,7 @@ Running_directory="${Project_directory}/_experiments/${NAME}"
 # Name of the core code file
 code_file='core_code.py'
 # Name of switchboard file
-switch_file="switchboard-${NAME}"
+switch_file="switchboard"
 # Location of the modules-other directory
 modules_o_dir='_modules-other'
 # Location of the modules-physics directory
@@ -96,7 +96,8 @@ else
 fi
 
 ###############################################################################
-# Populate directory with relevant modules
+# Adding modules
+# Populate directory with other modules if needed
 if [ -e _experiments/${NAME}/${modules_o_dir} ]
 then
 	echo 'Other module files already added'
@@ -112,6 +113,25 @@ else
 		echo "Cannot find other modules"
 	fi
 fi
+# Populate directory with physics modules if needed
+if [ -e _experiments/${NAME}/${modules_p_dir} ]
+then
+	echo 'Physics module files already added'
+else
+	echo ''
+	echo '--Adding module files--'
+	echo ''
+	if [ -e $modules_p_dir ]
+	then
+		cp -r $modules_p_dir _experiments/$NAME
+		echo "Copied $modules_p_dir"
+		# If copying physics modules, then run switchboard script
+		#	to select only the modules specified there
+		RUN_SWITCHBOARD=1
+	else
+		echo "Cannot find physics modules"
+	fi
+fi
 
 ###############################################################################
 ###############################################################################
@@ -123,7 +143,7 @@ echo 'Done'
 echo ''
 ###############################################################################
 ###############################################################################
-# Create log file if running code
+# Create (or prepend) log file if running code
 #	if (VER = 0, 1, 2)
 if [ $VER -eq 0 ] || [ $VER -eq 1 ] || [ $VER -eq 2 ]
 then
