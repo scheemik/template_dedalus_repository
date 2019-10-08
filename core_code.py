@@ -62,11 +62,12 @@ if rank==0:
 
 ###############################################################################
 # Importing parameters from switchboard
-import importlib
+#import importlib
 
 # Import SwitchBoard Parameters (sbp)
 #   This also runs the switchboard file, which will move files around
-sbp = importlib.import_module(switchboard)
+#sbp = importlib.import_module(switchboard)
+import switchboard as sbp
 
 # Call parameters from sbp.some_param. For example:
 nx = sbp.n_x #256
