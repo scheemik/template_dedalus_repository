@@ -14,6 +14,7 @@ This will create a new directory for your experiment under `_experiments`. Edit 
 To run an experiment, run the `run.sh` script with the `-n`, `-c`, `-l`, `-v` flags, as specified in that script's header. Running an experiment again will overwrite the old outputs.
     $ sh run.sh -n my_new_exp -c 2 -l 1 -v 1
 
+---
 This script can restart the simulation from the last save of the original
 output to extend the integration.  This requires that the output files from
 the original simulation are merged, and the last is symlinked or copied to
@@ -44,7 +45,7 @@ import logging
 logger = logging.getLogger(__name__)
 
 ###############################################################################
-# Command line arguments
+# Checking command line arguments
 import sys
 # Arguments must be passed in the correct order
 arg_array = sys.argv
@@ -64,6 +65,7 @@ if rank==0:
 import importlib
 
 # Import SwitchBoard Parameters (sbp)
+#   This also runs the switchboard file, which will move files around
 sbp = importlib.import_module(switchboard)
 
 # Call parameters from sbp.some_param. For example:
@@ -86,11 +88,6 @@ problem.meta['p','bz','uz','wz']['z']['dirichlet'] = False
 problem.parameters['NU'] = sbp.nu
 problem.parameters['KA'] = sbp.kappa
 problem.parameters['N0'] = sbp.N_0
-"""
-problem.parameters['P'] = (sbp.Rayleigh * sbp.Prandtl)**(-1/2)
-problem.parameters['R'] = (sbp.Rayleigh / sbp.Prandtl)**(-1/2)
-problem.parameters['F'] = F = 1
-"""
 ###############################################################################
 # Forcing from the boundary
 # Polarization relation from Cushman-Roisin and Beckers eq (13.7)
