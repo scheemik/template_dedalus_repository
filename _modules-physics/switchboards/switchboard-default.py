@@ -121,6 +121,13 @@ T       = bf.T          # [s]
 A       = bf.A          # []
 nT      = bf.nT         # []
 PolRel  = bf.PolRel     # Dictionary of coefficients for variables
+# Dedalus specific string substitutions
+window  = bf.window
+ramp    = bf.ramp
+fu      = bf.fu
+fw      = bf.fw
+fb      = bf.fb
+fp      = bf.fp
 
 ###############################################################################
 # Cleaning up the _modules-physics directory tree

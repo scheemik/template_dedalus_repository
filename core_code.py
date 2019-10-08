@@ -101,21 +101,20 @@ for fld in ['u', 'w', 'b']:#, 'p']:
     problem.parameters['BF' + fld] = BF  # pass function in as a parameter.
     del BF
 # Parameters for boundary forcing
-problem.parameters['kx'] = sbp.k_x
-problem.parameters['kz'] = sbp.k_z
-problem.parameters['omega'] = sbp.omega
-problem.parameters['grav'] = sbp.g # can't use 'g': Dedalus already uses that for grid
-problem.parameters['T'] = sbp.T # [s] period of oscillation
-problem.parameters['nT'] = sbp.nT # number of periods for the ramp
-#problem.parameters['z_top'] = sbp.z_t
-problem.substitutions['window'] = "1" # effectively, no window
-# Ramp in time
-problem.substitutions['ramp'] = "(1/2)*(tanh(4*t/(nT*T) - 2) + 1)"
+problem.parameters['kx']        = sbp.k_x
+problem.parameters['kz']        = sbp.k_z
+problem.parameters['omega']     = sbp.omega
+problem.parameters['grav']      = sbp.g # can't use 'g': Dedalus uses that for grid
+problem.parameters['T']         = sbp.T # [s] period of oscillation
+problem.parameters['nT']        = sbp.nT # number of periods for the ramp
+# Spatial window and Temporal ramp for boundary forcing
+problem.substitutions['window'] = sbp.window
+problem.substitutions['ramp']   = sbp.ramp
 # Substitutions for boundary forcing (see C-R & B eq 13.7)
-problem.substitutions['fu'] = "-BFu*sin(kx*x + kz*z - omega*t)*window*ramp"
-problem.substitutions['fw'] = " BFw*sin(kx*x + kz*z - omega*t)*window*ramp"
-problem.substitutions['fb'] = "-BFb*cos(kx*x + kz*z - omega*t)*window*ramp"
-#problem.substitutions['fp'] = "-BFp*sin(kx*x + kz*z - omega*t)*window*ramp"
+problem.substitutions['fu']     = sbp.fu
+problem.substitutions['fw']     = sbp.fw
+problem.substitutions['fb']     = sbp.fb
+#problem.substitutions['fp']     = sbp.fp
 ###############################################################################
 # Sponge Layer (SL) as an NCC
 problem.parameters['SL'] = 1.0
