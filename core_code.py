@@ -91,11 +91,8 @@ problem.parameters['KA'] = sbp.kappa
 problem.parameters['N0'] = sbp.N_0
 ###############################################################################
 # Forcing from the boundary
-# Polarization relation from Cushman-Roisin and Beckers eq (13.7)
-#   (signs implemented later)
-PolRel = {'u': sbp.A*(sbp.g*sbp.omega*sbp.k_z)/(sbp.N_0**2*sbp.k_x),
-          'w': sbp.A*(sbp.g*sbp.omega)/(sbp.N_0**2),
-          'b': sbp.A*sbp.g}
+# Polarization relation from boundary forcing file
+PolRel = sbp.PolRel
 # Creating forcing amplitudes
 for fld in ['u', 'w', 'b']:#, 'p']:
     BF = domain.new_field()
@@ -107,8 +104,8 @@ for fld in ['u', 'w', 'b']:#, 'p']:
 problem.parameters['kx'] = sbp.k_x
 problem.parameters['kz'] = sbp.k_z
 problem.parameters['omega'] = sbp.omega
-problem.parameters['grav'] = sbp.g # can't use 'g' because Dedalus already uses that for grid
-problem.parameters['T'] = sbp.T # period of oscillation
+problem.parameters['grav'] = sbp.g # can't use 'g': Dedalus already uses that for grid
+problem.parameters['T'] = sbp.T # [s] period of oscillation
 problem.parameters['nT'] = sbp.nT # number of periods for the ramp
 #problem.parameters['z_top'] = sbp.z_t
 problem.substitutions['window'] = "1" # effectively, no window
