@@ -314,3 +314,7 @@ then
 	fi
 	echo 'Done with mp4 creation'
 fi
+
+echo ''
+echo 'Done running experiment'
+echo ''
