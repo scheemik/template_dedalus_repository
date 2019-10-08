@@ -7,48 +7,45 @@ This is the default file for boundary forcing settings for the Dedalus experimen
 """
 
 import numpy as np
+# To import the switchboard
+import sys
+sys.path.append("..") # Adds higher directory to python modules path
+import switchboard as sbp
 
 ###############################################################################
 # Boundary forcing parameters
 
 # Characteristic stratification
-N_0 = 1.0 # [rad/s]
-# Horizontal wavelength (3 across top boundary)
-lam_x = 0.5 / 3.0 #L_x / 3.0
+N_0     = 1.0                   # [rad/s]
+# Horizontal wavelength
+lam_x   = sbp.lam_x             # [m]
 # Oscillation frequency = N_0 * cos(theta), from dispersion relation
-omega = 0.7071 # [rad s^-1]
+omega   = 0.7071                # [rad s^-1]
 # Angle of beam w.r.t. the horizontal
-theta = np.arccos(omega/N_0) # [rad]
+theta   = np.arccos(omega/N_0)  # [rad]
 # Horizontal wavenumber
-k_x    = 2*np.pi/lam_x # [m^-1] k*cos(theta)
+k_x     = 2*np.pi/lam_x         # [m^-1] k*cos(theta)
 # Characteristic wavenumber
-k   = k_x*N_0/omega # [m^-1]
+k       = k_x*N_0/omega         # [m^-1]
 # Vertical wavenumber
-k_z   = k*np.sin(theta) # [m^-1] k*sin(theta)
+k_z     = k*np.sin(theta)       # [m^-1] k*sin(theta)
 
 # Oscillation period = 2pi / omega
-T = 2*np.pi / omega
+T       = 2*np.pi / omega       # [s]
 # Forcing amplitude modifier
-A = 2.0e-4
+A       = 2.0e-4                # []
 # Forcing amplitude ramp (number of oscillations)
-nT = 3.0
-"""
+nT      = 3.0                   # []
+
 ###############################################################################
 # Polarization relation from Cushman-Roisin and Beckers eq (13.7)
 #   (signs implemented later)
-PolRel = {'u': sbp.A*(sbp.g*sbp.omega*sbp.k_z)/(sbp.N_0**2*sbp.k_x),
-          'w': sbp.A*(sbp.g*sbp.omega)/(sbp.N_0**2),
-          'b': sbp.A*sbp.g}
-
+PolRel = {'u': A*(sbp.g*omega*k_z)/(N_0**2*k_x),
+          'w': A*(sbp.g*omega)/(N_0**2),
+          'b': A*sbp.g}
+"""
 ###############################################################################
 # Parameters for boundary forcing
-problem.parameters['kx'] = sbp.k_x
-problem.parameters['kz'] = sbp.k_z
-problem.parameters['omega'] = sbp.omega
-problem.parameters['grav'] = sbp.g # can't use 'g' because Dedalus already uses that for grid
-problem.parameters['T'] = sbp.T # period of oscillation
-problem.parameters['nT'] = sbp.nT # number of periods for the ramp
-#problem.parameters['z_top'] = sbp.z_t
 problem.substitutions['window'] = "1" # effectively, no window
 # Ramp in time
 problem.substitutions['ramp'] = "(1/2)*(tanh(4*t/(nT*T) - 2) + 1)"
