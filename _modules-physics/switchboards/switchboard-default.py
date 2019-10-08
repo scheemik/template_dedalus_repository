@@ -20,7 +20,7 @@ dealias = 3/2               # []
 stop_n_periods = 10         # [] oscillation periods
 stop_wall_time = 60         # [minutes]
 stop_iteration = np.inf     # []
-stop_sim_time  = 15         # [s] to be calculated from stop_n_periods later
+stop_sim_time  = 10         # [s] to be calculated from stop_n_periods later
 # Time step size
 dt = 0.125
 # Determine whether adaptive time stepping is on or off
@@ -120,6 +120,7 @@ k_z     = bf.k_z        # [m^-1]
 T       = bf.T          # [s]
 A       = bf.A          # []
 nT      = bf.nT         # []
+PolRel  = bf.PolRel     # Dictionary of coefficients for variables
 
 ###############################################################################
 # Cleaning up the _modules-physics directory tree
