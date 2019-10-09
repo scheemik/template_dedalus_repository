@@ -13,6 +13,10 @@ sys.path.append("..") # Adds higher directory to python modules path
 import switchboard as sbp
 
 ###############################################################################
+# Dedalus syntax substitutions for spatial window and temporal ramp
+window  = "1" # effectively, no window
+ramp    = "(1/2)*(tanh(4*t/(nT*T) - 2) + 1)"
+###############################################################################
 # Boundary forcing parameters
 
 # Characteristic stratification
@@ -46,9 +50,6 @@ PolRel = {'u': A*(sbp.g*omega*k_z)/(N_0**2*k_x),
           #'p': A*(g*rho_0*kz)/(kx**2+kz**2)} # relation for p not used
 
 ###############################################################################
-# Dedalus syntax substitutions for spatial window and temporal ramp
-window  = "1" # effectively, no window
-ramp    = "(1/2)*(tanh(4*t/(nT*T) - 2) + 1)"
 # Substitutions for boundary forcing (see C-R & B eq 13.7)
 fu      = "-BFu*sin(kx*x + kz*z - omega*t)*window*ramp"
 fw      = " BFw*sin(kx*x + kz*z - omega*t)*window*ramp"
