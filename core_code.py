@@ -108,6 +108,9 @@ problem.parameters['grav']      = sbp.g # can't use 'g': Dedalus uses that for g
 problem.parameters['T']         = sbp.T # [s] period of oscillation
 problem.parameters['nT']        = sbp.nT # number of periods for the ramp
 # Spatial window and Temporal ramp for boundary forcing
+problem.parameters['slope']     = sbp.bf_slope
+problem.parameters['left_edge'] = sbp.bfl_edge
+problem.parameters['right_edge']= sbp.bfr_edge
 problem.substitutions['window'] = sbp.window
 problem.substitutions['ramp']   = sbp.ramp
 # Substitutions for boundary forcing (see C-R & B eq 13.7)

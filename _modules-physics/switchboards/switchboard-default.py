@@ -37,15 +37,21 @@ L_x = 4.0                   # [m]
 L_z = 1.0                   # [m]
 z_t = 0.0
 
+# Dimensions of displayed domain (should be leq simulated domain)
+L_x_dis = 1.0               # [m]
+L_z_dis = 1.0               # [m]
+
+# Display buffer (measured from top left corner)
+Dis_buff_x = 1.0            # [m]
+Dis_buff_z = 0.0            # [m]
+
+# Upper left corner of display domain is always (0, 0)
+#   Therefore, the upper left corner of the simulated domain is
+x_sim_0 = -Dis_buff_x
+z_sim_0 =  Dis_buff_z
+
 # not sure why, but this needs to be here, above imports from bf file
 lam_x = L_x / 3.0
-
-# Dimensions of displayed domain (should be leq simulated domain)
-L_xdis = 1.0                # [m]
-L_zdis = 1.0                # [m]
-# Display buffer (measured from top left corner)
-L_xdis_buff = 0.0           # [m]
-L_zdis_buff = 0.0           # [m]
 
 ###############################################################################
 # Physical parameters
@@ -122,6 +128,9 @@ A       = bf.A          # []
 nT      = bf.nT         # []
 PolRel  = bf.PolRel     # Dictionary of coefficients for variables
 # Dedalus specific string substitutions
+bf_slope= bf.bf_slope
+bfl_edge= bf.bfl_edge
+bfr_edge= bf.bfr_edge
 window  = bf.window
 ramp    = bf.ramp
 fu      = bf.fu

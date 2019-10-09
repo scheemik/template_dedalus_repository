@@ -13,10 +13,6 @@ sys.path.append("..") # Adds higher directory to python modules path
 import switchboard as sbp
 
 ###############################################################################
-# Dedalus syntax substitutions for spatial window and temporal ramp
-window  = "1" # effectively, no window
-ramp    = "(1/2)*(tanh(4*t/(nT*T) - 2) + 1)"
-###############################################################################
 # Boundary forcing parameters
 
 # Characteristic stratification
@@ -39,6 +35,26 @@ T       = 2*np.pi / omega       # [s]
 A       = 2.0e-4                # []
 # Forcing amplitude ramp (number of oscillations)
 nT      = 3.0                   # []
+
+###############################################################################
+# Dedalus syntax substitutions for spatial window and temporal ramp
+#window    = "1" # effectively, no window
+window    = "(1/2)*(tanh(slope*(x-left_edge))+1)*(1/2)*(tanh(slope*(-x+right_edge))+1)"
+ramp      = "(1/2)*(tanh(4*t/(nT*T) - 2) + 1)"
+# Window parameters
+bf_slope  = 35
+win_width = lam_x
+# Check if 1/2 window width fits to the left of display domain
+x_0, z_0  = sbp.sim_ul_corner
+Dis_buf_x = sbp.Dis_buff_x
+if (0.5 * win_width < Dis_buf_x):
+    # It will fit, put 1/2 on left, 1/2 on right
+    bfl_edge = (x_0 + Dis_buf_x) - lam_x/2.0
+    bfr_edge = (x_0 + Dis_buf_x) + lam_x/2.0
+else:
+    # It will not fit, put as far left as possible
+    bfl_edge = x_0
+    bfr_edge = x_0 + lam_x
 
 ###############################################################################
 # Polarization relation from Cushman-Roisin and Beckers eq (13.7)
