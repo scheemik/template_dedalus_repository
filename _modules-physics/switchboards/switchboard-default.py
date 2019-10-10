@@ -37,10 +37,10 @@ L_x = 1.5                   # [m]
 L_z = 1.5                   # [m]
 z_t = 0.0
 # Dimensions of displayed domain (should be leq simulated domain)
-L_x_dis = 0.5               # [m]
-L_z_dis = 0.5               # [m]
+L_x_dis = 1.5               # [m]
+L_z_dis = 1.5               # [m]
 # Display buffer (measured from top left corner)
-Dis_buff_x = 0.5            # [m]
+Dis_buff_x = 0.0            # [m]
 Dis_buff_z = 0.0            # [m]
 # Upper left corner of display domain is always (0, 0)
 x_0     = 0.0
@@ -48,6 +48,9 @@ z_0     = 0.0
 # Therefore, the upper left corner of the simulated domain is
 x_sim_0 = -Dis_buff_x
 z_sim_0 =  Dis_buff_z
+# Lower right corner of simulated domain
+x_sim_f = x_sim_0 + L_x
+z_sim_f = z_sim_0 - L_z
 
 ###############################################################################
 # Physical parameters
