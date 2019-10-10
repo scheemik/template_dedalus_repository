@@ -26,6 +26,13 @@ def add_frame_title(fig, file, index, title_func):
     title = title_func(file['scales/sim_time'][index])
     fig.suptitle(title, fontsize='large')
 
+# Saves figure as a frame
+def save_fig_as_frame(fig, file, index, savename_func, output, dpi):
+    savename = savename_func(file['scales/write_number'][index])
+    savepath = output.joinpath(savename)
+    fig.savefig(str(savepath), dpi=dpi)
+    fig.clear()
+
 ###############################################################################
 def main(filename, start, count, output):
     """Save plot of specified tasks for given range of analysis writes."""
@@ -37,8 +44,9 @@ def main(filename, start, count, output):
     import switchboard as sbp
 
     # Get relevant parameters from switchboard
-    L_x_dis = sbp.L_x_dis
-    L_z_dis = sbp.L_z_dis
+    plot_all = sbp.plot_all_variables
+    L_x_dis  = sbp.L_x_dis
+    L_z_dis  = sbp.L_z_dis
     # Calculate aspect ratio
     AR = L_x_dis / L_z_dis
 
@@ -73,10 +81,7 @@ def main(filename, start, count, output):
             # Add title to frame
             add_frame_title(fig, file, index, title_func)
             # Save figure
-            savename = savename_func(file['scales/write_number'][index])
-            savepath = output.joinpath(savename)
-            fig.savefig(str(savepath), dpi=dpi)
-            fig.clear()
+            save_fig_as_frame(fig, file, index, savename_func, output, dpi)
     plt.close(fig)
 
 
