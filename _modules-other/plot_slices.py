@@ -21,6 +21,16 @@ from dedalus.extras import plot_tools
 ###############################################################################
 # Helper functions
 
+# Sets parameters according to the switchboard settings
+def flip_the_switches(plot_all_variables):
+    if plot_all_variables:
+        tasks = ['b', 'p', 'u', 'w']
+        nrows, ncols = 2, 2
+    else:
+        tasks = ['w']
+        nrows, ncols = 1, 2
+    return tasks, nrows, ncols
+
 # Adds the title to a frame
 def add_frame_title(fig, file, index, title_func):
     title = title_func(file['scales/sim_time'][index])
@@ -53,14 +63,14 @@ def main(filename, start, count, output):
     # Change the size of the text overall
     font = {'size' : 12}
     plt.rc('font', **font)
+    # Set parameters based on switches
+    tasks, nrows, ncols = flip_the_switches(plot_all)
     # Plot settings
-    tasks = ['b', 'p', 'u', 'w']
     scale = 2.5
     dpi = 100
     title_func = lambda sim_time: r'{:}, t = {:2.3f}'.format(NAME, sim_time)
     savename_func = lambda write: 'write_{:06}.png'.format(write)
     # Layout
-    nrows, ncols = 2, 2
     image = plot_tools.Box(AR, 1)
     pad = plot_tools.Frame(0.2, 0.2, 0.15, 0.15)
     margin = plot_tools.Frame(0.3, 0.2, 0.1, 0.1)
