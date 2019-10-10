@@ -76,7 +76,7 @@ nz = sbp.n_z #64
 ###############################################################################
 # Create bases and domain
 x_basis = de.Fourier('x',   nx, interval=(sbp.x_sim_0, sbp.x_sim_f), dealias=sbp.dealias)
-z_basis = de.Chebyshev('z', nz, interval=(sbp.z_sim_0, sbp.z_sim_f), dealias=sbp.dealias)
+z_basis = de.Chebyshev('z', nz, interval=(sbp.z_sim_f, sbp.z_sim_0), dealias=sbp.dealias)
 domain = de.Domain([x_basis, z_basis], grid_dtype=np.float64)
 
 ###############################################################################
@@ -89,6 +89,7 @@ problem.meta['p','bz','uz','wz']['z']['dirichlet'] = False
 problem.parameters['NU'] = sbp.nu
 problem.parameters['KA'] = sbp.kappa
 problem.parameters['N0'] = sbp.N_0
+
 ###############################################################################
 # Forcing from the boundary
 # Polarization relation from boundary forcing file
@@ -118,12 +119,15 @@ problem.substitutions['fu']     = sbp.fu
 problem.substitutions['fw']     = sbp.fw
 problem.substitutions['fb']     = sbp.fb
 #problem.substitutions['fp']     = sbp.fp
+
 ###############################################################################
 # Sponge Layer (SL) as an NCC
 problem.parameters['SL'] = 1.0
+
 ###############################################################################
 # Background Profile (BP) as an NCC
 problem.parameters['BP'] = 1.0
+
 ###############################################################################
 # Equations of motion (non-linear terms on RHS)
 #   Mass conservation equation
@@ -137,20 +141,11 @@ problem.add_equation("dt(u) -SL*NU*dx(dx(u)) - NU*dz(uz) + dx(p)"
 #   Vertical momentum equation
 problem.add_equation("dt(w) -SL*NU*dx(dx(w)) - NU*dz(wz) + dz(p) - b"
                     + "= - (u*dx(w) + w*wz)")
-
 # Required for solving differential equations in Chebyshev dimension
 problem.add_equation("bz - dz(b) = 0")
 problem.add_equation("uz - dz(u) = 0")
 problem.add_equation("wz - dz(w) = 0")
-"""
-problem.add_equation("dx(u) + wz = 0")
-problem.add_equation("dt(b) - P*(dx(dx(b)) + dz(bz)) - F*w       = -(u*dx(b) + w*bz)")
-problem.add_equation("dt(u) - R*(dx(dx(u)) + dz(uz)) + dx(p)     = -(u*dx(u) + w*uz)")
-problem.add_equation("dt(w) - R*(dx(dx(w)) + dz(wz)) + dz(p) - b = -(u*dx(w) + w*wz)")
-problem.add_equation("bz - dz(b) = 0")
-problem.add_equation("uz - dz(u) = 0")
-problem.add_equation("wz - dz(w) = 0")
-"""
+
 ###############################################################################
 # Boundary contitions
 #	Using Fourier basis for x automatically enforces periodic bc's
@@ -169,15 +164,7 @@ problem.add_bc("left(b) = 0")
 problem.add_bc("right(b) = right(fb)")
 # Sets gauge pressure to zero in the constant mode
 problem.add_bc("left(p) = 0", condition="(nx == 0)") # required because of above redundancy
-"""
-problem.add_bc("left(b) = 0")
-problem.add_bc("left(u) = 0")
-problem.add_bc("left(w) = 0")
-problem.add_bc("right(b) = 0")
-problem.add_bc("right(u) = 0")
-problem.add_bc("right(w) = 0", condition="(nx != 0)")
-problem.add_bc("right(p) = 0", condition="(nx == 0)")
-"""
+
 ###############################################################################
 # Build solver
 solver = problem.build_solver(de.timesteppers.RK222)
