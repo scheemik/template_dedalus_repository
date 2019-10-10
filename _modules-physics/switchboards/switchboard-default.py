@@ -46,8 +46,8 @@ Dis_buff_z = 0.0            # [m]
 x_0     = 0.0
 z_0     = 0.0
 # Therefore, the upper left corner of the simulated domain is
-x_sim_0 = -Dis_buff_x
-z_sim_0 =  Dis_buff_z
+x_sim_0 = x_0 - Dis_buff_x
+z_sim_0 = z_0 + Dis_buff_z
 # Lower right corner of simulated domain
 x_sim_f = x_sim_0 + L_x
 z_sim_f = z_sim_0 - L_z
