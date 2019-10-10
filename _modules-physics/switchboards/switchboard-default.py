@@ -67,6 +67,13 @@ g           = 9.81          # [m/s^2] Acceleration due to gravity
 bf_module       = 'bf_default'
 
 ###############################################################################
+# Plotting parameters
+
+# Frames and animation
+# If True, plots b, p, u, and w. If false, plots profile and w
+plot_all_variables = False
+
+###############################################################################
 # Snapshot parameters
 snapshots_dir   = 'snapshots'
 snap_dt         = 0.25
