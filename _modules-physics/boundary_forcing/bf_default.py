@@ -15,44 +15,52 @@ import switchboard as sbp
 ###############################################################################
 # Boundary forcing parameters
 
-# Characteristic stratification
+# Non-linear system of 3 equations with 6 unknowns, need to specify 3:
+# 1. Characteristic stratification (eventually from the background profile)
 N_0     = 1.0                   # [rad/s]
-# Horizontal wavelength
-lam_x   = sbp.lam_x             # [m]
-# Oscillation frequency = N_0 * cos(theta), from dispersion relation
+# 2. Characteristic wavenumber
+k       = 45                    # [m^-1]
+# 3. Oscillation frequency
 omega   = 0.7071                # [rad s^-1]
-# Angle of beam w.r.t. the horizontal
+# Use the equations given in Cushman-Roisin and Beckers ch 13 for the rest:
+# 4. Angle of beam w.r.t. the horizontal (eq 13.6, dispersion relation)
 theta   = np.arccos(omega/N_0)  # [rad]
-# Horizontal wavenumber
-k_x     = 2*np.pi/lam_x         # [m^-1] k*cos(theta)
-# Characteristic wavenumber
-k       = k_x*N_0/omega         # [m^-1]
-# Vertical wavenumber
-k_z     = k*np.sin(theta)       # [m^-1] k*sin(theta)
+# 5. Horizontal wavenumber = k*cos(\theta)
+k_x     = k*omega/N_0           # [m^-1]
+# 6. Vertical wavenumber
+k_z     = k*np.sin(theta)       # [m^-1]
+
+# Other parameters specified by relations
+# Horizontal wavelength
+lam_x   = 2*np.pi / k_x         # [m]
 # Oscillation period = 2pi / omega
 T       = 2*np.pi / omega       # [s]
-# Forcing amplitude modifier
-A       = 2.0e-4                # []
-# Forcing amplitude ramp (number of oscillations)
-nT      = 3.0                   # []
 
 ###############################################################################
 # Dedalus syntax substitutions for spatial window and temporal ramp
-#window    = "1" # effectively, no window
-window    = "(1/2)*(tanh(slope*(x-left_edge))+1)*(1/2)*(tanh(slope*(-x+right_edge))+1)"
+window    = "1" # effectively, no window
+#window    = "(1/2)*(tanh(slope*(x-left_edge))+1)*(1/2)*(tanh(slope*(-x+right_edge))+1)"
 ramp      = "(1/2)*(tanh(4*t/(nT*T) - 2) + 1)"
-# Window parameters
+# Forcing amplitude modifier
+A         = 2.0e-4
+# Forcing amplitude ramp (number of oscillations)
+nT        = 3.0
+# Slope of window edges
 bf_slope  = 35
-win_width = lam_x
+# Number of horizontal wavelengths that fit into the window
+win_lams  = 1
+# Width of window
+win_width = lam_x * win_lams
 # Check if 1/2 window width fits to the left of display domain
-x_0, z_0  = sbp.sim_ul_corner
-Dis_buf_x = sbp.Dis_buff_x
-if (0.5 * win_width < Dis_buf_x):
+Dis_buff_x= sbp.Dis_buff_x
+if (0.5 * win_width < Dis_buff_x):
     # It will fit, put 1/2 on left, 1/2 on right
-    bfl_edge = (x_0 + Dis_buf_x) - lam_x/2.0
-    bfr_edge = (x_0 + Dis_buf_x) + lam_x/2.0
+    x_sim_0  = sbp.x_sim_0
+    bfl_edge = x_sim_0 - lam_x/2.0
+    bfr_edge = x_sim_0 + lam_x/2.0
 else:
     # It will not fit, put as far left as possible
+    x_0      = sbp.x_0
     bfl_edge = x_0
     bfr_edge = x_0 + lam_x
 

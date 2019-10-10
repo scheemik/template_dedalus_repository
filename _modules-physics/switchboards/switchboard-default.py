@@ -33,7 +33,7 @@ restart_file  = 'restart.h5'
 # Domain parameters
 
 # Dimensions of simulated domain
-L_x = 4.0                   # [m]
+L_x = 3.0                   # [m]
 L_z = 1.0                   # [m]
 z_t = 0.0
 
@@ -46,12 +46,14 @@ Dis_buff_x = 1.0            # [m]
 Dis_buff_z = 0.0            # [m]
 
 # Upper left corner of display domain is always (0, 0)
-#   Therefore, the upper left corner of the simulated domain is
+x_0     = 0.0
+z_0     = 0.0
+# Therefore, the upper left corner of the simulated domain is
 x_sim_0 = -Dis_buff_x
 z_sim_0 =  Dis_buff_z
 
 # not sure why, but this needs to be here, above imports from bf file
-lam_x = L_x / 3.0
+#lam_x = L_x / 3.0
 
 ###############################################################################
 # Physical parameters
@@ -117,12 +119,12 @@ if os.path.isfile(bf_path):
 import boundary_forcing as bf
 # See boundary forcing file for the meaning of these variables
 N_0     = bf.N_0        # [rad s^-1]
-#lam_x   = L_x / 3.0     # [m]
+k       = bf.k          # [m^-1]
 omega   = bf.omega      # [rad s^-1]
 theta   = bf.theta      # [rad]
 k_x     = bf.k_x        # [m^-1]
-k       = bf.k          # [m^-1]
 k_z     = bf.k_z        # [m^-1]
+lam_x   = bf.lam_x      # [m]
 T       = bf.T          # [s]
 A       = bf.A          # []
 nT      = bf.nT         # []
