@@ -2,10 +2,11 @@
 Plot planes from joint analysis files.
 
 Usage:
-    plot_slices.py <files>... [--output=<dir>]
+    plot_slices.py EXP_NAME <files>... [--output=<dir>]
 
 Options:
-    --output=<dir>  Output directory [default: ./frames]
+    EXP_NAME            # Name of experiment to add switchboard module path
+    --output=<dir>      # Output directory [default: ./frames]
 
 """
 
@@ -17,10 +18,24 @@ import matplotlib.pyplot as plt
 plt.ioff()
 from dedalus.extras import plot_tools
 
-
 def main(filename, start, count, output):
     """Save plot of specified tasks for given range of analysis writes."""
 
+    # To import the switchboard
+    import sys
+    switch_path = "../" + NAME
+    sys.path.insert(0, switch_path) # Adds higher directory to python modules path
+    import switchboard as sbp
+
+    # Get relevant parameters from switchboard
+    L_x_dis = sbp.L_x_dis
+    L_z_dis = sbp.L_z_dis
+    # Calculate aspect ratio
+    AR = L_x_dis / L_z_dis
+
+    # Change the size of the text overall
+    font = {'size' : 12}
+    plt.rc('font', **font)
     # Plot settings
     tasks = ['b', 'p', 'u', 'w']
     scale = 2.5
@@ -28,8 +43,8 @@ def main(filename, start, count, output):
     title_func = lambda sim_time: 't = {:.3f}'.format(sim_time)
     savename_func = lambda write: 'write_{:06}.png'.format(write)
     # Layout
-    nrows, ncols = 4, 1
-    image = plot_tools.Box(4, 1)
+    nrows, ncols = 2, 2
+    image = plot_tools.Box(AR, 1)
     pad = plot_tools.Frame(0.2, 0.2, 0.1, 0.1)
     margin = plot_tools.Frame(0.3, 0.2, 0.1, 0.1)
 
@@ -68,6 +83,8 @@ if __name__ == "__main__":
 
     args = docopt(__doc__)
 
+    NAME = str(args['EXP_NAME'])
+
     output_path = pathlib.Path(args['--output']).absolute()
     # Create output directory if needed
     with Sync() as sync:
@@ -75,4 +92,3 @@ if __name__ == "__main__":
             if not output_path.exists():
                 output_path.mkdir()
     post.visit_writes(args['<files>'], main, output=output_path)
-

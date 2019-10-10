@@ -250,7 +250,7 @@ then
 		rm -rf frames
 	fi
 	echo "Plotting 2d slices"
-	mpiexec -n $CORES python3 $plot_file $snapshot_path/*.h5
+	mpiexec -n $CORES python3 $plot_file $NAME $snapshot_path/*.h5
 	echo 'Done plotting frames'
 	echo ''
 fi
