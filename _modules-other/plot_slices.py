@@ -18,6 +18,15 @@ import matplotlib.pyplot as plt
 plt.ioff()
 from dedalus.extras import plot_tools
 
+###############################################################################
+# Helper functions
+
+# Adds the title to a frame
+def add_frame_title(fig, file, index, title_func):
+    title = title_func(file['scales/sim_time'][index])
+    fig.suptitle(title, fontsize='large')
+
+###############################################################################
 def main(filename, start, count, output):
     """Save plot of specified tasks for given range of analysis writes."""
 
@@ -40,7 +49,7 @@ def main(filename, start, count, output):
     tasks = ['b', 'p', 'u', 'w']
     scale = 2.5
     dpi = 100
-    title_func = lambda sim_time: 't = {:.3f}'.format(sim_time)
+    title_func = lambda sim_time: r'{:}, t = {:2.3f}'.format(NAME, sim_time)
     savename_func = lambda write: 'write_{:06}.png'.format(write)
     # Layout
     nrows, ncols = 2, 2
@@ -61,10 +70,8 @@ def main(filename, start, count, output):
                 # Call 3D plotting helper, slicing in time
                 dset = file['tasks'][task]
                 plot_tools.plot_bot_3d(dset, 0, index, axes=axes, title=task, even_scale=True)
-            # Add time title
-            title = title_func(file['scales/sim_time'][index])
-            title_height = 1 - 0.5 * mfig.margin.top / mfig.fig.y
-            fig.suptitle(title, x=0.48, y=title_height, ha='left')
+            # Add title to frame
+            add_frame_title(fig, file, index, title_func)
             # Save figure
             savename = savename_func(file['scales/write_number'][index])
             savepath = output.joinpath(savename)
