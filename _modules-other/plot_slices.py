@@ -17,6 +17,8 @@ matplotlib.use('Agg')
 import matplotlib.pyplot as plt
 plt.ioff()
 from dedalus.extras import plot_tools
+# Import modified versions of plot bot
+from plot_tools_mod import plot_bot_3d_mod
 
 ###############################################################################
 # Helper functions
