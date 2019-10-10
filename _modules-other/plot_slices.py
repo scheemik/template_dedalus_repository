@@ -45,7 +45,7 @@ def main(filename, start, count, output):
     # Layout
     nrows, ncols = 2, 2
     image = plot_tools.Box(AR, 1)
-    pad = plot_tools.Frame(0.2, 0.2, 0.1, 0.1)
+    pad = plot_tools.Frame(0.2, 0.2, 0.15, 0.15)
     margin = plot_tools.Frame(0.3, 0.2, 0.1, 0.1)
 
     # Create multifigure
