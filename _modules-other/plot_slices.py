@@ -17,7 +17,7 @@ matplotlib.use('Agg')
 import matplotlib.pyplot as plt
 plt.ioff()
 from dedalus.extras import plot_tools
-# Import modified versions of plot bot
+# Import modified version of plot bot
 from plot_tools_mod import plot_bot_3d_mod
 
 ###############################################################################
@@ -89,14 +89,14 @@ def main(filename, start, count, output):
                 axes = mfig.add_axes(i, j, [0, 0, 1, 1])
                 # Call 3D plotting helper, slicing in time
                 dset = file['tasks'][task]
-                plot_tools.plot_bot_3d(dset, 0, index, axes=axes, title=task, even_scale=True)
+                plot_bot_3d_mod(dset, 0, index, axes=axes, title=task, even_scale=True)
             # Add title to frame
             add_frame_title(fig, file, index, title_func)
             # Save figure
             save_fig_as_frame(fig, file, index, savename_func, output, dpi)
     plt.close(fig)
 
-
+###############################################################################
 if __name__ == "__main__":
 
     import pathlib
