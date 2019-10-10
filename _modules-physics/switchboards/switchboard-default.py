@@ -37,8 +37,8 @@ L_x = 1.5                   # [m]
 L_z = 1.5                   # [m]
 z_t = 0.0
 # Dimensions of displayed domain (should be leq simulated domain)
-L_x_dis = 1.5               # [m]
-L_z_dis = 1.5               # [m]
+L_x_dis = 0.5               # [m]
+L_z_dis = 0.5               # [m]
 # Display buffer (measured from top left corner)
 Dis_buff_x = 0.0            # [m]
 Dis_buff_z = 0.0            # [m]
@@ -72,6 +72,8 @@ bf_module       = 'bf_default'
 # Frames and animation
 # If True, plots b, p, u, and w. If false, plots profile and w
 plot_all_variables = False
+# The number of ticks on the top color bar
+n_clrbar_ticks = 3
 
 ###############################################################################
 # Snapshot parameters

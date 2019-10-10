@@ -49,7 +49,7 @@ class DimWrapper:
             return self.basis.elements
 
 
-def plot_bot_mod(dset, image_axes, data_slices, image_scales=(0,0), clim=None, even_scale=False, cmap='RdBu_r', axes=None, figkw={}, title=None, func=None):
+def plot_bot_mod(dset, image_axes, data_slices, x_limits=None, y_limits=None, n_cb_ticks=3, image_scales=(0,0), clim=None, even_scale=False, cmap='RdBu_r', axes=None, figkw={}, title=None, func=None):
     """
     Plot a 2d slice of the grid data of a dset/field.
 
@@ -61,6 +61,12 @@ def plot_bot_mod(dset, image_axes, data_slices, image_scales=(0,0), clim=None, e
         Data axes to use for image x and y axes
     data_slices: tuple of slices, ints
         Slices selecting image data from global data
+    x_lims: [float, float]
+        Lower and upper plotting limits on the horizontal axis
+    y_lims: [float, float]
+        Lower and upper plotting limits on the vertical axis
+    n_cb_ticks: int
+        The number of ticks on the top colorbar
     image_scales: tuple of ints or strs (xs, ys)
         Axis scales (default: (0,0))
     clim : tuple of floats, optional
@@ -126,10 +132,10 @@ def plot_bot_mod(dset, image_axes, data_slices, image_scales=(0,0), clim=None, e
         else:
             clim = (data.min(), data.max())
     plot.set_clim(*clim)
-
+    
     # Colorbar
     cbar = plt.colorbar(plot, cax=caxes, orientation='horizontal',
-        ticks=ticker.MaxNLocator(nbins=5))
+        ticks=ticker.MaxNLocator(nbins=n_cb_ticks))
     cbar.outline.set_visible(False)
     caxes.xaxis.set_ticks_position('top')
 
@@ -149,6 +155,12 @@ def plot_bot_mod(dset, image_axes, data_slices, image_scales=(0,0), clim=None, e
         paxes.set_ylabel(yscale)
     else:
         paxes.set_ylabel(dset.dims[yaxis].label)
+
+    # Setting limits on the horizontal and vertical axes
+    if (x_limits != None):
+        paxes.set_xlim(x_limits)
+    if (y_limits != None):
+        paxes.set_ylim(y_limits)
 
     return paxes, caxes
 

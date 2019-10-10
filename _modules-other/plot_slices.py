@@ -56,11 +56,21 @@ def main(filename, start, count, output):
     import switchboard as sbp
 
     # Get relevant parameters from switchboard
-    plot_all = sbp.plot_all_variables
+    plot_all       = sbp.plot_all_variables
+    n_clrbar_ticks = sbp.n_clrbar_ticks
+    # Display parameters
+    x_0 = sbp.x_0
+    z_t = sbp.z_0
     L_x_dis  = sbp.L_x_dis
     L_z_dis  = sbp.L_z_dis
+    x_f = x_0 + L_x_dis
+    z_b = z_t - L_z_dis
+
     # Calculate aspect ratio
     AR = L_x_dis / L_z_dis
+    # Set tuples for display boundaries
+    x_lims = [x_0, x_f]
+    y_lims = [z_b, z_t]
 
     # Change the size of the text overall
     font = {'size' : 12}
@@ -89,7 +99,7 @@ def main(filename, start, count, output):
                 axes = mfig.add_axes(i, j, [0, 0, 1, 1])
                 # Call 3D plotting helper, slicing in time
                 dset = file['tasks'][task]
-                plot_bot_3d_mod(dset, 0, index, axes=axes, title=task, even_scale=True)
+                plot_bot_3d_mod(dset, 0, index, x_limits=x_lims, y_limits=y_lims, n_cb_ticks=n_clrbar_ticks, axes=axes, title=task, even_scale=True)
             # Add title to frame
             add_frame_title(fig, file, index, title_func)
             # Save figure
