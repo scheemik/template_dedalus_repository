@@ -75,8 +75,8 @@ nz = sbp.n_z #64
 
 ###############################################################################
 # Create bases and domain
-x_basis = de.Fourier('x',   nx, interval=(0, sbp.L_x), dealias=sbp.dealias)
-z_basis = de.Chebyshev('z', nz, interval=(-sbp.L_z/2, sbp.L_z/2), dealias=sbp.dealias)
+x_basis = de.Fourier('x',   nx, interval=(sbp.x_sim_0, sbp.x_sim_f), dealias=sbp.dealias)
+z_basis = de.Chebyshev('z', nz, interval=(sbp.z_sim_0, sbp.z_sim_f), dealias=sbp.dealias)
 domain = de.Domain([x_basis, z_basis], grid_dtype=np.float64)
 
 ###############################################################################
