@@ -49,7 +49,7 @@ class DimWrapper:
             return self.basis.elements
 
 
-def plot_bot(dset, image_axes, data_slices, image_scales=(0,0), clim=None, even_scale=False, cmap='RdBu_r', axes=None, figkw={}, title=None, func=None):
+def plot_bot_mod(dset, image_axes, data_slices, image_scales=(0,0), clim=None, even_scale=False, cmap='RdBu_r', axes=None, figkw={}, title=None, func=None):
     """
     Plot a 2d slice of the grid data of a dset/field.
 
@@ -153,7 +153,7 @@ def plot_bot(dset, image_axes, data_slices, image_scales=(0,0), clim=None, even_
     return paxes, caxes
 
 
-def plot_bot_2d(dset, transpose=False, **kw):
+def plot_bot_2d_mod(dset, transpose=False, **kw):
     """
     Plot the grid data of a 2d field.
 
@@ -164,7 +164,7 @@ def plot_bot_2d(dset, transpose=False, **kw):
     transpose : bool, optional
         Flag for transposing plot (default: False)
 
-    Other keyword arguments are passed on to plot_bot.
+    Other keyword arguments are passed on to plot_bot_mod.
 
     """
 
@@ -182,7 +182,7 @@ def plot_bot_2d(dset, transpose=False, **kw):
         image_axes = image_axes[::-1]
     data_slices = (slice(None), slice(None))
 
-    return plot_bot(dset, image_axes, data_slices, **kw)
+    return plot_bot_mod(dset, image_axes, data_slices, **kw)
 
 
 def plot_bot_3d_mod(dset, normal_axis, normal_index, transpose=False, **kw):
@@ -200,7 +200,7 @@ def plot_bot_3d_mod(dset, normal_axis, normal_index, transpose=False, **kw):
     transpose : bool, optional
         Flag for transposing plot (default: False)
 
-    Other keyword arguments are passed on to plot_bot.
+    Other keyword arguments are passed on to plot_bot_mod.
 
     """
 
@@ -229,7 +229,7 @@ def plot_bot_3d_mod(dset, normal_axis, normal_index, transpose=False, **kw):
     data_slices = [slice(None), slice(None), slice(None)]
     data_slices[normal_axis] = normal_index
 
-    return plot_bot(dset, image_axes, tuple(data_slices), **kw)
+    return plot_bot_mod(dset, image_axes, tuple(data_slices), **kw)
 
 
 class MultiFigure:
