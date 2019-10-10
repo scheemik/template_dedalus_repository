@@ -7,6 +7,48 @@ import matplotlib.pyplot as plt
 from matplotlib import ticker
 from matplotlib import transforms
 
+from dedalus.core.field import Field
+from dedalus.tools.array import reshape_vector
+
+class FieldWrapper:
+    """Class to mimic h5py dataset interface for Dedalus fields."""
+
+    def __init__(self, field):
+        self.field = field
+        self.attrs = {'name': field.name}
+        self.dims = [DimWrapper(field, axis) for axis in range(field.domain.dim)]
+
+    def __getitem__(self, item):
+        return self.field.data[item]
+
+    @property
+    def shape(self):
+        return self.field.data.shape
+
+
+class DimWrapper:
+    """Wrapper class to mimic h5py dimension scales."""
+
+    def __init__(self, field, axis):
+        self.field = field
+        self.axis = axis
+        self.basis = field.domain.bases[axis]
+
+    @property
+    def label(self):
+        if self.field.layout.grid_space[self.axis]:
+            return self.basis.name
+        else:
+            return self.basis.element_name
+
+    def __getitem__(self, item):
+        if self.field.layout.grid_space[self.axis]:
+            scale = self.field.scales[self.axis]
+            return self.basis.grid(scale)
+        else:
+            return self.basis.elements
+
+
 def plot_bot(dset, image_axes, data_slices, image_scales=(0,0), clim=None, even_scale=False, cmap='RdBu_r', axes=None, figkw={}, title=None, func=None):
     """
     Plot a 2d slice of the grid data of a dset/field.
@@ -188,6 +230,189 @@ def plot_bot_3d_mod(dset, normal_axis, normal_index, transpose=False, **kw):
     data_slices[normal_axis] = normal_index
 
     return plot_bot(dset, image_axes, tuple(data_slices), **kw)
+
+
+class MultiFigure:
+    """
+    An array of generic images within a matplotlib figure.
+
+    Parameters
+    ----------
+    nrows, ncols : int
+        Number of image rows/columns.
+    image : Box instance
+        Box describing the image shape.
+    pad : Frame instance
+        Frame describing the padding around each image.
+    margin : Frame instance
+        Frame describing the margin around the array of images.
+    scale : float, optional
+        Scaling factor to convert from provided box/frame units to figsize.
+        Margin will be automatically expanded so that fig dimensions are integers.
+
+    Other keywords passed to plt.figure.
+
+    """
+
+    def __init__(self, nrows, ncols, image, pad, margin, scale=1., **kw):
+
+        # Build composite boxes
+        subfig = pad + image
+        fig = margin + nrows*subfig.ybox + ncols*subfig.xbox
+
+        # Rectify scaling so fig dimensions are integers
+        intscale = np.ceil(scale*fig.y) / fig.y
+        extra_w = np.ceil(intscale*fig.x) - intscale*fig.x
+
+        # Apply scale
+        image *= intscale
+        pad *= intscale
+        margin *= intscale
+        margin.left += extra_w / 2
+        margin.right += extra_w / 2
+
+        # Rebuild composite boxes
+        subfig  = pad + image
+        fig = margin + nrows*subfig.ybox + ncols*subfig.xbox
+
+        # Build figure
+        figx = int(np.rint(fig.x))
+        figy = int(np.rint(fig.y))
+        self.figure = plt.figure(figsize=(figx, figy), **kw)
+
+        # Attributes
+        self.nrows = nrows
+        self.ncols = ncols
+        self.image = image
+        self.pad = pad
+        self.margin = margin
+        self.fig = fig
+
+    def add_axes(self, i, j, rect, **kw):
+        """
+        Add axes to a subfigure.
+
+        Parameters
+        ----------
+        i, j  : int
+            Image row/column
+        rect : tuple of floats
+            (left, bottom, width, height) in fractions of image width and height
+
+        Other keywords passed to Figure.add_axes.
+
+        """
+
+        # Get image offset in figure coordinates
+        irev = self.nrows - 1 - i
+        subfig = self.pad + self.image
+        offset = self.margin.bottom_left + irev*subfig.ybox + j*subfig.xbox + self.pad.bottom_left
+
+        # Convert image rect to figure rect
+        imstart = Box(rect[0], rect[1])
+        imshape = Box(rect[2], rect[3])
+        figstart = (offset + imstart * self.image) / self.fig
+        figshape = imshape * self.image / self.fig
+        figrect = [figstart.x, figstart.y, figshape.x, figshape.y]
+
+        return self.figure.add_axes(figrect, **kw)
+
+
+class Box:
+    """
+    2d-vector-like object for representing image sizes and offsets.
+
+    Parameters
+    ----------
+    x, y : float
+        Box width/height.
+
+    """
+
+    def __init__(self, x, y):
+        self.x = x
+        self.y = y
+
+    @property
+    def xbox(self):
+        return Box(self.x, 0)
+
+    @property
+    def ybox(self):
+        return Box(0, self.y)
+
+    def __add__(self, other):
+        if isinstance(other, Box):
+            return Box(self.x+other.x, self.y+other.y)
+        return NotImplemented
+
+    def __radd__(self, other):
+        return self.__radd__(other)
+
+    def __mul__(self, other):
+        if np.isscalar(other):
+            return Box(self.x*other, self.y*other)
+        elif isinstance(other, Box):
+            return Box(self.x*other.x, self.y*other.y)
+        return NotImplemented
+
+    def __rmul__(self, other):
+        return self.__mul__(other)
+
+    def __truediv__(self, other):
+        if np.isscalar(other):
+            return Box(self.x/other, self.y/other)
+        elif isinstance(other, Box):
+            return Box(self.x/other.x, self.y/other.y)
+        return NotImplemented
+
+
+class Frame:
+    """
+    Object for representing a non-uniform frame around an image.
+
+    Parameters
+    ----------
+    top, bottom, left, right : float
+        Frame widths.
+
+    """
+
+    def __init__(self, top, bottom, left, right):
+        self.top = top
+        self.bottom = bottom
+        self.left = left
+        self.right = right
+
+    @property
+    def bottom_left(self):
+        return Box(self.left, self.bottom)
+
+    @property
+    def top_right(self):
+        return Box(self.right, self.top)
+
+    def __add__(self, other):
+        if isinstance(other, Box):
+            x = self.left + other.x + self.right
+            y = self.bottom + other.y + self.top
+            return Box(x, y)
+        return NotImplemented
+
+    def __radd__(self, other):
+        return self.__add__(other)
+
+    def __mul__(self, other):
+        if np.isscalar(other):
+            return Frame(other*self.top,
+                         other*self.bottom,
+                         other*self.left,
+                         other*self.right)
+        return NotImplemented
+
+    def __rmul__(self, other):
+        return self.__mul__(other)
+
 
 def quad_mesh(x, y, cut_x_edges=False, cut_y_edges=False):
     """
