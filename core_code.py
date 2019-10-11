@@ -56,9 +56,10 @@ if rank==0:
     # Check number of arguments passed in
     if (len(arg_array) != 2):
         print("Wrong number of arguments passed to core code")
-    print('Core code filename:', filename)
-    print('Using switchboard:', switchboard)
-    print("")
+        print("")
+    #print('Core code filename:', filename)
+    #print('Using switchboard:', switchboard)
+    #print("")
 
 ###############################################################################
 # Importing parameters from switchboard
@@ -66,10 +67,9 @@ if rank==0:
 
 # Import SwitchBoard Parameters (sbp)
 #   This also runs the switchboard file, which will move files around
-#sbp = importlib.import_module(switchboard)
 import switchboard as sbp
 
-# Call parameters from sbp.some_param. For example:
+# Call parameters by sbp.some_param. For example:
 nx = sbp.n_x #256
 nz = sbp.n_z #64
 
@@ -78,6 +78,9 @@ nz = sbp.n_z #64
 x_basis = de.Fourier('x',   nx, interval=(sbp.x_sim_0, sbp.x_sim_f), dealias=sbp.dealias)
 z_basis = de.Chebyshev('z', nz, interval=(sbp.z_sim_f, sbp.z_sim_0), dealias=sbp.dealias)
 domain = de.Domain([x_basis, z_basis], grid_dtype=np.float64)
+# Get x and z grids into variables. Used for BP and initial conditions
+x = domain.grid(0)
+z = domain.grid(1)
 
 ###############################################################################
 # 2D Boussinesq hydrodynamics
@@ -92,6 +95,7 @@ problem.parameters['N0'] = sbp.N_0
 
 ###############################################################################
 # Forcing from the boundary
+
 # Polarization relation from boundary forcing file
 PolRel = sbp.PolRel
 # Creating forcing amplitudes
@@ -126,7 +130,11 @@ problem.parameters['SL'] = 1.0
 
 ###############################################################################
 # Background Profile (BP) as an NCC
-problem.parameters['BP'] = 1.0
+BP = domain.new_field()
+BP.meta['x']['constant'] = True  # means the NCC is constant along x
+BP_array = sbp.build_bp_array(z)
+BP['g'] = BP_array
+problem.parameters['BP'] = BP
 
 ###############################################################################
 # Equations of motion (non-linear terms on RHS)
@@ -175,8 +183,8 @@ logger.info('Solver built')
 if not pathlib.Path(sbp.restart_file).exists():
 
     # Initial conditions
-    x = domain.grid(0)
-    z = domain.grid(1)
+    #x = domain.grid(0)
+    #z = domain.grid(1)
     b = solver.state['b']
     bz = solver.state['bz']
 

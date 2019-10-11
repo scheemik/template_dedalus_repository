@@ -17,7 +17,7 @@ n_z = 128                   # []
 # Dealias factor
 dealias = 3/2               # []
 # Stopping conditions for the simulation
-stop_n_periods = 10         # [] oscillation periods
+stop_n_periods = 12         # [] oscillation periods
 stop_wall_time = 60         # [minutes]
 stop_iteration = np.inf     # []
 stop_sim_time  = 10         # [s] to be calculated from stop_n_periods later
@@ -65,6 +65,8 @@ g           = 9.81          # [m/s^2] Acceleration due to gravity
 
 # Boundary forcing
 bf_module       = 'bf_default'
+# Background profile
+bp_module       = 'bp_default'
 
 ###############################################################################
 # Plotting parameters
@@ -114,7 +116,6 @@ if rank==0:
 # Add path to _modules-physics so python knows to look there on imports
 import sys
 p_module_dir = './_modules_physics/'
-sys.path.insert(0, p_module_dir)
 
 ###############################################################################
 # Boundary forcing
@@ -124,6 +125,8 @@ bf_path = p_module_dir + 'boundary_forcing/' + bf_module + '.py'
 if os.path.isfile(bf_path):
     copy2(bf_path, p_module_dir + 'boundary_forcing.py')
 
+# Need to add the path before every import
+sys.path.insert(0, p_module_dir)
 import boundary_forcing as bf
 # See boundary forcing file for the meaning of these variables
 N_0     = bf.N_0        # [rad s^-1]
@@ -147,6 +150,22 @@ fu      = bf.fu
 fw      = bf.fw
 fb      = bf.fb
 fp      = bf.fp
+
+###############################################################################
+# Background Density Profile
+
+# Move over boundary forcing file
+bp_path = p_module_dir + 'background_profile/' + bp_module + '.py'
+if os.path.isfile(bp_path):
+    copy2(bp_path, p_module_dir + 'background_profile.py')
+
+# Need to add the path before every import
+sys.path.insert(0, p_module_dir)
+import background_profile as bp
+# See background profile file for the meaning of these variables
+N_0     = bp.N_0        # [rad s^-1]
+# Dedalus specific string substitutions
+build_bp_array = bp.build_bp_array
 
 ###############################################################################
 # Cleaning up the _modules-physics directory tree
