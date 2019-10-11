@@ -45,6 +45,14 @@ def save_fig_as_frame(fig, file, index, savename_func, output, dpi):
     fig.savefig(str(savepath), dpi=dpi)
     fig.clear()
 
+def plot_one_task(n, ncols, mfig, file, task, index, x_lims, y_lims, n_clrbar_ticks):
+    # Build subfigure axes
+    i, j = divmod(n, ncols)
+    axes = mfig.add_axes(i, j, [0, 0, 1, 1])
+    # Call 3D plotting helper, slicing in time
+    dset = file['tasks'][task]
+    plot_bot_3d_mod(dset, 0, index, x_limits=x_lims, y_limits=y_lims, n_cb_ticks=n_clrbar_ticks, axes=axes, title=task, even_scale=True)
+
 ###############################################################################
 def main(filename, start, count, output):
     """Save plot of specified tasks for given range of analysis writes."""
@@ -56,15 +64,15 @@ def main(filename, start, count, output):
     import switchboard as sbp
 
     # Get relevant parameters from switchboard
-    plot_all       = sbp.plot_all_variables
-    n_clrbar_ticks = sbp.n_clrbar_ticks
+    plot_all        = sbp.plot_all_variables
+    n_clrbar_ticks  = sbp.n_clrbar_ticks
     # Display parameters
-    x_0 = sbp.x_0
-    z_t = sbp.z_0
-    L_x_dis  = sbp.L_x_dis
-    L_z_dis  = sbp.L_z_dis
-    x_f = x_0 + L_x_dis
-    z_b = z_t - L_z_dis
+    x_0             = sbp.x_0
+    z_t             = sbp.z_0
+    L_x_dis         = sbp.L_x_dis
+    L_z_dis         = sbp.L_z_dis
+    x_f             = x_0 + L_x_dis
+    z_b             = z_t - L_z_dis
 
     # Calculate aspect ratio
     AR = L_x_dis / L_z_dis
@@ -94,12 +102,10 @@ def main(filename, start, count, output):
     with h5py.File(filename, mode='r') as file:
         for index in range(start, start+count):
             for n, task in enumerate(tasks):
-                # Build subfigure axes
-                i, j = divmod(n, ncols)
-                axes = mfig.add_axes(i, j, [0, 0, 1, 1])
-                # Call 3D plotting helper, slicing in time
-                dset = file['tasks'][task]
-                plot_bot_3d_mod(dset, 0, index, x_limits=x_lims, y_limits=y_lims, n_cb_ticks=n_clrbar_ticks, axes=axes, title=task, even_scale=True)
+                if (plot_all == False):
+                    # shift n so that animation is on the right side
+                    n = 1
+                plot_one_task(n, ncols, mfig, file, task, index, x_lims, y_lims, n_clrbar_ticks)
             # Add title to frame
             add_frame_title(fig, file, index, title_func)
             # Save figure
