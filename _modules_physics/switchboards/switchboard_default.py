@@ -12,8 +12,8 @@ import numpy as np
 # Simulation parameters
 
 # Number of grid points in each dimension
-n_x = 512                   # []
-n_z = 128                   # []
+n_x = 256                   # []
+n_z = 512                   # []
 # Dealias factor
 dealias = 3/2               # []
 # Stopping conditions for the simulation
@@ -164,7 +164,7 @@ sys.path.insert(0, p_module_dir)
 import background_profile as bp
 # See background profile file for the meaning of these variables
 N_0     = bp.N_0        # [rad s^-1]
-# Dedalus specific string substitutions
+# The background profile generator function
 build_bp_array = bp.build_bp_array
 
 ###############################################################################
