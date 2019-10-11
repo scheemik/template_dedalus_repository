@@ -10,6 +10,11 @@ from matplotlib import transforms
 from dedalus.core.field import Field
 from dedalus.tools.array import reshape_vector
 
+# import sys
+# o_module_dir = '../_modules_other/'
+# sys.path.insert(0, o_module_dir)
+from _modules_other.latex_fmt import latex_exp
+
 class FieldWrapper:
     """Class to mimic h5py dataset interface for Dedalus fields."""
 
@@ -132,10 +137,10 @@ def plot_bot_mod(dset, image_axes, data_slices, x_limits=None, y_limits=None, n_
         else:
             clim = (data.min(), data.max())
     plot.set_clim(*clim)
-    
+
     # Colorbar
     cbar = plt.colorbar(plot, cax=caxes, orientation='horizontal',
-        ticks=ticker.MaxNLocator(nbins=n_cb_ticks))
+        ticks=ticker.MaxNLocator(nbins=n_cb_ticks), format=ticker.FuncFormatter(latex_exp))
     cbar.outline.set_visible(False)
     caxes.xaxis.set_ticks_position('top')
 

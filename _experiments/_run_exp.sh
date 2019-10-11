@@ -66,9 +66,9 @@ code_file='core_code.py'
 # Name of switchboard file
 switch_file="switchboard"
 # Location of the modules-other directory
-modules_o_dir='_modules-other'
+modules_o_dir='_modules_other'
 # Location of the modules-physics directory
-modules_p_dir='_modules-physics'
+modules_p_dir='_modules_physics'
 # Path to snapshot files
 snapshot_path="snapshots"
 # Name of merging file

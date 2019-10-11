@@ -4,7 +4,7 @@
 #	$ sh make_new_experiment.sh -n <name of experiment>
 
 code_file='core_code.py'
-o_mod_dir='_modules-other'
+o_mod_dir='_modules_other'
 
 # Parse arguments
 while getopts n: option

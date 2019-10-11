@@ -5,7 +5,7 @@
 #								-s <name of switchboard>
 
 code_file='core_code.py'
-switch_dir='_modules-physics/switchboards'
+switch_dir='_modules_physics/switchboards'
 run_file='_experiments/_run_exp.sh'
 submit_file='submit_to_Niagara.sh'
 
@@ -30,7 +30,7 @@ then
 fi
 if [ -z "$SWITCH" ]
 then
-	SWITCH='switchboard-default.py'
+	SWITCH='switchboard_default.py'
 	echo "-s, No switchboard specified, using default switchboard: $SWITCH"
 fi
 

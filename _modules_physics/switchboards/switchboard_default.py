@@ -111,7 +111,7 @@ if rank==0:
     print('')
 # Add path to _modules-physics so python knows to look there on imports
 import sys
-p_module_dir = './_modules-physics/'
+p_module_dir = './_modules_physics/'
 sys.path.insert(0, p_module_dir)
 
 ###############################################################################
