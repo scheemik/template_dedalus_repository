@@ -222,7 +222,9 @@ solver.stop_iteration = sbp.stop_iteration
 
 ###############################################################################
 # Analysis
-snapshots = solver.evaluator.add_file_handler(sbp.snapshots_dir, sim_dt=sbp.snap_dt, max_writes=sbp.snap_max_writes, mode=fh_mode)
+def add_new_file_handler(snapshot_directory):
+    return solver.evaluator.add_file_handler(snapshot_directory, sim_dt=sbp.snap_dt, max_writes=sbp.snap_max_writes, mode=fh_mode)
+snapshots = add_new_file_handler(sbp.snapshots_dir)
 snapshots.add_system(solver.state)
 
 ###############################################################################
