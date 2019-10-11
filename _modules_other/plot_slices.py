@@ -45,6 +45,7 @@ def save_fig_as_frame(fig, file, index, savename_func, output, dpi):
     fig.savefig(str(savepath), dpi=dpi)
     fig.clear()
 
+# Plots one frame of one task (b, p, u, or w)
 def plot_one_task(n, ncols, mfig, file, task, index, x_lims, y_lims, n_clrbar_ticks):
     # Build subfigure axes
     i, j = divmod(n, ncols)
@@ -52,6 +53,9 @@ def plot_one_task(n, ncols, mfig, file, task, index, x_lims, y_lims, n_clrbar_ti
     # Call 3D plotting helper, slicing in time
     dset = file['tasks'][task]
     plot_bot_3d_mod(dset, 0, index, x_limits=x_lims, y_limits=y_lims, n_cb_ticks=n_clrbar_ticks, axes=axes, title=task, even_scale=True)
+
+def extract_bp_snapshot(exp_name):
+    return 0
 
 ###############################################################################
 def main(filename, start, count, output):
