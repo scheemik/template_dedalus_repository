@@ -66,6 +66,7 @@ def main(filename, start, count, output):
     # Get relevant parameters from switchboard
     plot_all        = sbp.plot_all_variables
     n_clrbar_ticks  = sbp.n_clrbar_ticks
+    font_size       = sbp.font_size
     # Display parameters
     x_0             = sbp.x_0
     z_t             = sbp.z_0
