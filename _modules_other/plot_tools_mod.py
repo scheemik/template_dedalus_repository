@@ -10,10 +10,7 @@ from matplotlib import transforms
 from dedalus.core.field import Field
 from dedalus.tools.array import reshape_vector
 
-# import sys
-# o_module_dir = '../_modules_other/'
-# sys.path.insert(0, o_module_dir)
-from _modules_other.latex_fmt import latex_exp
+from latex_format import latex_exp
 
 class FieldWrapper:
     """Class to mimic h5py dataset interface for Dedalus fields."""
