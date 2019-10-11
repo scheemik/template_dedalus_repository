@@ -12,8 +12,8 @@ import numpy as np
 # Simulation parameters
 
 # Number of grid points in each dimension
-n_x = 256                   # []
-n_z = 64                    # []
+n_x = 512                   # []
+n_z = 128                   # []
 # Dealias factor
 dealias = 3/2               # []
 # Stopping conditions for the simulation
@@ -33,8 +33,8 @@ restart_file  = 'restart.h5'
 # Domain parameters
 
 # Dimensions of simulated domain
-L_x = 1.5                   # [m]
-L_z = 1.5                   # [m]
+L_x = 1.0                   # [m]
+L_z = 1.0                   # [m]
 z_t = 0.0
 # Dimensions of displayed domain (should be leq simulated domain)
 L_x_dis = 0.5               # [m]
@@ -74,6 +74,8 @@ bf_module       = 'bf_default'
 plot_all_variables = False
 # The number of ticks on the top color bar
 n_clrbar_ticks = 3
+# Overall font size of plots
+font_size = 12
 
 ###############################################################################
 # Snapshot parameters
