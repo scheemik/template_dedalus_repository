@@ -96,44 +96,6 @@ else
 fi
 
 ###############################################################################
-# Adding modules
-# Populate directory with other modules if needed
-if [ -e _experiments/${NAME}/${modules_o_dir} ]
-then
-	echo 'Other module files already added'
-else
-	echo ''
-	echo '--Adding module files--'
-	echo ''
-	if [ -e $modules_o_dir ]
-	then
-		cp -r $modules_o_dir _experiments/$NAME
-		echo "Copied $modules_o_dir"
-	else
-		echo "Cannot find other modules"
-	fi
-fi
-# Populate directory with physics modules if needed
-if [ -e _experiments/${NAME}/${modules_p_dir} ]
-then
-	echo 'Physics module files already added'
-else
-	echo ''
-	echo '--Adding module files--'
-	echo ''
-	if [ -e $modules_p_dir ]
-	then
-		cp -r $modules_p_dir _experiments/$NAME
-		echo "Copied $modules_p_dir"
-		# If copying physics modules, then run switchboard script
-		#	to select only the modules specified there
-		RUN_SWITCHBOARD=1
-	else
-		echo "Cannot find physics modules"
-	fi
-fi
-
-###############################################################################
 ###############################################################################
 echo ''
 echo '--Navigating to experiment directory--'

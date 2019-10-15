@@ -8,6 +8,10 @@ code_file='core_code.py'
 switch_dir='_modules_physics/switchboards'
 run_file='_experiments/_run_exp.sh'
 submit_file='submit_to_Niagara.sh'
+# Location of the modules-other directory
+modules_o_dir='_modules_other'
+# Location of the modules-physics directory
+modules_p_dir='_modules_physics'
 
 # Parse arguments
 while getopts n:s: option
@@ -55,6 +59,8 @@ fi
 # Make a new directory under the experiments folder
 mkdir ./_experiments/$NAME
 echo "New experiment directory: /_experiments/${NAME}"
+
+###############################################################################
 echo ''
 echo '--Populating experiment directory--'
 echo ''
@@ -91,6 +97,44 @@ then
 else
 	echo "No submit file found. Aborting script"
 	exit 1
+fi
+
+###############################################################################
+# Adding modules
+# Populate directory with other modules if needed
+if [ -e _experiments/${NAME}/${modules_o_dir} ]
+then
+	echo 'Other module files already added'
+else
+	echo ''
+	echo '--Adding module files--'
+	echo ''
+	if [ -e $modules_o_dir ]
+	then
+		cp -r $modules_o_dir _experiments/$NAME
+		echo "Copied $modules_o_dir"
+	else
+		echo "Cannot find other modules"
+	fi
+fi
+# Populate directory with physics modules if needed
+if [ -e _experiments/${NAME}/${modules_p_dir} ]
+then
+	echo 'Physics module files already added'
+else
+	echo ''
+	echo '--Adding module files--'
+	echo ''
+	if [ -e $modules_p_dir ]
+	then
+		cp -r $modules_p_dir _experiments/$NAME
+		echo "Copied $modules_p_dir"
+		# If copying physics modules, then run switchboard script
+		#	to select only the modules specified there
+		RUN_SWITCHBOARD=1
+	else
+		echo "Cannot find physics modules"
+	fi
 fi
 
 echo "Done generating new experiment: ${NAME}"
