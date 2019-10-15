@@ -107,7 +107,7 @@ then
 	echo 'Other module files already added'
 else
 	echo ''
-	echo '--Adding module files--'
+	echo '--Adding other module files--'
 	echo ''
 	if [ -e $modules_o_dir ]
 	then
@@ -123,7 +123,7 @@ then
 	echo 'Physics module files already added'
 else
 	echo ''
-	echo '--Adding module files--'
+	echo '--Adding physics module files--'
 	echo ''
 	if [ -e $modules_p_dir ]
 	then
@@ -137,4 +137,5 @@ else
 	fi
 fi
 
+echo ''
 echo "Done generating new experiment: ${NAME}"

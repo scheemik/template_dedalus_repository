@@ -96,13 +96,29 @@ else
 fi
 
 ###############################################################################
+# Checking modules
+if [ -e _experiments/${NAME}/${modules_o_dir} ]
+then
+	echo 'Other module files found'
+else
+	echo 'Other module files not found. Aborting script'
+	exit 1
+fi
+if [ -e _experiments/${NAME}/${modules_p_dir} ]
+then
+	echo 'Physics module files found'
+else
+	echo 'Physics module files not found. Aborting script'
+	exit 1
+fi
+
+###############################################################################
 ###############################################################################
 echo ''
 echo '--Navigating to experiment directory--'
 echo ''
 cd _experiments/$NAME
 echo 'Done'
-echo ''
 ###############################################################################
 ###############################################################################
 # Create (or prepend) log file if running code
@@ -133,7 +149,6 @@ then
 	#	This way, the most recent run's information is at the top
 	echo -e "${LINE0}\n${LINE1}\n${LINE2}\n${LINE3}\n${LINE4}\n${LINE5}\n${LINE6}\n${LINE7}\n${LINE8}\n${LINE9}\n$(cat ${LOG_FILE})" > $LOG_FILE
 	echo 'Done creating log file'
-	echo ''
 fi
 
 ###############################################################################
@@ -167,7 +182,6 @@ then
         echo ""
     fi
 	echo 'Done running script'
-	echo ''
 fi
 
 ###############################################################################
@@ -214,7 +228,6 @@ then
 	echo "Plotting 2d slices"
 	mpiexec -n $CORES python3 $plot_file $NAME $snapshot_path/*.h5
 	echo 'Done plotting frames'
-	echo ''
 fi
 
 ###############################################################################
