@@ -136,6 +136,27 @@ else
 		echo "Cannot find physics modules"
 	fi
 fi
+###############################################################################
+###############################################################################
+echo ''
+echo '--Navigating to experiment directory--'
+echo ''
+cd _experiments/$NAME
+echo 'Done'
+###############################################################################
+###############################################################################
+# Rearranging modules
+#	Call switchboard python script to move around the modules as needed
+echo ''
+echo '--Testing switchboard file--'
+echo ''
+if [ -e switchboard.py ]
+then
+	python3 switchboard.py
+	echo 'Ran switchboard file'
+else
+	echo 'Switchboard file not found'
+fi
 
 echo ''
 echo "Done generating new experiment: ${NAME}"
