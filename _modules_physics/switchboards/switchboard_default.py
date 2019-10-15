@@ -61,14 +61,6 @@ Rayleigh    = 1e6
 g           = 9.81          # [m/s^2] Acceleration due to gravity
 
 ###############################################################################
-# Select physics modules
-
-# Boundary forcing
-bf_module       = 'bf_default'
-# Background profile
-bp_module       = 'bp_default'
-
-###############################################################################
 # Plotting parameters
 
 # Frames and animation
@@ -104,6 +96,15 @@ flow_log_message= 'Max linear criterion = {0:f}'
 ###############################################################################
 ################    Shouldn't need to edit below here    #####################
 ###############################################################################
+# Select physics modules from select_modules.py file
+
+import select_modules as select
+# Boundary forcing
+bf_module       = select.bf_module #'bf_default'
+# Background profile
+bp_module       = select.bp_module #'bp_default'
+
+###############################################################################
 # Imports for preparing physics modules
 from mpi4py import MPI
 comm = MPI.COMM_WORLD
@@ -119,11 +120,6 @@ p_module_dir = './_modules_physics/'
 
 ###############################################################################
 # Boundary forcing
-
-# Move over boundary forcing file
-bf_path = p_module_dir + 'boundary_forcing/' + bf_module + '.py'
-if os.path.isfile(bf_path):
-    copy2(bf_path, p_module_dir + 'boundary_forcing.py')
 
 # Need to add the path before every import
 sys.path.insert(0, p_module_dir)
@@ -153,11 +149,6 @@ fp      = bf.fp
 
 ###############################################################################
 # Background Density Profile
-
-# Move over boundary forcing file
-bp_path = p_module_dir + 'background_profile/' + bp_module + '.py'
-if os.path.isfile(bp_path):
-    copy2(bp_path, p_module_dir + 'background_profile.py')
 
 # Need to add the path before every import
 sys.path.insert(0, p_module_dir)

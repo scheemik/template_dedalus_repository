@@ -121,6 +121,19 @@ cd _experiments/$NAME
 echo 'Done'
 ###############################################################################
 ###############################################################################
+# Rearranging modules
+#	Call select modules script to move around the modules as needed
+echo ''
+echo '--Selecting physics modules--'
+echo ''
+if [ -e select_modules.py ]
+then
+	python3 select_modules.py
+	echo 'Modules selected'
+else
+	echo 'Module selection file not found'
+fi
+###############################################################################
 # Create (or prepend) log file if running code
 #	if (VER = 0, 1, 2)
 if [ $VER -eq 0 ] || [ $VER -eq 1 ] || [ $VER -eq 2 ]

@@ -6,6 +6,7 @@
 
 code_file='core_code.py'
 switch_dir='_modules_physics/switchboards'
+select_mod_file='select_modules.py'
 run_file='_experiments/_run_exp.sh'
 submit_file='submit_to_Niagara.sh'
 # Location of the modules-other directory
@@ -82,6 +83,14 @@ else
 	echo "No switchboard file found. Aborting script"
 	exit 1
 fi
+if [ -e $select_mod_file ]
+then
+	cp $select_mod_file _experiments/${NAME}/
+	echo "Copied $select_mod_file"
+else
+	echo "No module selection file found. Aborting script"
+	exit 1
+fi
 if [ -e $run_file ]
 then
 	cp $run_file _experiments/${NAME}/run_${NAME}.sh
@@ -136,27 +145,8 @@ else
 		echo "Cannot find physics modules"
 	fi
 fi
-###############################################################################
-###############################################################################
-echo ''
-echo '--Navigating to experiment directory--'
-echo ''
-cd _experiments/$NAME
-echo 'Done'
-###############################################################################
-###############################################################################
-# Rearranging modules
-#	Call switchboard python script to move around the modules as needed
-echo ''
-echo '--Testing switchboard file--'
-echo ''
-if [ -e switchboard.py ]
-then
-	python3 switchboard.py
-	echo 'Ran switchboard file'
-else
-	echo 'Switchboard file not found'
-fi
 
 echo ''
 echo "Done generating new experiment: ${NAME}"
+echo ''
+echo 'Check switchboard and module selection files before running experiment'
