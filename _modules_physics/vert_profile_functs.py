@@ -37,32 +37,3 @@ def tanh_bump(z, height, slope, center, width):
     # correct for added height
     values -= height
     return values
-
-def Repro_profile(z, n, z_b, z_t, slope, N_1, N_2):
-    """
-    A function to reproduce the vertical density profiles of Ghaemsaidi et al. 2016
-    z       = array of vertical values from z_b to z_t
-    n       = number of interfaces in well-mixed layer
-    ml_b    = bottom of mixed layer
-    ml_t    = top of mixed layer
-    slope   = slope of tanh functions
-    N_1     = value
-    """
-    # initialize array of values to be returned
-    values = 0*z
-    # Add upper stratification
-    values += tanh_(z, N_1, slope, z_t)
-    # Add lower stratification
-    values += tanh_(z, N_2, -slope, z_b)
-    # Find height of staircase region
-    H = z_t - z_b
-    # If there are steps to be added...
-    if (n > 0):
-        # calculate height of steps
-        height = H / float(n)
-        # calculate height of pseudo delta bumps as midpoint between N1 and N2
-        bump_h = max(N_1, N_2) - 0.5*abs(N_1-N_2)
-        for i in range(n):
-            c_i = z_b + (height/2.0 + i*height)
-            values += tanh_bump(z, bump_h, slope, c_i, 0.05)
-    return values

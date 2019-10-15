@@ -11,7 +11,7 @@ this_path = "~/Documents/Dedalus_Projects/example_projects/template_dedalus_repo
 that_path = "./_modules_physics/background_profile"
 #sys.path.insert(0, this_path) # Adds higher directory to python modules path
 sys.path.append(that_path)
-import Foran_profile as fp
+import bp_default as bp
 
 def dedalus_plot(vert, hori, plt_title, x_label, y_label, y_lims):
     #matplotlib.use('Agg')
@@ -51,7 +51,7 @@ def test_plot(hori, vert, plt_title, x_label=None, y_label=None, x_lims=None, y_
 
 z_b = -0.5
 z_t =  0.0
-n = 1
+n = 0
 ml_b = -0.38
 ml_t = -0.2
 slope = 120
@@ -59,7 +59,7 @@ N_1 = 0.95
 N_2 = 1.05
 
 z = np.linspace(z_b, z_t, 100)
-a = fp.Repro_profile(z, n, ml_b, ml_t, slope, N_1, N_2)
+a = bp.build_bp_array2(z)
 
 x_lims = [0, 1.5]
 y_lims = [z_b, z_t]

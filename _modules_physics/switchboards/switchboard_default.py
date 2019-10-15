@@ -154,7 +154,7 @@ fp      = bf.fp
 sys.path.insert(0, p_module_dir)
 import background_profile as bp
 # See background profile file for the meaning of these variables
-N_0     = bp.N_0        # [rad s^-1]
+#N_0     = bp.N_0        # [rad s^-1]
 # The background profile generator function
 build_bp_array = bp.build_bp_array
 
