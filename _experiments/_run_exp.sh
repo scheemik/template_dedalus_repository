@@ -128,7 +128,7 @@ echo '--Selecting physics modules--'
 echo ''
 if [ -e select_modules.py ]
 then
-	python3 select_modules.py
+	mpiexec -n $CORES python3 select_modules.py
 	echo 'Modules selected'
 else
 	echo 'Module selection file not found'
