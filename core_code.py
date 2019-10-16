@@ -249,14 +249,12 @@ flow.add_property(sbp.flow_property, name=sbp.flow_name)
 # Set logger parameters if using stop_time or stop_oscillations
 use_sst = sbp.use_stop_sim_time
 if use_sst:
-    endtime_str   = 'Sim end time: %e'
+    endtime_str   = 'Sim end time: %f'
     iteration_str = 'Iteration: %i, Time: %e, dt: %e'
-    endtime_str2  = 'Sim end time: %f'
     time_factor   = 1.0
 else:
-    endtime_str   = 'Sim end period: %e'
+    endtime_str   = 'Sim end period: %f'
     iteration_str = 'Iteration: %i, t/T: %e, dt/T: %e'
-    endtime_str2  = 'Sim end period: %f'
     time_factor   = sbp.T
 
 ###############################################################################
@@ -281,6 +279,6 @@ except:
 finally:
     end_time = time.time()
     logger.info('Iterations: %i' %solver.iteration)
-    logger.info(endtime_str2 %(solver.sim_time/time_factor))
+    logger.info(endtime_str %(solver.sim_time/time_factor))
     logger.info('Run time: %.2f sec' %(end_time-start_time))
     logger.info('Run time: %f cpu-hr' %((end_time-start_time)/60/60*domain.dist.comm_cart.size))
