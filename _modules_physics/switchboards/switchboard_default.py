@@ -20,7 +20,7 @@ dealias = 3/2               # []
 stop_n_periods = 1          # [] oscillation periods
 stop_wall_time = 60         # [minutes]
 stop_iteration = np.inf     # []
-stop_sim_time  = 5          # [s] to be calculated from stop_n_periods later
+stop_sim_time  = 3          # [s] to be calculated from stop_n_periods later
 # If True, the program will use stop_sim_time, if False, stop_n_periods*T
 use_stop_sim_time = True
 # Initial time step size
