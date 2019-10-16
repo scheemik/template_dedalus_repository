@@ -37,16 +37,16 @@ if rank==0:
     if os.path.isfile(bf_path):
         copy2(bf_path, p_module_dir + 'boundary_forcing.py')
         print('Using ' + bf_module + '.py')
-    else:
-        print(bf_module+'.py not found. Was it selected previously?')
+    # else:
+    #     print(bf_module+'.py not found. Was it selected previously?')
 
     # Move the background profile file up one directory level
     bp_path = p_module_dir + 'background_profile/' + bp_module + '.py'
     if os.path.isfile(bp_path):
         copy2(bp_path, p_module_dir + 'background_profile.py')
         print('Using ' + bp_module + '.py')
-    else:
-        print(bp_module+'.py not found. Was it selected previously?')
+    # else:
+    #     print(bp_module+'.py not found. Was it selected previously?')
 
 ###############################################################################
 # Cleaning up the _modules-physics directory tree
