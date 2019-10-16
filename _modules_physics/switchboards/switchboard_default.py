@@ -79,6 +79,12 @@ snapshots_dir   = 'snapshots'
 snap_dt         = 0.25
 snap_max_writes = 50
 
+# Background profile snapshot parameters
+take_bp_snaps   = True
+bp_snap_dir     = 'snapshots/bp_snaps'
+bp_task         = "N0*BP"
+bp_task_name    = 'bp'
+
 ###############################################################################
 # CFL parameters
 CFL_cadence     = 10

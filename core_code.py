@@ -224,8 +224,13 @@ solver.stop_iteration = sbp.stop_iteration
 # Analysis
 def add_new_file_handler(snapshot_directory):
     return solver.evaluator.add_file_handler(snapshot_directory, sim_dt=sbp.snap_dt, max_writes=sbp.snap_max_writes, mode=fh_mode)
+# Add file handler for snapshots and output state of variables
 snapshots = add_new_file_handler(sbp.snapshots_dir)
 snapshots.add_system(solver.state)
+# Add file handler for bp snaps and add corresponding task
+if sbp.take_bp_snaps:
+    bp_snapshots = add_new_file_handler(sbp.bp_snap_dir)
+    bp_snapshots.add_task(sbp.bp_task, layout='g', name=sbp.bp_task_name)
 
 ###############################################################################
 # CFL
