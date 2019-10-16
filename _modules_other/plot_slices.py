@@ -60,8 +60,37 @@ def plot_one_task(n, ncols, mfig, file, task, index, x_lims, y_lims, n_clrbar_ti
     dset = file['tasks'][task]
     plot_bot_3d_mod(dset, 0, index, x_limits=x_lims, y_limits=y_lims, n_cb_ticks=n_clrbar_ticks, axes=axes, title=task, even_scale=True)
 
-def extract_bp_snapshot(exp_name):
-    return 0
+# Extracts relevant arrays from a vertical profile snapshot
+def extract_vp_snapshot(task_name):
+    vp_snap_filepath = 'snapshots/bp_snaps/bp_snaps_s1.h5'
+    with h5py.File(vp_snap_filepath, mode='r') as file:
+        data = file['tasks'][task_name]
+        temp = data[()]
+        hori = temp[0][0]
+        z_   = file['scales']['z']['1.0']
+        vert = z_[()]
+    return hori, vert
+
+def plot_bp_on_left(bp_task_name, mfig):
+    axes0 = mfig.add_axes(0, 0, [0, 0, 1.3, 1])#, sharey=axes1)
+    axes0.set_title('Profile')
+    axes0.set_xlabel(r'$N$ (s$^{-1}$)')
+    axes0.set_ylabel(r'$z$ (m)')
+    #axes0.set_ylim([z_b,z_t+0.04]) # fudge factor to line up y axes
+    #axes0.set_xlim([xleft,xright+0.04])
+    hori, vert = extract_vp_snapshot(bp_task_name)
+    dis_ratio = 2.0 # Profile plot gets skinnier as this goes up
+    xleft  = min(hori)
+    xright = max(hori)
+    ybott  = min(vert)
+    ytop   = max(vert)
+    if (xright-xleft == 0):
+        xleft  =  0.0
+        xright =  1.5
+    calc_ratio = abs((xright-xleft)/(ybott-ytop))*dis_ratio
+    axes0.plot(hori, vert, 'k-')
+    # Force display aspect ratio
+    axes0.set_aspect(calc_ratio)
 
 ###############################################################################
 def main(filename, start, count, output):
@@ -116,6 +145,8 @@ def main(filename, start, count, output):
         for index in range(start, start+count):
             for n, task in enumerate(tasks):
                 if (plot_all == False):
+                    # Plot stratification profile on the left
+                    plot_bp_on_left(sbp.bp_task_name, mfig)
                     # shift n so that animation is on the right side
                     n = 1
                 plot_one_task(n, ncols, mfig, file, task, index, x_lims, y_lims, n_clrbar_ticks)
