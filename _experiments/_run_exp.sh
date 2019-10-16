@@ -20,6 +20,8 @@ DATETIME=`date +"%Y-%m-%d_%Hh%M"`
 # 	-> merge, plot frames, and create a gif
 # VER = 4
 #	-> create mp4 from frames
+# VER = 5
+#	-> run the script, merge
 
 while getopts n:c:l:v:k:x:z: option
 do
@@ -87,11 +89,9 @@ write_out_script='write_out_params.py'
 ###############################################################################
 echo ''
 echo '--Checking experiment directory--'
-echo ''
 if [ -e _experiments/$NAME ]
 then
 	echo 'Experiment directory found'
-	echo ''
 else
 	echo "Experiment directory for $NAME not found. Aborting script."
 	exit 1
@@ -118,7 +118,6 @@ fi
 ###############################################################################
 echo ''
 echo '--Navigating to experiment directory--'
-echo ''
 cd _experiments/$NAME
 echo 'Done'
 ###############################################################################
@@ -127,7 +126,6 @@ echo 'Done'
 #	Call select modules script to move around the modules as needed
 echo ''
 echo '--Selecting physics modules--'
-echo ''
 if [ -e select_modules.py ]
 then
 	mpiexec -n $CORES python3 select_modules.py
@@ -139,11 +137,10 @@ fi
 # Create (or prepend) log file if running code
 #	if (VER = 0, 1, 2)
 LOG_FILE=LOG_${NAME}.txt
-if [ $VER -eq 0 ] || [ $VER -eq 1 ] || [ $VER -eq 2 ]
+if [ $VER -eq 0 ] || [ $VER -eq 1 ] || [ $VER -eq 2 ] || [ $VER -eq 5 ]
 then
 	echo ''
 	echo '--Creating experiment log file--'
-	echo ''
 	touch $LOG_FILE
 	LINE0="----------------------------------------------"
 	LINE1="Log created: ${DATETIME}"
@@ -164,7 +161,7 @@ then
 	#	This way, the most recent run's information is at the top
 	echo -e "${LINE0}\n${LINE1}\n${LINE2}\n${LINE3}\n${LINE4}\n${LINE5}\n${LINE6}\n${LINE7}\n${LINE8}\n${LINE9}\n$(cat ${LOG_FILE})" > $LOG_FILE
 fi
-if [ $VER -eq 0 ] || [ $VER -eq 1 ] || [ $VER -eq 2 ]
+if [ $VER -eq 0 ] || [ $VER -eq 1 ] || [ $VER -eq 2 ] || [ $VER -eq 5 ]
 then
 	if [ -e $LOG_FILE ]
 	then
@@ -178,11 +175,10 @@ fi
 ###############################################################################
 # run the script
 #	if (VER = 0, 1, 2)
-if [ $VER -eq 0 ] || [ $VER -eq 1 ] || [ $VER -eq 2 ]
+if [ $VER -eq 0 ] || [ $VER -eq 1 ] || [ $VER -eq 2 ] || [ $VER -eq 5 ]
 then
 	echo ''
 	echo '--Running script--'
-	echo ''
 	# Check if snapshots already exist. If so, remove them
 	if [ -e snapshots ]
 	then
@@ -211,11 +207,10 @@ fi
 ###############################################################################
 # merge snapshots
 #	if (VER = 0, 2, 3)
-if [ $VER -eq 0 ] || [ $VER -eq 2 ] || [ $VER -eq 3 ]
+if [ $VER -eq 0 ] || [ $VER -eq 2 ] || [ $VER -eq 3 ] || [ $VER -eq 5 ]
 then
 	echo ''
 	echo '--Merging snapshots--'
-	echo ''
 	# Check to make sure snapshots folder exists
 	echo "Checking for snapshots in directory: $snapshot_path"
 	if [ -e $snapshot_path ]
@@ -243,7 +238,6 @@ if [ $VER -eq 0 ] || [ $VER -eq 2 ] || [ $VER -eq 3 ]
 then
 	echo ''
 	echo '--Plotting frames--'
-	echo ''
 	if [ -e frames ]
 	then
 		echo "Removing old frames"
@@ -261,7 +255,6 @@ if [ $VER -eq 0 ] || [ $VER -eq 2 ] || [ $VER -eq 3 ]
 then
 	echo ''
 	echo '--Creating gif--'
-	echo ''
 	gif_name="${output_dir}/${DATETIME}_${NAME}.gif"
 	# Check if output directory exists
 	if [ ! -e $output_dir ]
@@ -296,7 +289,6 @@ if [ $VER -eq 0 ] || [ $VER -eq 4 ]
 then
 	echo ''
 	echo '--Creating mp4--'
-	echo ''
 	mp4_name="${DATETIME}_${NAME}.mp4"
 	# Check if frames exist
 	echo "Checking frames in ${frames_path}"
