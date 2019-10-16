@@ -81,6 +81,8 @@ frames_path='frames'
 gif_cre_file="${modules_o_dir}/create_gif.py"
 # Name of output directory
 output_dir='outputs'
+# Name of write out params to log file script
+write_out_script='write_out_params.py'
 
 ###############################################################################
 echo ''
@@ -136,12 +138,12 @@ fi
 ###############################################################################
 # Create (or prepend) log file if running code
 #	if (VER = 0, 1, 2)
+LOG_FILE=LOG_${NAME}.txt
 if [ $VER -eq 0 ] || [ $VER -eq 1 ] || [ $VER -eq 2 ]
 then
 	echo ''
 	echo '--Creating experiment log file--'
 	echo ''
-	LOG_FILE=LOG_${NAME}.txt
 	touch $LOG_FILE
 	LINE0="----------------------------------------------"
 	LINE1="Log created: ${DATETIME}"
@@ -161,7 +163,16 @@ then
 	# This pre-pends the information to the log file
 	#	This way, the most recent run's information is at the top
 	echo -e "${LINE0}\n${LINE1}\n${LINE2}\n${LINE3}\n${LINE4}\n${LINE5}\n${LINE6}\n${LINE7}\n${LINE8}\n${LINE9}\n$(cat ${LOG_FILE})" > $LOG_FILE
-	echo 'Done creating log file'
+fi
+if [ $VER -eq 0 ] || [ $VER -eq 1 ] || [ $VER -eq 2 ]
+then
+	if [ -e $LOG_FILE ]
+	then
+		python3 ${modules_o_dir}/${write_out_script} ${NAME}
+		echo 'Done creating log file'
+	else
+		echo 'Log file not found'
+	fi
 fi
 
 ###############################################################################

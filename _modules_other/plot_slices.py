@@ -24,14 +24,20 @@ from plot_tools_mod import plot_bot_3d_mod
 # Helper functions
 
 # Sets parameters according to the switchboard settings
-def flip_the_switches(plot_all_variables):
+def flip_the_switches(plot_all_variables, use_sst, T):
     if plot_all_variables:
         tasks = ['b', 'p', 'u', 'w']
         nrows, ncols = 2, 2
     else:
         tasks = ['w']
         nrows, ncols = 1, 2
-    return tasks, nrows, ncols
+    if use_sst:
+        title_str = r'{:}, $t$ = {:2.3f}'
+        time_factor = 1.0
+    else:
+        title_str = r'{:}, $t/T$ = {:2.3f}'
+        time_factor = T
+    return tasks, nrows, ncols, title_str, time_factor
 
 # Adds the title to a frame
 def add_frame_title(fig, file, index, title_func):
@@ -71,6 +77,8 @@ def main(filename, start, count, output):
     plot_all        = sbp.plot_all_variables
     n_clrbar_ticks  = sbp.n_clrbar_ticks
     font_size       = sbp.font_size
+    use_sst         = sbp.use_stop_sim_time
+    T               = sbp.T
     # Display parameters
     x_0             = sbp.x_0
     z_t             = sbp.z_0
@@ -89,11 +97,11 @@ def main(filename, start, count, output):
     font = {'size' : 12}
     plt.rc('font', **font)
     # Set parameters based on switches
-    tasks, nrows, ncols = flip_the_switches(plot_all)
+    tasks, nrows, ncols, title_str, time_factor = flip_the_switches(plot_all, use_sst, T)
     # Plot settings
     scale = 2.5
     dpi = 100
-    title_func = lambda sim_time: r'{:}, t = {:2.3f}'.format(NAME, sim_time)
+    title_func = lambda sim_time: r'{:}, t = {:2.3f}'.format(NAME, sim_time/time_factor)
     savename_func = lambda write: 'write_{:06}.png'.format(write)
     # Layout
     image = plot_tools.Box(AR, 1)

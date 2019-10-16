@@ -17,11 +17,13 @@ n_z = 512                   # []
 # Dealias factor
 dealias = 3/2               # []
 # Stopping conditions for the simulation
-stop_n_periods = 12         # [] oscillation periods
+stop_n_periods = 1          # [] oscillation periods
 stop_wall_time = 60         # [minutes]
 stop_iteration = np.inf     # []
-stop_sim_time  = 10         # [s] to be calculated from stop_n_periods later
-# Time step size
+stop_sim_time  = 5          # [s] to be calculated from stop_n_periods later
+# If True, the program will use stop_sim_time, if False, stop_n_periods*T
+use_stop_sim_time = True
+# Initial time step size
 dt = 0.125
 # Determine whether adaptive time stepping is on or off
 adapt_dt = True             # {T/F}
@@ -111,10 +113,6 @@ comm = MPI.COMM_WORLD
 rank = comm.Get_rank()
 from shutil import copy2, rmtree
 import os
-if rank==0:
-    print('Preparing physics modules')
-    print('')
-# Add path to _modules-physics so python knows to look there on imports
 import sys
 p_module_dir = './_modules_physics/'
 
@@ -136,6 +134,9 @@ T       = bf.T          # [s]
 A       = bf.A          # []
 nT      = bf.nT         # []
 PolRel  = bf.PolRel     # Dictionary of coefficients for variables
+# Calculate stop_sim_time if use_stop_sim_time=False
+if use_stop_sim_time == False:
+    stop_sim_time = stop_n_periods * T
 # Dedalus specific string substitutions
 bf_slope= bf.bf_slope
 bfl_edge= bf.bfl_edge
