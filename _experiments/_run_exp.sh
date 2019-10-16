@@ -228,6 +228,24 @@ then
 		echo "Merging snapshots"
 		mpiexec -n $CORES python3 $merge_file $snapshot_path
 	fi
+	# Check if there are auxiliary snapshots to merge
+	for f in ${snapshot_path}/*; do
+		# Check if this file is a directory
+		if [ -d "$f" ]
+		then
+			# Build relevant file strings
+			aux_snap=${f#"${snapshot_path}/"}
+			merged_h5_file="${f}/${aux_snap}_s1.h5"
+			# Check to see if aux snapshots have already been merged
+			if [ -e $merged_h5_file ] || [ $f == "${snapshot_path}/snapshots_s1" ]
+			then
+				echo "Already merged $f"
+			else
+				echo "Merging $f"
+				mpiexec -n $CORES python3 $merge_file $f
+			fi
+		fi
+	done
 	echo 'Done merging snapshots'
 fi
 
