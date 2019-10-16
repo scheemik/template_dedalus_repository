@@ -101,7 +101,7 @@ def main(filename, start, count, output):
     # Plot settings
     scale = 2.5
     dpi = 100
-    title_func = lambda sim_time: r'{:}, t = {:2.3f}'.format(NAME, sim_time/time_factor)
+    title_func = lambda sim_time: title_str.format(NAME, sim_time/time_factor)
     savename_func = lambda write: 'write_{:06}.png'.format(write)
     # Layout
     image = plot_tools.Box(AR, 1)
