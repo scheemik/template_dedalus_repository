@@ -35,8 +35,8 @@ restart_file  = 'restart.h5'
 # Domain parameters
 
 # Dimensions of simulated domain
-L_x = 1.0                   # [m]
-L_z = 1.0                   # [m]
+L_x = 0.5                   # [m]
+L_z = 0.5                   # [m]
 z_t = 0.0
 # Dimensions of displayed domain (should be leq simulated domain)
 L_x_dis = 0.5               # [m]
@@ -164,8 +164,6 @@ fp      = bf.fp
 # Need to add the path before every import
 sys.path.insert(0, p_module_dir)
 import background_profile as bp
-# See background profile file for the meaning of these variables
-#N_0     = bp.N_0        # [rad s^-1]
 # The background profile generator function
 build_bp_array = bp.build_bp_array
 
