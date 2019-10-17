@@ -279,16 +279,14 @@ then
 	then
 		echo "Creating $output_dir directory"
 		mkdir $output_dir
-		echo ""
 	fi
 	# Check if gis already exists
 	if [ -e $gif_name ]
 	then
 		echo "Overwriting $gif_name"
 		rm $gif_name
-		echo ""
 	fi
-	echo "${output_dir}/${DATETIME}_${NAME}.gif"
+	#echo "${output_dir}/${DATETIME}_${NAME}.gif"
 	files=/$frames_path/*
 	if [ -e $frames_path ] && [ ${#files[@]} -gt 0 ]
 	then
