@@ -68,10 +68,14 @@ g           = 9.81          # [m/s^2] Acceleration due to gravity
 # Frames and animation
 # If True, plots b, p, u, and w. If false, plots profile and w
 plot_all_variables = False
+# If True, the sponge layer plot will be overlayed on top of background profile
+plot_sponge        = True
 # The number of ticks on the top color bar
 n_clrbar_ticks = 3
 # Overall font size of plots
-font_size = 12
+font_size   = 12
+scale       = 2.5
+dpi         = 100
 
 ###############################################################################
 # Snapshot parameters

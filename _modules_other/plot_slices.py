@@ -71,24 +71,29 @@ def extract_vp_snapshot(task_name):
         vert = z_[()]
     return hori, vert
 
-def plot_bp_on_left(bp_task_name, mfig):
+def plot_bp_on_left(bp_task_name, mfig, ylims=None):
     axes0 = mfig.add_axes(0, 0, [0, 0, 1.3, 1])#, sharey=axes1)
     axes0.set_title('Profile')
     axes0.set_xlabel(r'$N$ (s$^{-1}$)')
     axes0.set_ylabel(r'$z$ (m)')
-    #axes0.set_ylim([z_b,z_t+0.04]) # fudge factor to line up y axes
-    #axes0.set_xlim([xleft,xright+0.04])
     hori, vert = extract_vp_snapshot(bp_task_name)
     dis_ratio = 2.0 # Profile plot gets skinnier as this goes up
+    buffer    = 0.04
     xleft  = min(hori)
     xright = max(hori)
-    ybott  = min(vert)
-    ytop   = max(vert)
+    if ylims==None:
+        ybott  = min(vert)
+        ytop   = max(vert)
+    else:
+        ybott  = ylims[0]
+        ytop   = ylims[1]
     if (xright-xleft == 0):
-        xleft  =  0.0
-        xright =  1.5
+        xleft  =  0.0 - buffer
+        xright =  1.5 + buffer
     calc_ratio = abs((xright-xleft)/(ybott-ytop))*dis_ratio
     axes0.plot(hori, vert, 'k-')
+    axes0.set_ylim([ybott-buffer,   ytop+buffer]) # fudge factor to line up y axes
+    axes0.set_xlim([xleft,        xright+buffer])
     # Force display aspect ratio
     axes0.set_aspect(calc_ratio)
 
@@ -102,34 +107,29 @@ def main(filename, start, count, output):
     sys.path.insert(0, switch_path) # Adds higher directory to python modules path
     import switchboard as sbp
 
-    # Get relevant parameters from switchboard
+    # Get relevant parameters from switchboard used in loop
     plot_all        = sbp.plot_all_variables
+    bp_task_name    = sbp.bp_task_name
     n_clrbar_ticks  = sbp.n_clrbar_ticks
-    font_size       = sbp.font_size
-    use_sst         = sbp.use_stop_sim_time
     T               = sbp.T
     # Display parameters
-    x_0             = sbp.x_0
-    z_t             = sbp.z_0
-    L_x_dis         = sbp.L_x_dis
-    L_z_dis         = sbp.L_z_dis
-    x_f             = x_0 + L_x_dis
-    z_b             = z_t - L_z_dis
+    x_f             = sbp.x_0 + sbp.L_x_dis
+    z_b             = sbp.z_t - sbp.L_z_dis
 
     # Calculate aspect ratio
-    AR = L_x_dis / L_z_dis
+    AR = sbp.L_x_dis / sbp.L_z_dis
     # Set tuples for display boundaries
-    x_lims = [x_0, x_f]
-    y_lims = [z_b, z_t]
+    x_lims = [sbp.x_0, x_f]
+    y_lims = [z_b, sbp.z_t]
 
     # Change the size of the text overall
-    font = {'size' : 12}
+    font = {'size' : sbp.font_size}
     plt.rc('font', **font)
     # Set parameters based on switches
-    tasks, nrows, ncols, title_str, time_factor = flip_the_switches(plot_all, use_sst, T)
+    tasks, nrows, ncols, title_str, time_factor = flip_the_switches(plot_all, sbp.use_stop_sim_time, sbp.T)
     # Plot settings
-    scale = 2.5
-    dpi = 100
+    scale   = sbp.scale
+    dpi     = sbp.dpi
     title_func = lambda sim_time: title_str.format(NAME, sim_time/time_factor)
     savename_func = lambda write: 'write_{:06}.png'.format(write)
     # Layout
@@ -146,7 +146,7 @@ def main(filename, start, count, output):
             for n, task in enumerate(tasks):
                 if (plot_all == False):
                     # Plot stratification profile on the left
-                    plot_bp_on_left(sbp.bp_task_name, mfig)
+                    plot_bp_on_left(bp_task_name, mfig, y_lims)
                     # shift n so that animation is on the right side
                     n = 1
                 plot_one_task(n, ncols, mfig, file, task, index, x_lims, y_lims, n_clrbar_ticks)
