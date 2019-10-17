@@ -87,9 +87,11 @@ def plot_bp_on_left(bp_task_name, mfig, ylims=None):
     else:
         ybott  = ylims[0]
         ytop   = ylims[1]
+    # If the profile is constant,
+    #   plot the straight line with a slight buffer on both sides
     if (xright-xleft == 0):
-        xleft  =  0.0 - buffer
-        xright =  1.5 + buffer
+        xleft  =  xleft - 0.5 - buffer
+        xright =  xright- 0.5 + buffer
     calc_ratio = abs((xright-xleft)/(ybott-ytop))*dis_ratio
     axes0.plot(hori, vert, 'k-')
     axes0.set_ylim([ybott-buffer,   ytop+buffer]) # fudge factor to line up y axes
