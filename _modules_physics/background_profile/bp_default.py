@@ -60,10 +60,6 @@ def Repro_profile(z, n, ml_b, ml_t, slope, N_1, N_2):
             values += vpf.tanh_bump(z, bump_h, slope, c_i, 0.05)
     return values
 
-# def build_bp_array(z):
-#     BP_array = z*0.0 + 1.0
-#     return BP_array
-
 def build_bp_array(z):
     BP_array = Repro_profile(z, n, ml_b, ml_t, slope, N_1, N_2)
     return BP_array

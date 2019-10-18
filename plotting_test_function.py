@@ -13,24 +13,20 @@ that_path = "./_modules_physics/background_profile"
 sys.path.append(that_path)
 import bp_default as bp
 
-def dedalus_plot(vert, hori, plt_title, x_label, y_label, y_lims):
-    #matplotlib.use('Agg')
-    scale = 2.5
-    image = plot_tools.Box(1, 1) # aspect ratio of figure
-    pad = plot_tools.Frame(0.2, 0.2, 0.15, 0.15)
-    margin = plot_tools.Frame(0.3, 0.2, 0.1, 0.1)
-    # Create multifigure
-    mfig = plot_tools.MultiFigure(1, 1, image, pad, margin, scale)
-    fig = mfig.figure
-    ax = mfig.add_axes(0, 0, [0, 0, 1, 1])
-    #fg, ax = plt.subplots(1,1)
-    ax.set_title(plt_title)
-    ax.set_xlabel(x_label)
-    ax.set_ylabel(y_label)
-    ax.set_ylim(y_lims)
-    ax.plot(hori, vert, 'k-')
-    plt.grid(True)
-    return fig
+def build_bp_array(z):
+    BP_array = z*0.0 + 1.0
+    return BP_array
+
+def fixed_aspect_ratio(ax, ratio):
+    '''
+    Set a fixed aspect ratio on matplotlib plots
+    regardless of axis units
+    '''
+    xvals,yvals = ax.get_xlim(), ax.get_ylim()
+
+    xrange = xvals[1]-xvals[0]
+    yrange = yvals[1]-yvals[0]
+    ax.set_aspect(ratio*(xrange/yrange), adjustable='box')
 
 # Plotting function for sponge layer, background profile, etc.
 def test_plot(hori, vert, plt_title, x_label=None, y_label=None, x_lims=None, y_lims=None):
@@ -47,6 +43,7 @@ def test_plot(hori, vert, plt_title, x_label=None, y_label=None, x_lims=None, y_
         ax.set_ylim(y_lims)
     ax.plot(hori, vert, 'k-')
     plt.grid(True)
+    fixed_aspect_ratio(ax, 2.0)
     return fg
 
 z_b = -0.5
@@ -59,7 +56,7 @@ N_1 = 0.95
 N_2 = 1.05
 
 z = np.linspace(z_b, z_t, 100)
-a = bp.build_bp_array2(z)
+a = bp.build_bp_array(z)
 
 x_lims = [0, 1.5]
 y_lims = [z_b, z_t]
