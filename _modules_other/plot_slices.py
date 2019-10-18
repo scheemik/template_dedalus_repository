@@ -91,7 +91,7 @@ def plot_bp_on_left(bp_task_name, mfig, ylims=None):
     #   plot the straight line with a slight buffer on both sides
     if (xright-xleft == 0):
         xleft  =  xleft - 0.5 - buffer
-        xright =  xright- 0.5 + buffer
+        xright =  xright+ 0.5 + buffer
     calc_ratio = abs((xright-xleft)/(ybott-ytop))*dis_ratio
     axes0.plot(hori, vert, 'k-')
     axes0.set_ylim([ybott-buffer,   ytop+buffer]) # fudge factor to line up y axes
