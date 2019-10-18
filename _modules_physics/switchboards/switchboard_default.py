@@ -79,6 +79,8 @@ if use_sponge==False:
     plot_sponge    = False
 # Fudge factor to make plots look nicer
 buffer = 0.04
+# Extra buffer for a constant vertical profile
+extra_buffer = 0.5
 # Display ratio of vertical profile plot
 vp_dis_ratio = 2.0 # Profile plot gets skinnier as this goes up
 # The number of ticks on the top color bar

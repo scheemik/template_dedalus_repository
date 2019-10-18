@@ -74,6 +74,22 @@ def extract_vp_snapshot(task_name):
         vert = z_[()]
     return hori, vert
 
+def add_vp_buffers(ax, buffer, extra_buffer):
+    xvals,yvals = ax.get_xlim(), ax.get_ylim()
+    xrange = xvals[1]-xvals[0]
+    # Check if its a constant vertical profile
+    if xrange==0:
+        xleft  = xvals[0] - extra_buffer
+        xright = xvals[1] + extra_buffer
+    else:
+        xleft  = xvals[0] - buffer
+        xright = xvals[1] + buffer
+    ax.set_xlim(xleft, xright)
+    yrange = yvals[1]-yvals[0]
+    ytop   = yvals[1] + buffer
+    ybott  = yvals[0]
+    ax.set_ylim(ybott, ytop)
+
 # Set a fixed aspect ratio on matplotlib plots regardless of axis units
 def fixed_aspect_ratio(ax, ratio):
     # Does not work for twin axes plots
@@ -82,7 +98,7 @@ def fixed_aspect_ratio(ax, ratio):
     yrange = yvals[1]-yvals[0]
     ax.set_aspect(ratio*(xrange/yrange), adjustable='box')
 
-def plot_bp_on_left(bp_task_name, mfig, buffer, dis_ratio, ylims=None):
+def plot_bp_on_left(bp_task_name, mfig, buffer, extra_buffer, dis_ratio, ylims=None):
     axes0 = mfig.add_axes(0, 0, [0, 0, 1.3, 1])#, sharey=axes1)
     axes0.set_title('Background profile')
     axes0.set_xlabel(r'$N$ (s$^{-1}$)')
@@ -90,12 +106,14 @@ def plot_bp_on_left(bp_task_name, mfig, buffer, dis_ratio, ylims=None):
     # Get arrays of background profile values
     hori, vert = extract_vp_snapshot(bp_task_name)
     axes0.plot(hori, vert, 'k-')
+    # Add buffers around the edge to make plot look nice
+    add_vp_buffers(axes0, buffer, extra_buffer)
     # Force display aspect ratio
     fixed_aspect_ratio(axes0, dis_ratio)
     return axes0
 
 # Adds sponge layer profile on top of background profile plot
-def add_sponge_profile(sl_task_name, mfig, buffer, dis_ratio, ylims=None):
+def add_sponge_profile(sl_task_name, mfig, buffer, extra_buffer, dis_ratio, ylims=None):
     axes0 = mfig.add_axes(0, 2, [0, 0, 1.3, 1])
     axes0.set_title('Sponge layer')
     axes0.set_xlabel(r'$\nu$ (s$^{-1}$)')
@@ -103,6 +121,8 @@ def add_sponge_profile(sl_task_name, mfig, buffer, dis_ratio, ylims=None):
     # Get arrays of background profile values
     hori, vert = extract_vp_snapshot(sl_task_name)
     axes0.plot(hori, vert, 'k-')
+    # Add buffers around the edge to make plot look nice
+    add_vp_buffers(axes0, buffer, extra_buffer)
     # Force display aspect ratio
     fixed_aspect_ratio(axes0, dis_ratio)
     return axes0
@@ -156,10 +176,9 @@ def main(filename, start, count, output):
             for n, task in enumerate(tasks):
                 if (plot_all == False):
                     # Plot stratification profile on the left
-                    ax0 = plot_bp_on_left(sbp.bp_task_name, mfig, sbp.buffer, sbp.vp_dis_ratio, y_lims)
+                    ax0 = plot_bp_on_left(sbp.bp_task_name, mfig, sbp.buffer, sbp.extra_buffer, sbp.vp_dis_ratio, y_lims)
                     if sbp.plot_sponge:
-                        #ax1, dis_ratio = plot_bp_on_left(sbp.bp_task_name, mfig, sbp.buffer, sbp.vp_dis_ratio, y_lims)
-                        ax1 = add_sponge_profile(sbp.bp_task_name, mfig, sbp.buffer, sbp.vp_dis_ratio, y_lims)
+                        ax1 = add_sponge_profile(sbp.bp_task_name, mfig, sbp.buffer, sbp.extra_buffer, sbp.vp_dis_ratio, y_lims)
                     # shift n so that animation is on the right side
                     n = 1
                 plot_one_task(n, ncols, mfig, file, task, index, x_lims, y_lims, n_clrbar_ticks)
