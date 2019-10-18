@@ -24,13 +24,16 @@ from plot_tools_mod import plot_bot_3d_mod
 # Helper functions
 
 # Sets parameters according to the switchboard settings
-def flip_the_switches(plot_all_variables, use_sst, T):
+def flip_the_switches(plot_all_variables, plot_sponge_profile, use_sst, T):
     if plot_all_variables:
         tasks = ['b', 'p', 'u', 'w']
         nrows, ncols = 2, 2
     else:
         tasks = ['w']
-        nrows, ncols = 1, 2
+        if plot_sponge_profile:
+            nrows, ncols = 1, 3
+        else:
+            nrows, ncols = 1, 2
     if use_sst:
         title_str = r'{:}, $t$ = {:2.3f}'
         time_factor = 1.0
@@ -71,64 +74,38 @@ def extract_vp_snapshot(task_name):
         vert = z_[()]
     return hori, vert
 
-def find_limits(hori, vert, ylims, buffer):
-    # Find limits of plot in the horizontal
-    xleft  = min(hori)
-    xright = max(hori)
-    # Find limits of plot in the vertical
-    if ylims==None:
-        ybott  = min(vert)
-        ytop   = max(vert)
-    else:
-        ybott  = ylims[0]
-        ytop   = ylims[1]
-    # If the profile is constant,
-    #   plot the straight line with an extra buffer on both sides
-    if (xright-xleft == 0):
-        extra_buffer = 0.5
-    else:
-        extra_buffer = 0.0
-    xleft  =  xleft  - extra_buffer - buffer
-    xright =  xright + extra_buffer + buffer
-    return xleft, xright, ybott, ytop
-
-def set_limits(axis, hori, vert, ylims, buffer):
-    xleft, xright, ybott, ytop = find_limits(hori, vert, ylims, buffer)
-    axis.set_ylim([ybott, ytop+buffer]) # fudge factor to line up y axes
-    axis.set_xlim([xleft, xright])
-    return xleft, xright, ybott, ytop
+# Set a fixed aspect ratio on matplotlib plots regardless of axis units
+def fixed_aspect_ratio(ax, ratio):
+    # Does not work for twin axes plots
+    xvals,yvals = ax.get_xlim(), ax.get_ylim()
+    xrange = xvals[1]-xvals[0]
+    yrange = yvals[1]-yvals[0]
+    ax.set_aspect(ratio*(xrange/yrange), adjustable='box')
 
 def plot_bp_on_left(bp_task_name, mfig, buffer, dis_ratio, ylims=None):
     axes0 = mfig.add_axes(0, 0, [0, 0, 1.3, 1])#, sharey=axes1)
-    axes0.set_title('Profile')
+    axes0.set_title('Background profile')
     axes0.set_xlabel(r'$N$ (s$^{-1}$)')
     axes0.set_ylabel(r'$z$ (m)')
     # Get arrays of background profile values
     hori, vert = extract_vp_snapshot(bp_task_name)
     axes0.plot(hori, vert, 'k-')
-    # Find and set plot limits
-    xleft, xright, ybott, ytop = set_limits(axes0, hori, vert, ylims, buffer)
     # Force display aspect ratio
-    calc_ratio = abs((xright-xleft)/(ybott-ytop))*dis_ratio
-    axes0.set_aspect(calc_ratio)
-    return axes0, calc_ratio
+    fixed_aspect_ratio(axes0, dis_ratio)
+    return axes0
 
 # Adds sponge layer profile on top of background profile plot
-def add_sponge_profile(sl_task_name, axes, ylims, buffer, ratio, clr='orange'):
-    # Make new axis as twin of background profile in the vertical
-    ax1 = axes.twiny()
-    # Get arrays of sponge layer profile values and plot
+def add_sponge_profile(sl_task_name, mfig, buffer, dis_ratio, ylims=None):
+    axes0 = mfig.add_axes(0, 1, [0, 0, 1.3, 1])
+    axes0.set_title('Sponge layer')
+    axes0.set_xlabel(r'$\nu$ (s$^{-1}$)')
+    axes0.set_ylabel(r'$z$ (m)')
+    # Get arrays of background profile values
     hori, vert = extract_vp_snapshot(sl_task_name)
-    ax1.plot(hori, vert, '--', color=clr)
-    # Find and set plot limits
-    set_limits(ax1, hori, vert, ylims, buffer)
-    # Change color of x label and ticks
-    ax1.set_xlabel(r'$\nu(z)$', color=clr)
-    for tl in ax1.get_xticklabels():
-        tl.set_color(clr)
+    axes0.plot(hori, vert, 'k-')
     # Force display aspect ratio
-    ax1.set_aspect(ratio)
-    return ax1
+    fixed_aspect_ratio(axes0, dis_ratio)
+    return axes0
 
 ###############################################################################
 def main(filename, start, count, output):
@@ -159,7 +136,7 @@ def main(filename, start, count, output):
     font = {'size' : sbp.font_size}
     plt.rc('font', **font)
     # Set parameters based on switches
-    tasks, nrows, ncols, title_str, time_factor = flip_the_switches(plot_all, sbp.use_stop_sim_time, sbp.T)
+    tasks, nrows, ncols, title_str, time_factor = flip_the_switches(plot_all, sbp.plot_sponge, sbp.use_stop_sim_time, sbp.T)
     # Plot settings
     scale   = sbp.scale
     dpi     = sbp.dpi
@@ -179,11 +156,15 @@ def main(filename, start, count, output):
             for n, task in enumerate(tasks):
                 if (plot_all == False):
                     # Plot stratification profile on the left
-                    ax0, dis_ratio = plot_bp_on_left(sbp.bp_task_name, mfig, sbp.buffer, sbp.vp_dis_ratio, y_lims)
+                    ax0 = plot_bp_on_left(sbp.bp_task_name, mfig, sbp.buffer, sbp.vp_dis_ratio, y_lims)
                     if sbp.plot_sponge:
-                        ax1 = add_sponge_profile(sbp.bp_task_name, ax0, y_lims, sbp.buffer, dis_ratio)
-                    # shift n so that animation is on the right side
-                    n = 1
+                        #ax1, dis_ratio = plot_bp_on_left(sbp.bp_task_name, mfig, sbp.buffer, sbp.vp_dis_ratio, y_lims)
+                        ax1 = add_sponge_profile(sbp.bp_task_name, mfig, sbp.buffer, sbp.vp_dis_ratio, y_lims)
+                        # shift n so that animation is on the right side
+                        n = 2
+                    else:
+                        # shift n so that animation is on the right side
+                        n = 1
                 plot_one_task(n, ncols, mfig, file, task, index, x_lims, y_lims, n_clrbar_ticks)
             # Add title to frame
             add_frame_title(fig, file, index, title_func)
