@@ -143,7 +143,7 @@ then
 	echo '--Creating experiment log file--'
 	touch $LOG_FILE
 	LINE0="----------------------------------------------"
-	LINE1="Log created: ${DATETIME}"
+	LINE1="Log update: ${DATETIME}"
 	LINE2=""
 	LINE3="--Run options--"
 	LINE4=""
