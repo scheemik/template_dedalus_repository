@@ -96,7 +96,7 @@ def plot_bp_on_left(bp_task_name, mfig, buffer, dis_ratio, ylims=None):
 
 # Adds sponge layer profile on top of background profile plot
 def add_sponge_profile(sl_task_name, mfig, buffer, dis_ratio, ylims=None):
-    axes0 = mfig.add_axes(0, 1, [0, 0, 1.3, 1])
+    axes0 = mfig.add_axes(0, 2, [0, 0, 1.3, 1])
     axes0.set_title('Sponge layer')
     axes0.set_xlabel(r'$\nu$ (s$^{-1}$)')
     axes0.set_ylabel(r'$z$ (m)')
@@ -160,11 +160,8 @@ def main(filename, start, count, output):
                     if sbp.plot_sponge:
                         #ax1, dis_ratio = plot_bp_on_left(sbp.bp_task_name, mfig, sbp.buffer, sbp.vp_dis_ratio, y_lims)
                         ax1 = add_sponge_profile(sbp.bp_task_name, mfig, sbp.buffer, sbp.vp_dis_ratio, y_lims)
-                        # shift n so that animation is on the right side
-                        n = 2
-                    else:
-                        # shift n so that animation is on the right side
-                        n = 1
+                    # shift n so that animation is on the right side
+                    n = 1
                 plot_one_task(n, ncols, mfig, file, task, index, x_lims, y_lims, n_clrbar_ticks)
             # Add title to frame
             add_frame_title(fig, file, index, title_func)
