@@ -62,9 +62,6 @@ if rank==0:
     #print("")
 
 ###############################################################################
-# Importing parameters from switchboard
-#import importlib
-
 # Import SwitchBoard Parameters (sbp)
 #   This also runs the switchboard file, which will move files around
 import switchboard as sbp
@@ -112,7 +109,7 @@ problem.parameters['omega']     = sbp.omega
 problem.parameters['grav']      = sbp.g # can't use 'g': Dedalus uses that for grid
 problem.parameters['T']         = sbp.T # [s] period of oscillation
 problem.parameters['nT']        = sbp.nT # number of periods for the ramp
-# Spatial window and Temporal ramp for boundary forcing
+# Spatial window and temporal ramp for boundary forcing
 problem.parameters['slope']     = sbp.bf_slope
 problem.parameters['left_edge'] = sbp.bfl_edge
 problem.parameters['right_edge']= sbp.bfr_edge
