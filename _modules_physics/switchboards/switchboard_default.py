@@ -55,6 +55,11 @@ x_sim_f = x_sim_0 + L_x
 z_sim_f = z_sim_0 - L_z
 
 ###############################################################################
+# Sponge layer parameters
+
+use_sponge = True
+
+###############################################################################
 # Physical parameters
 nu          = 1.0E-6        # [m^2/s] Viscosity (momentum diffusivity)
 kappa       = 1.4E-7        # [m^2/s] Thermal diffusivity
@@ -70,6 +75,12 @@ g           = 9.81          # [m/s^2] Acceleration due to gravity
 plot_all_variables = False
 # If True, the sponge layer plot will be overlayed on top of background profile
 plot_sponge        = True
+if use_sponge==False:
+    plot_sponge    = False
+# Fudge factor to make plots look nicer
+buffer = 0.04
+# Display ratio of vertical profile plot
+vp_dis_ratio = 2.0 # Profile plot gets skinnier as this goes up
 # The number of ticks on the top color bar
 n_clrbar_ticks = 3
 # Overall font size of plots
