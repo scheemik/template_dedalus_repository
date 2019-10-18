@@ -22,7 +22,7 @@ stop_wall_time = 60         # [minutes]
 stop_iteration = np.inf     # []
 stop_sim_time  = 3          # [s] to be calculated from stop_n_periods later
 # If True, the program will use stop_sim_time, if False, stop_n_periods*T
-use_stop_sim_time = True
+use_stop_sim_time = False
 # Initial time step size
 dt = 0.125
 # Determine whether adaptive time stepping is on or off

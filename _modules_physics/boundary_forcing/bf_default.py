@@ -38,8 +38,8 @@ T       = 2*np.pi / omega       # [s]
 
 ###############################################################################
 # Dedalus syntax substitutions for spatial window and temporal ramp
-window    = "1" # effectively, no window
-#window    = "(1/2)*(tanh(slope*(x-left_edge))+1)*(1/2)*(tanh(slope*(-x+right_edge))+1)"
+#window    = "1" # effectively, no window
+window    = "(1/2)*(tanh(slope*(x-left_edge))+1)*(1/2)*(tanh(slope*(-x+right_edge))+1)"
 ramp      = "(1/2)*(tanh(4*t/(nT*T) - 2) + 1)"
 # Forcing amplitude modifier
 A         = 2.0e-4
