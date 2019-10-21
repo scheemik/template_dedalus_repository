@@ -92,7 +92,6 @@ snap_max_writes = 50
 
 # Background profile snapshot parameters
 take_bp_snaps   = True
-
 # Sponge layer snapshot parameters
 take_sl_snaps   = True
 if use_sponge==False:
@@ -104,12 +103,10 @@ take_vp_snaps = True
 vp_snap_dir = 'vp_snapshots'
 vp_snap_dicts = [
            {'take_vp_snaps':   take_bp_snaps,
-            'vp_snap_dir':     'bp_snaps',
             'vp_task':         "N0*BP",
             'vp_task_name':    'bp'},
 
            {'take_vp_snaps':   take_sl_snaps,
-            'vp_snap_dir':     'sl_snaps',
             'vp_task':         "SL",
             'vp_task_name':    'sl'}
             ]
