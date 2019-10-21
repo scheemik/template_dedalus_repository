@@ -74,7 +74,7 @@ def extract_vp_snapshot(task_name, snap_dir, vp_snaps):
         vert = z_[()]
     return hori, vert
 
-def add_vp_buffers(ax, buffer, extra_buffer):
+def add_vp_buffers(ax, buffer, extra_buffer, ylims=None):
     xvals,yvals = ax.get_xlim(), ax.get_ylim()
     xrange = xvals[1]-xvals[0]
     # Check if its a constant vertical profile
@@ -85,17 +85,24 @@ def add_vp_buffers(ax, buffer, extra_buffer):
         xleft  = xvals[0] - buffer
         xright = xvals[1] + buffer
     ax.set_xlim(xleft, xright)
-    yrange = yvals[1]-yvals[0]
-    ytop   = yvals[1] + buffer
-    ybott  = yvals[0]
+    if ylims==None:
+        yrange = yvals[1]-yvals[0]
+        ytop   = yvals[1] + buffer
+        ybott  = yvals[0]
+    else:
+        ytop   = ylims[1]
+        ybott  = ylims[0]
     ax.set_ylim(ybott, ytop)
 
 # Set a fixed aspect ratio on matplotlib plots regardless of axis units
-def fixed_aspect_ratio(ax, ratio):
+def fixed_aspect_ratio(ax, ratio, ylims=None):
     # Does not work for twin axes plots
     xvals,yvals = ax.get_xlim(), ax.get_ylim()
     xrange = xvals[1]-xvals[0]
-    yrange = yvals[1]-yvals[0]
+    if ylims==None:
+        yrange = yvals[1]-yvals[0]
+    else:
+        yrange = ylims[1]-ylims[0]
     ax.set_aspect(ratio*(xrange/yrange), adjustable='box')
 
 def plot_bp_on_left(bp_task_name, snap_dir, bp_snaps, mfig, buffer, extra_buffer, dis_ratio, ylims=None):
@@ -107,9 +114,9 @@ def plot_bp_on_left(bp_task_name, snap_dir, bp_snaps, mfig, buffer, extra_buffer
     hori, vert = extract_vp_snapshot(bp_task_name, snap_dir, bp_snaps)
     axes0.plot(hori, vert, 'k-')
     # Add buffers around the edge to make plot look nice
-    add_vp_buffers(axes0, buffer, extra_buffer)
+    add_vp_buffers(axes0, buffer, extra_buffer, ylims)
     # Force display aspect ratio
-    fixed_aspect_ratio(axes0, dis_ratio)
+    fixed_aspect_ratio(axes0, dis_ratio, ylims)
     return axes0
 
 # Adds sponge layer profile on top of background profile plot
@@ -122,9 +129,9 @@ def add_sponge_profile(sl_task_name, snap_dir, sl_snaps, mfig, buffer, extra_buf
     hori, vert = extract_vp_snapshot(sl_task_name, snap_dir, sl_snaps)
     axes0.plot(hori, vert, 'k-')
     # Add buffers around the edge to make plot look nice
-    add_vp_buffers(axes0, buffer, extra_buffer)
+    add_vp_buffers(axes0, buffer, extra_buffer, ylims)
     # Force display aspect ratio
-    fixed_aspect_ratio(axes0, dis_ratio)
+    fixed_aspect_ratio(axes0, dis_ratio, ylims)
     return axes0
 
 ###############################################################################
