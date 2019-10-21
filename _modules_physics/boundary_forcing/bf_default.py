@@ -33,6 +33,8 @@ k_z     = k*np.sin(theta)       # [m^-1]
 # Other parameters specified by relations
 # Horizontal wavelength
 lam_x   = 2*np.pi / k_x         # [m]
+# Vertical wavelength
+lam_z   = 2*np.pi / k_z         # [m]
 # Oscillation period = 2pi / omega
 T       = 2*np.pi / omega       # [s]
 
