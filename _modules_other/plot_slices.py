@@ -144,13 +144,13 @@ def main(filename, start, count, output):
     #T               = sbp.T
     # Display parameters
     x_f             = sbp.x_0 + sbp.L_x_dis
-    z_b             = sbp.z_t - sbp.L_z_dis
+    z_b             = sbp.z_0 - sbp.L_z_dis
 
     # Calculate aspect ratio
     AR = sbp.L_x_dis / sbp.L_z_dis
     # Set tuples for display boundaries
     x_lims = [sbp.x_0, x_f]
-    y_lims = [z_b, sbp.z_t]
+    y_lims = [z_b, sbp.z_0]
 
     # Change the size of the text overall
     font = {'size' : sbp.font_size}
