@@ -13,7 +13,7 @@ import numpy as np
 # Boundary forcing
 bf_module       = 'bf_default'
 # Background profile
-bp_module       = 'bp_default'
+bp_module       = 'bp_N_const'
 # Sponge layer
 sl_module       = 'sl_default'
 
