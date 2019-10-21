@@ -225,6 +225,7 @@ solver.stop_iteration = sbp.stop_iteration
 # Analysis
 def add_new_file_handler(snapshot_directory, dt=sbp.snap_dt):
     return solver.evaluator.add_file_handler(snapshot_directory, sim_dt=dt, max_writes=sbp.snap_max_writes, mode=fh_mode)
+
 # Add file handler for snapshots and output state of variables
 snapshots = add_new_file_handler(sbp.snapshots_dir)
 snapshots.add_system(solver.state)
@@ -233,7 +234,8 @@ snapshots.add_system(solver.state)
 if sbp.take_vp_snaps:
     vp_snapshots = add_new_file_handler(sbp.snapshots_dir + '/' + sbp.vp_snap_dir, dt=stop_sim_time)
     for vp_dict in sbp.vp_snap_dicts:
-        vp_snapshots.add_task(vp_dict['vp_task'], layout='g', name=vp_dict['vp_task_name'])
+        if vp_dict['take_vp_snaps']:
+            vp_snapshots.add_task(vp_dict['vp_task'], layout='g', name=vp_dict['vp_task_name'])
 
 ###############################################################################
 # CFL
