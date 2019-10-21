@@ -28,32 +28,25 @@ use_stop_sim_time = False
 dt = 0.125
 # Determine whether adaptive time stepping is on or off
 adapt_dt = False             # {T/F}
-# Restart simulation parameters
-restart_add_time = stop_sim_time
-restart_file  = 'restart.h5'
 
 ###############################################################################
 # Domain parameters
 
 # Dimensions of simulated domain
-L_x = 0.75                   # [m]
-L_z = 0.5                   # [m]
-z_t = 0.0
-# Dimensions of displayed domain (should be leq simulated domain)
-L_x_dis = 0.5               # [m]
-L_z_dis = 0.5               # [m]
-# Display buffer (measured from top left corner)
+L_x = 1.5                   # [m]
+L_z = 1.0                   # [m] Does not include sponge layer
+#z_t = 0.0
+# Constraints on display domain
+#   If True, display domain will be exactly the simulated domain
+#   If False, display only the specified domain
+dis_eq_sim = True
+# Dimensions of displayed domain if dis_eq_sim==False
+L_x_dis = 0.5               # [m] (should be leq simulated domain)
+L_z_dis = 0.5               # [m] (should be leq simulated domain)
+# Display buffer if dis_eq_sim==False (measured from top left corner)
 Dis_buff_x = 0.0            # [m]
 Dis_buff_z = 0.0            # [m]
 # Upper left corner of display domain is always (0, 0)
-x_0     = 0.0
-z_0     = 0.0
-# Therefore, the upper left corner of the simulated domain is
-x_sim_0 = x_0 - Dis_buff_x
-z_sim_0 = z_0 + Dis_buff_z
-# Lower right corner of simulated domain
-x_sim_f = x_sim_0 + L_x
-z_sim_f = z_sim_0 - L_z
 
 ###############################################################################
 # Sponge layer parameters
@@ -130,13 +123,35 @@ flow_log_message= 'Max linear criterion = {0:f}'
 ###############################################################################
 ################    Shouldn't need to edit below here    #####################
 ###############################################################################
-# Select physics modules from select_modules.py file
+# Calculating domain parameters
 
+# Constraints on display domain
+#   If True, display domain will be exactly the simulated domain
+#   If False, display only the specified domain
+if dis_eq_sim==True:
+    # Dimensions of displayed domain
+    L_x_dis = L_x               # [m]
+    L_z_dis = L_z               # [m]
+    # Display buffer (measured from top left corner)
+    Dis_buff_x = 0.0            # [m]
+    Dis_buff_z = 0.0            # [m]
+# Upper left corner of display domain is always (0, 0)
+x_0     = 0.0
+z_0     = 0.0
+# Therefore, the upper left corner of the simulated domain is
+x_sim_0 = x_0 - Dis_buff_x
+z_sim_0 = z_0 + Dis_buff_z
+# Lower right corner of simulated domain
+x_sim_f = x_sim_0 + L_x
+z_sim_f = z_sim_0 - L_z
+
+###############################################################################
+# Select physics modules from select_modules.py file
 import select_modules as select
 # Boundary forcing
-bf_module       = select.bf_module #'bf_default'
+bf_module       = select.bf_module
 # Background profile
-bp_module       = select.bp_module #'bp_default'
+bp_module       = select.bp_module
 
 ###############################################################################
 # Imports for preparing physics modules
@@ -169,6 +184,9 @@ PolRel  = bf.PolRel     # Dictionary of coefficients for variables
 # Calculate stop_sim_time if use_stop_sim_time=False
 if use_stop_sim_time == False:
     stop_sim_time = stop_n_periods * T
+# Set restart simulation parameters
+restart_add_time = stop_sim_time
+restart_file  = 'restart.h5'
 # Dedalus specific string substitutions
 bf_slope= bf.bf_slope
 bfl_edge= bf.bfl_edge
@@ -197,6 +215,12 @@ sys.path.insert(0, p_module_dir)
 import sponge_layer as sl
 # The sponge layer profile generator function
 build_sl_array = sl.build_sl_array
+# Redefine the vertical domain length
+if use_sponge==True:
+    L_z = L_z + sl.sl_thickness
+    z_sim_f = sl.z_sl_bot
+    if dis_eq_sim==True:
+        L_z_dis = L_z
 
 ###############################################################################
 # Cleaning up the _modules-physics directory tree
