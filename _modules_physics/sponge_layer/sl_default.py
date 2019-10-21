@@ -16,12 +16,12 @@ import switchboard as sbp
 ###############################################################################
 # Sponge layer parameters
 
-# Bottom boundary of sponge layer
-z_sl_bot        = sbp.z_sim_f               # [m]
-# Thickness of sponge layer
-sl_thickness    = 0.2                       # [m]
 # Top boundary of sponge layer
-z_sl_top        = z_sl_bot + sl_thickness   # [m]
+z_sl_top        = sbp.z_sim_f               # [m]
+# Thickness of sponge layer
+sl_thickness    = 0.5                       # [m]
+# Bottom boundary of sponge layer
+z_sl_bot        = z_sl_top - sl_thickness   # [m]
 # Slope of sponge layer ramp
 slope           = 40.0                      # []
 # Maximum coefficient ramped to at end of sponge layer
