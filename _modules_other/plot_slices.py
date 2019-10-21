@@ -64,8 +64,8 @@ def plot_one_task(n, ncols, mfig, file, task, index, x_lims, y_lims, n_clrbar_ti
     plot_bot_3d_mod(dset, 0, index, x_limits=x_lims, y_limits=y_lims, n_cb_ticks=n_clrbar_ticks, axes=axes, title=task, even_scale=True)
 
 # Extracts relevant arrays from a vertical profile snapshot
-def extract_vp_snapshot(task_name):
-    vp_snap_filepath = 'snapshots/bp_snaps/bp_snaps_s1.h5'
+def extract_vp_snapshot(task_name, snap_dir, vp_snaps):
+    vp_snap_filepath = snap_dir + '/' + vp_snaps + '/' + vp_snaps + '_s1.h5'
     with h5py.File(vp_snap_filepath, mode='r') as file:
         data = file['tasks'][task_name]
         temp = data[()]
@@ -98,13 +98,13 @@ def fixed_aspect_ratio(ax, ratio):
     yrange = yvals[1]-yvals[0]
     ax.set_aspect(ratio*(xrange/yrange), adjustable='box')
 
-def plot_bp_on_left(bp_task_name, mfig, buffer, extra_buffer, dis_ratio, ylims=None):
+def plot_bp_on_left(bp_task_name, snap_dir, bp_snaps, mfig, buffer, extra_buffer, dis_ratio, ylims=None):
     axes0 = mfig.add_axes(0, 0, [0, 0, 1.3, 1])#, sharey=axes1)
     axes0.set_title('Background profile')
     axes0.set_xlabel(r'$N$ (s$^{-1}$)')
     axes0.set_ylabel(r'$z$ (m)')
     # Get arrays of background profile values
-    hori, vert = extract_vp_snapshot(bp_task_name)
+    hori, vert = extract_vp_snapshot(bp_task_name, snap_dir, bp_snaps)
     axes0.plot(hori, vert, 'k-')
     # Add buffers around the edge to make plot look nice
     add_vp_buffers(axes0, buffer, extra_buffer)
@@ -113,13 +113,13 @@ def plot_bp_on_left(bp_task_name, mfig, buffer, extra_buffer, dis_ratio, ylims=N
     return axes0
 
 # Adds sponge layer profile on top of background profile plot
-def add_sponge_profile(sl_task_name, mfig, buffer, extra_buffer, dis_ratio, ylims=None):
+def add_sponge_profile(sl_task_name, snap_dir, sl_snaps, mfig, buffer, extra_buffer, dis_ratio, ylims=None):
     axes0 = mfig.add_axes(0, 2, [0, 0, 1.3, 1])
     axes0.set_title('Sponge layer')
-    axes0.set_xlabel(r'$\nu$ (s$^{-1}$)')
+    axes0.set_xlabel(r'$\nu$ (m$^{2}$/s)')
     axes0.set_ylabel(r'$z$ (m)')
     # Get arrays of background profile values
-    hori, vert = extract_vp_snapshot(sl_task_name)
+    hori, vert = extract_vp_snapshot(sl_task_name, snap_dir, sl_snaps)
     axes0.plot(hori, vert, 'k-')
     # Add buffers around the edge to make plot look nice
     add_vp_buffers(axes0, buffer, extra_buffer)
@@ -176,9 +176,9 @@ def main(filename, start, count, output):
             for n, task in enumerate(tasks):
                 if (plot_all == False):
                     # Plot stratification profile on the left
-                    ax0 = plot_bp_on_left(sbp.bp_task_name, mfig, sbp.buffer, sbp.extra_buffer, sbp.vp_dis_ratio, y_lims)
+                    ax0 = plot_bp_on_left(sbp.bp_task_name, sbp.snapshots_dir, sbp.bp_snap_dir, mfig, sbp.buffer, sbp.extra_buffer, sbp.vp_dis_ratio, y_lims)
                     if sbp.plot_sponge:
-                        ax1 = add_sponge_profile(sbp.bp_task_name, mfig, sbp.buffer, sbp.extra_buffer, sbp.vp_dis_ratio, y_lims)
+                        ax1 = add_sponge_profile(sbp.sl_task_name, sbp.snapshots_dir, sbp.sl_snap_dir, mfig, sbp.buffer, sbp.extra_buffer, sbp.vp_dis_ratio, y_lims)
                     # shift n so that animation is on the right side
                     n = 1
                 plot_one_task(n, ncols, mfig, file, task, index, x_lims, y_lims, n_clrbar_ticks)
