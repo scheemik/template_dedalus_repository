@@ -6,12 +6,12 @@ from dedalus.extras import plot_tools
 
 # To import the switchboard
 import sys
-#switch_path = "../" + NAME
-this_path = "~/Documents/Dedalus_Projects/example_projects/template_dedalus_repository/_modules_physics/background_profile/"
 that_path = "./_modules_physics/background_profile"
-#sys.path.insert(0, this_path) # Adds higher directory to python modules path
 sys.path.append(that_path)
 import bp_default as bp
+that_path = "./_modules_physics/sponge_layer"
+sys.path.append(that_path)
+import sl_default as sl
 
 def build_bp_array(z):
     BP_array = z*0.0 + 1.0
@@ -56,14 +56,15 @@ N_1 = 0.95
 N_2 = 1.05
 
 z = np.linspace(z_b, z_t, 100)
-a = bp.build_bp_array(z)
+a = sl.build_sl_array(z)
 
-x_lims = [0, 1.5]
+x_lims = [0, 0.5]
 y_lims = [z_b, z_t]
 
 plt_title = 'Plot title'
-x_label = r'$N$ (s$^{-1}$)'
+x_label = r'$\nu$ (s$^{-1}$)'
 y_label = r'$z$ (m)'
 
-fg = test_plot(a, z, plt_title, x_label, y_label, x_lims, y_lims)
+#fg = test_plot(a, z, plt_title, x_label, y_label, x_lims, y_lims)
+fg = test_plot(a, z, plt_title, x_label, y_label)
 plt.show()
