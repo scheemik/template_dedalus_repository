@@ -14,6 +14,8 @@ import numpy as np
 bf_module       = 'bf_default'
 # Background profile
 bp_module       = 'bp_default'
+# Sponge layer
+sl_module       = 'sl_default'
 
 ###############################################################################
 ################    Shouldn't need to edit below here    #####################
@@ -24,6 +26,16 @@ comm = MPI.COMM_WORLD
 rank = comm.Get_rank()
 from shutil import copy2, rmtree
 import os
+
+def add_p_module(p_module_dir, p_module, module_name_str):
+    # Move the physics module file up one directory level
+    pm_path = p_module_dir + module_name_str + '/' + p_module + '.py'
+    if os.path.isfile(pm_path):
+        copy2(pm_path, p_module_dir + module_name_str + '.py')
+        print('Using ' + p_module + '.py')
+    # else:
+    #     print(p_module + '.py not found. Was it selected previously?')
+
 # If this is the root thread, then do all this stuff
 if rank==0:
     print('Preparing physics modules')
@@ -32,21 +44,9 @@ if rank==0:
     import sys
     p_module_dir = './_modules_physics/'
 
-    # Move the boundary forcing file up one directory level
-    bf_path = p_module_dir + 'boundary_forcing/' + bf_module + '.py'
-    if os.path.isfile(bf_path):
-        copy2(bf_path, p_module_dir + 'boundary_forcing.py')
-        print('Using ' + bf_module + '.py')
-    # else:
-    #     print(bf_module+'.py not found. Was it selected previously?')
-
-    # Move the background profile file up one directory level
-    bp_path = p_module_dir + 'background_profile/' + bp_module + '.py'
-    if os.path.isfile(bp_path):
-        copy2(bp_path, p_module_dir + 'background_profile.py')
-        print('Using ' + bp_module + '.py')
-    # else:
-    #     print(bp_module+'.py not found. Was it selected previously?')
+    add_p_module(p_module_dir, bf_module, 'boundary_forcing')
+    add_p_module(p_module_dir, bp_module, 'background_profile')
+    add_p_module(p_module_dir, sl_module, 'sponge_layer')
 
 ###############################################################################
 # Cleaning up the _modules-physics directory tree

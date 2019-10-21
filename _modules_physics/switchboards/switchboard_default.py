@@ -21,12 +21,13 @@ stop_n_periods = 1          # [] oscillation periods
 stop_wall_time = 60         # [minutes]
 stop_iteration = np.inf     # []
 stop_sim_time  = 3          # [s] to be calculated from stop_n_periods later
+
 # If True, the program will use stop_sim_time, if False, stop_n_periods*T
 use_stop_sim_time = False
 # Initial time step size
 dt = 0.125
 # Determine whether adaptive time stepping is on or off
-adapt_dt = True             # {T/F}
+adapt_dt = False             # {T/F}
 # Restart simulation parameters
 restart_add_time = stop_sim_time
 restart_file  = 'restart.h5'
@@ -35,7 +36,7 @@ restart_file  = 'restart.h5'
 # Domain parameters
 
 # Dimensions of simulated domain
-L_x = 0.5                   # [m]
+L_x = 0.75                   # [m]
 L_z = 0.5                   # [m]
 z_t = 0.0
 # Dimensions of displayed domain (should be leq simulated domain)
@@ -98,9 +99,17 @@ snap_max_writes = 50
 
 # Background profile snapshot parameters
 take_bp_snaps   = True
-bp_snap_dir     = 'snapshots/bp_snaps'
+bp_snap_dir     = 'bp_snaps'
 bp_task         = "N0*BP"
 bp_task_name    = 'bp'
+
+# Sponge layer snapshot parameters
+take_sl_snaps   = True
+if use_sponge==False:
+    take_sl_snaps = False
+sl_snap_dir     = 'sl_snaps'
+sl_task         = "SL"
+sl_task_name    = 'sl'
 
 ###############################################################################
 # CFL parameters
@@ -179,6 +188,15 @@ sys.path.insert(0, p_module_dir)
 import background_profile as bp
 # The background profile generator function
 build_bp_array = bp.build_bp_array
+
+###############################################################################
+# Sponge Layer Profile
+
+# Need to add the path before every import
+sys.path.insert(0, p_module_dir)
+import sponge_layer as sl
+# The sponge layer profile generator function
+build_sl_array = sl.build_sl_array
 
 ###############################################################################
 # Cleaning up the _modules-physics directory tree

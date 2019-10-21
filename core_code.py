@@ -123,7 +123,11 @@ problem.substitutions['fb']     = sbp.fb
 
 ###############################################################################
 # Sponge Layer (SL) as an NCC
-problem.parameters['SL'] = 1.0
+SL = domain.new_field()
+SL.meta['x']['constant'] = True  # means the NCC is constant along x
+SL_array = sbp.build_sl_array(z)
+SL['g'] = SL_array
+problem.parameters['SL'] = SL
 
 ###############################################################################
 # Background Profile (BP) as an NCC
@@ -226,8 +230,12 @@ snapshots = add_new_file_handler(sbp.snapshots_dir)
 snapshots.add_system(solver.state)
 # Add file handler for bp snaps and add corresponding task
 if sbp.take_bp_snaps:
-    bp_snapshots = add_new_file_handler(sbp.bp_snap_dir)
+    bp_snapshots = add_new_file_handler(sbp.snapshots_dir + '/' + sbp.bp_snap_dir)
     bp_snapshots.add_task(sbp.bp_task, layout='g', name=sbp.bp_task_name)
+# Add file handler for sl snaps and add corresponding task
+if sbp.take_sl_snaps:
+    sl_snapshots = add_new_file_handler(sbp.snapshots_dir + '/'  + sbp.sl_snap_dir)
+    sl_snapshots.add_task(sbp.sl_task, layout='g', name=sbp.sl_task_name)
 
 ###############################################################################
 # CFL
