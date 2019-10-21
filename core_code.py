@@ -228,14 +228,12 @@ def add_new_file_handler(snapshot_directory, dt=sbp.snap_dt):
 # Add file handler for snapshots and output state of variables
 snapshots = add_new_file_handler(sbp.snapshots_dir)
 snapshots.add_system(solver.state)
-# Add file handler for bp snaps and add corresponding task
-if sbp.take_bp_snaps:
-    bp_snapshots = add_new_file_handler(sbp.snapshots_dir + '/' + sbp.bp_snap_dir, dt=stop_sim_time)
-    bp_snapshots.add_task(sbp.bp_task, layout='g', name=sbp.bp_task_name)
-# Add file handler for sl snaps and add corresponding task
-if sbp.take_sl_snaps:
-    sl_snapshots = add_new_file_handler(sbp.snapshots_dir + '/'  + sbp.sl_snap_dir, dt=stop_sim_time)
-    sl_snapshots.add_task(sbp.sl_task, layout='g', name=sbp.sl_task_name)
+
+# Add file handlers for all vertical profiles
+if sbp.take_vp_snaps:
+    vp_snapshots = add_new_file_handler(sbp.snapshots_dir + '/' + sbp.vp_snap_dir, dt=stop_sim_time)
+    for vp_dict in sbp.vp_snap_dicts:
+        vp_snapshots.add_task(vp_dict['vp_task'], layout='g', name=vp_dict['vp_task_name'])
 
 ###############################################################################
 # CFL

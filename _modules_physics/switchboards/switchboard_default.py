@@ -35,7 +35,7 @@ adapt_dt = False             # {T/F}
 # Dimensions of simulated domain
 L_x = 1.5                   # [m]
 L_z = 1.0                   # [m] Does not include sponge layer
-#z_t = 0.0
+
 # Constraints on display domain
 #   If True, display domain will be exactly the simulated domain
 #   If False, display only the specified domain
@@ -92,17 +92,27 @@ snap_max_writes = 50
 
 # Background profile snapshot parameters
 take_bp_snaps   = True
-bp_snap_dir     = 'bp_snaps'
-bp_task         = "N0*BP"
-bp_task_name    = 'bp'
 
 # Sponge layer snapshot parameters
 take_sl_snaps   = True
 if use_sponge==False:
     take_sl_snaps = False
-sl_snap_dir     = 'sl_snaps'
-sl_task         = "SL"
-sl_task_name    = 'sl'
+
+# Define all vertical profile snapshots in an array of dictionaries
+#   Meant for profiles that are constant in time
+take_vp_snaps = True
+vp_snap_dir = 'vp_snapshots'
+vp_snap_dicts = [
+           {'take_vp_snaps':   take_bp_snaps,
+            'vp_snap_dir':     'bp_snaps',
+            'vp_task':         "N0*BP",
+            'vp_task_name':    'bp'},
+
+           {'take_vp_snaps':   take_sl_snaps,
+            'vp_snap_dir':     'sl_snaps',
+            'vp_task':         "SL",
+            'vp_task_name':    'sl'}
+            ]
 
 ###############################################################################
 # CFL parameters
@@ -177,16 +187,11 @@ theta   = bf.theta      # [rad]
 k_x     = bf.k_x        # [m^-1]
 k_z     = bf.k_z        # [m^-1]
 lam_x   = bf.lam_x      # [m]
+lam_z   = bf.lam_z      # [m]
 T       = bf.T          # [s]
 A       = bf.A          # []
 nT      = bf.nT         # []
 PolRel  = bf.PolRel     # Dictionary of coefficients for variables
-# Calculate stop_sim_time if use_stop_sim_time=False
-if use_stop_sim_time == False:
-    stop_sim_time = stop_n_periods * T
-# Set restart simulation parameters
-restart_add_time = stop_sim_time
-restart_file  = 'restart.h5'
 # Dedalus specific string substitutions
 bf_slope= bf.bf_slope
 bfl_edge= bf.bfl_edge
@@ -197,6 +202,13 @@ fu      = bf.fu
 fw      = bf.fw
 fb      = bf.fb
 fp      = bf.fp
+
+# Calculate stop_sim_time if use_stop_sim_time=False
+if use_stop_sim_time == False:
+    stop_sim_time = stop_n_periods * T
+# Set restart simulation parameters
+restart_add_time = stop_sim_time
+restart_file  = 'restart.h5'
 
 ###############################################################################
 # Background Density Profile
@@ -215,7 +227,7 @@ sys.path.insert(0, p_module_dir)
 import sponge_layer as sl
 # The sponge layer profile generator function
 build_sl_array = sl.build_sl_array
-# Redefine the vertical domain length
+# Redefine the vertical domain length if need be
 if use_sponge==True:
     L_z = L_z + sl.sl_thickness
     z_sim_f = sl.z_sl_bot
