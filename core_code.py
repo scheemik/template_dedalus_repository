@@ -122,6 +122,14 @@ problem.substitutions['fb']     = sbp.fb
 #problem.substitutions['fp']     = sbp.fp
 
 ###############################################################################
+# Background Profile (BP) as an NCC
+BP = domain.new_field()
+BP.meta['x']['constant'] = True  # means the NCC is constant along x
+BP_array = sbp.build_bp_array(z)
+BP['g'] = BP_array
+problem.parameters['BP'] = BP
+
+###############################################################################
 # Sponge Layer (SL) as an NCC
 SL = domain.new_field()
 SL.meta['x']['constant'] = True  # means the NCC is constant along x
@@ -130,12 +138,12 @@ SL['g'] = SL_array
 problem.parameters['SL'] = SL
 
 ###############################################################################
-# Background Profile (BP) as an NCC
-BP = domain.new_field()
-BP.meta['x']['constant'] = True  # means the NCC is constant along x
-BP_array = sbp.build_bp_array(z)
-BP['g'] = BP_array
-problem.parameters['BP'] = BP
+# Rayleigh Friction (RF) as an NCC
+RF = domain.new_field()
+RF.meta['x']['constant'] = True  # means the NCC is constant along x
+RF_array = sbp.build_rf_array(z)
+RF['g'] = RF_array
+problem.parameters['RF'] = RF
 
 ###############################################################################
 # Equations of motion (non-linear terms on RHS)
@@ -145,10 +153,10 @@ problem.add_equation("dx(u) + wz = 0")
 problem.add_equation("dt(b) - KA*(dx(dx(b)) + dz(bz))"
                     + "= -((N0*BP)**2)*w - (u*dx(b) + w*bz)")
 #   Horizontal momentum equation
-problem.add_equation("dt(u) -SL*NU*dx(dx(u)) - NU*dz(uz) + dx(p)"
+problem.add_equation("dt(u) -SL*NU*dx(dx(u)) - NU*dz(uz) + dx(p) + RF*u"
                     + "= - (u*dx(u) + w*uz)")
 #   Vertical momentum equation
-problem.add_equation("dt(w) -SL*NU*dx(dx(w)) - NU*dz(wz) + dz(p) - b"
+problem.add_equation("dt(w) -SL*NU*dx(dx(w)) - NU*dz(wz) + dz(p) + RF*w - b"
                     + "= - (u*dx(w) + w*wz)")
 # Required for solving differential equations in Chebyshev dimension
 problem.add_equation("bz - dz(b) = 0")

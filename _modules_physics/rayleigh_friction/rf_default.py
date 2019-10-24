@@ -13,16 +13,15 @@ import numpy as np
 import sys
 sys.path.append("../") # Adds higher directory to python modules path
 import vert_profile_functs as vpf
-sys.path.append("../switchboard")
-#import switchboard as sbp
+import switchboard as sbp
 
 ###############################################################################
 # Rayleigh friction parameters
 
 # Top boundary of Rayleigh friction
-z_rf_top        = -0.5#sbp.z_sim_f               # [m]
+z_rf_top        = sbp.z_sim_f               # [m]
 # Thickness of Rayleigh friction layer
-rf_thickness    = 0.197#sbp.lambda_z              # [m]
+rf_thickness    = sbp.lam_z              # [m]
 # Bottom boundary of Rayleigh friction layer
 z_rf_bot        = z_rf_top - rf_thickness   # [m]
 # Slope of Rayleigh friction layer ramp

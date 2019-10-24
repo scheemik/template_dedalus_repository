@@ -34,7 +34,8 @@ adapt_dt = False             # {T/F}
 
 # Dimensions of simulated domain
 L_x = 1.5                   # [m]
-L_z = 1.0                   # [m] Does not include sponge layer
+L_z = 0.5                   # [m] Does not include absorbing bottom layer
+z_div = L_z                 # [m] The dividing line of the absorbing layer
 
 # Constraints on display domain
 #   If True, display domain will be exactly the simulated domain
@@ -49,9 +50,10 @@ Dis_buff_z = 0.0            # [m]
 # Upper left corner of display domain is always (0, 0)
 
 ###############################################################################
-# Sponge layer parameters
+# Bottom diffusion parameters
 
-use_sponge = True
+use_sponge            = False
+use_rayleigh_friction = True
 
 ###############################################################################
 # Physical parameters
@@ -67,10 +69,10 @@ g           = 9.81          # [m/s^2] Acceleration due to gravity
 # Frames and animation
 # If True, plots b, p, u, and w. If false, plots profile and w
 plot_all_variables = False
-# If True, the sponge layer plot will be overlayed on top of background profile
+# If True, the sponge layer plot will be plotted to the right of the animation
 plot_sponge        = True
-if use_sponge==False:
-    plot_sponge    = False
+# If True, the Rayleigh friction plot will replace background profile
+plot_rf            = True
 # Fudge factor to make plots look nicer
 buffer = 0.04
 # Extra buffer for a constant vertical profile
@@ -94,8 +96,10 @@ snap_max_writes = 50
 take_bp_snaps   = True
 # Sponge layer snapshot parameters
 take_sl_snaps   = True
-if use_sponge==False:
-    take_sl_snaps = False
+if take_sl_snaps==False:
+    plot_sponge = False
+# Rayleigh friction snapshot parameters
+take_rf_snaps   = True
 
 # Define all vertical profile snapshots in an array of dictionaries
 #   Meant for profiles that are constant in time
@@ -108,7 +112,11 @@ vp_snap_dicts = [
 
            {'take_vp_snaps':   take_sl_snaps,
             'vp_task':         "SL",
-            'vp_task_name':    'sl'}
+            'vp_task_name':    'sl'},
+
+           {'take_vp_snaps':   take_rf_snaps,
+            'vp_task':         "RF",
+            'vp_task_name':    'rf'}
             ]
 
 ###############################################################################
@@ -222,14 +230,36 @@ build_bp_array = bp.build_bp_array
 # Need to add the path before every import
 sys.path.insert(0, p_module_dir)
 import sponge_layer as sl
-# The sponge layer profile generator function
-build_sl_array = sl.build_sl_array
-# Redefine the vertical domain length if need be
 if use_sponge==True:
+    # The sponge layer profile generator function
+    build_sl_array = sl.build_sl_array
+    # Redefine the vertical domain length if need be
     L_z = L_z + sl.sl_thickness
     z_sim_f = sl.z_sl_bot
     if dis_eq_sim==True:
         L_z_dis = L_z
+else:
+    build_sl_array = sl.build_no_sl_array
+
+###############################################################################
+# Rayleigh Friction Profile
+
+# Need to add the path before every import
+sys.path.insert(0, p_module_dir)
+import rayleigh_friction as rf
+if take_rf_snaps==False:
+    plot_rf = False
+if use_rayleigh_friction==True:
+    # The sponge layer profile generator function
+    build_rf_array = rf.build_rf_array
+    # Redefine the vertical domain length if need be
+    if use_sponge==False:
+        L_z = L_z + rf.rf_thickness
+        z_sim_f = rf.z_rf_bot
+        if dis_eq_sim==True:
+            L_z_dis = L_z
+else:
+    build_rf_array = rf.build_no_rf_array
 
 ###############################################################################
 # Cleaning up the _modules-physics directory tree

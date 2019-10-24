@@ -16,6 +16,8 @@ bf_module       = 'bf_default'
 bp_module       = 'bp_N_const'
 # Sponge layer
 sl_module       = 'sl_default'
+# Sponge layer
+rf_module       = 'rf_default'
 
 ###############################################################################
 ################    Shouldn't need to edit below here    #####################
@@ -47,6 +49,7 @@ if rank==0:
     add_p_module(p_module_dir, bf_module, 'boundary_forcing')
     add_p_module(p_module_dir, bp_module, 'background_profile')
     add_p_module(p_module_dir, sl_module, 'sponge_layer')
+    add_p_module(p_module_dir, rf_module, 'rayleigh_friction')
 
 ###############################################################################
 # Cleaning up the _modules-physics directory tree
