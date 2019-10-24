@@ -4,14 +4,17 @@ import matplotlib.pyplot as plt
 
 from dedalus.extras import plot_tools
 
-# To import the switchboard
+# To import modules
 import sys
 that_path = "./_modules_physics/background_profile"
 sys.path.append(that_path)
 import bp_default as bp
 that_path = "./_modules_physics/sponge_layer"
 sys.path.append(that_path)
-import sl_default as sl
+#import sl_default as sl
+that_path = "./_modules_physics/rayleigh_friction"
+sys.path.append(that_path)
+import rf_default as rf
 
 def build_bp_array(z):
     BP_array = z*0.0 + 1.0
@@ -46,7 +49,7 @@ def test_plot(hori, vert, plt_title, x_label=None, y_label=None, x_lims=None, y_
     fixed_aspect_ratio(ax, 2.0)
     return fg
 
-z_b = -0.5
+z_b = -1.0
 z_t =  0.0
 n = 0
 ml_b = -0.38
@@ -56,13 +59,13 @@ N_1 = 0.95
 N_2 = 1.05
 
 z = np.linspace(z_b, z_t, 100)
-a = sl.build_sl_array(z)
+a = rf.build_rf_array(z)
 
 x_lims = [0, 0.5]
 y_lims = [z_b, z_t]
 
 plt_title = 'Plot title'
-x_label = r'$\nu$ (s$^{-1}$)'
+x_label = r'$C_\nu$'
 y_label = r'$z$ (m)'
 
 #fg = test_plot(a, z, plt_title, x_label, y_label, x_lims, y_lims)
