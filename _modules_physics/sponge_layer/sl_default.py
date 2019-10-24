@@ -19,13 +19,13 @@ import switchboard as sbp
 # Top boundary of sponge layer
 z_sl_top        = sbp.z_sim_f               # [m]
 # Thickness of sponge layer
-sl_thickness    = 0.5                       # [m]
+sl_thickness    = 1.0                       # [m]
 # Bottom boundary of sponge layer
 z_sl_bot        = z_sl_top - sl_thickness   # [m]
 # Slope of sponge layer ramp
-slope           = 40.0                      # []
+slope           = 20.0                      # []
 # Maximum coefficient ramped to at end of sponge layer
-max_coeff       = 20                        # []
+max_coeff       = 2E+4                      # []
 
 ###############################################################################
 # Sponge layer function
@@ -36,12 +36,13 @@ def bottom_sponge(z, z_sl_bot, z_sl_top, slope, max_coeff):
     # Find height of sponge layer
     H = abs(z_sl_top - z_sl_bot)
     # Find 2/3 down the sponge layer
-    sp_c = z_sl_top - 2.0*H/3.0
+    sp_c = z_sl_top# - 2.0*H/3.0
     # Add upper stratification
     values += 1 + vpf.tanh_(z, max_coeff-1, -slope, sp_c)
     return values
 
-def build_sl_array2(z):
+# For no sponge layer, C_nu needs to be 1 everywhere
+def build_no_sl_array(z):
     SL_array = z*0.0 + 1.0
     return SL_array
 
