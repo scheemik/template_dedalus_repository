@@ -18,7 +18,7 @@ n_z = 512                   # []
 dealias = 3/2               # []
 # Stopping conditions for the simulation
 stop_n_periods = 1          # [] oscillation periods
-stop_wall_time = 60         # [minutes]
+stop_wall_time = 180        # [minutes]
 stop_iteration = np.inf     # []
 stop_sim_time  = 3          # [s] to be calculated from stop_n_periods later
 
@@ -35,7 +35,6 @@ adapt_dt = False             # {T/F}
 # Dimensions of simulated domain
 L_x = 1.5                   # [m]
 L_z = 0.5                   # [m] Does not include absorbing bottom layer
-z_div = L_z                 # [m] The dividing line of the absorbing layer
 
 # Constraints on display domain
 #   If True, display domain will be exactly the simulated domain
@@ -48,6 +47,7 @@ L_z_dis = 0.5               # [m] (should be leq simulated domain)
 Dis_buff_x = 0.0            # [m]
 Dis_buff_z = 0.0            # [m]
 # Upper left corner of display domain is always (0, 0)
+abs_div = -L_z              # [m] The dividing line of the absorbing layer
 
 ###############################################################################
 # Bottom diffusion parameters

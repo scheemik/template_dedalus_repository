@@ -69,13 +69,13 @@ def save_fig_as_frame(fig, file, index, savename_func, output, dpi):
     fig.clear()
 
 # Plots one frame of one task (b, p, u, or w)
-def plot_one_task(n, ncols, mfig, file, task, index, x_lims, y_lims, n_clrbar_ticks):
+def plot_one_task(n, ncols, mfig, file, task, index, x_lims, y_lims, n_clrbar_ticks, abs_line):
     # Build subfigure axes
     i, j = divmod(n, ncols)
     axes = mfig.add_axes(i, j, [0, 0, 1, 1])
     # Call 3D plotting helper, slicing in time
     dset = file['tasks'][task]
-    plot_bot_3d_mod(dset, 0, index, x_limits=x_lims, y_limits=y_lims, n_cb_ticks=n_clrbar_ticks, axes=axes, title=task, even_scale=True)
+    plot_bot_3d_mod(dset, 0, index, x_limits=x_lims, y_limits=y_lims, n_cb_ticks=n_clrbar_ticks, axes=axes, title=task, even_scale=True, abs_div=abs_line)
 
 # Extracts relevant arrays from a vertical profile snapshot
 def extract_vp_snapshot(task_name, snap_dir, vp_snaps):
@@ -119,7 +119,8 @@ def fixed_aspect_ratio(ax, ratio, ylims=None):
         yrange = ylims[1]-ylims[0]
     ax.set_aspect(ratio*(xrange/yrange), adjustable='box')
 
-def plot_vp_on_left(l_vp, snap_dir, vp_snaps, mfig, buffer, extra_buffer, dis_ratio, ylims=None):
+# Adds vertical profile plot to the left of animation
+def plot_vp_on_left(l_vp, snap_dir, vp_snaps, mfig, buffer, extra_buffer, dis_ratio, abs_line, ylims=None):
     axes0 = mfig.add_axes(0, 0, [0, 0, 1.3, 1])#, sharey=axes1)
     axes0.set_title(l_vp['vp_name'])
     axes0.set_xlabel(l_vp['vp_xlabel'])
@@ -131,10 +132,12 @@ def plot_vp_on_left(l_vp, snap_dir, vp_snaps, mfig, buffer, extra_buffer, dis_ra
     add_vp_buffers(axes0, buffer, extra_buffer, ylims)
     # Force display aspect ratio
     fixed_aspect_ratio(axes0, dis_ratio, ylims)
+    # Add horizontal line to divide absorption layer
+    axes0.axhline(y=abs_line, color='gray', ls='--')
     return axes0
 
-# Adds sponge layer profile on top of background profile plot
-def plot_vp_on_right(r_vp, snap_dir, vp_snaps, mfig, buffer, extra_buffer, dis_ratio, ylims=None):
+# Adds vertical profile plot to the right of animation
+def plot_vp_on_right(r_vp, snap_dir, vp_snaps, mfig, buffer, extra_buffer, dis_ratio, abs_line, ylims=None):
     axes0 = mfig.add_axes(0, 2, [0, 0, 1.3, 1])
     axes0.set_title(r_vp['vp_name'])
     axes0.set_xlabel(r_vp['vp_xlabel'])
@@ -146,6 +149,8 @@ def plot_vp_on_right(r_vp, snap_dir, vp_snaps, mfig, buffer, extra_buffer, dis_r
     add_vp_buffers(axes0, buffer, extra_buffer, ylims)
     # Force display aspect ratio
     fixed_aspect_ratio(axes0, dis_ratio, ylims)
+    # Add horizontal line to divide absorption layer
+    axes0.axhline(y=abs_line, color='gray', ls='--')
     return axes0
 
 ###############################################################################
@@ -161,7 +166,6 @@ def main(filename, start, count, output):
     # Get relevant parameters from switchboard used in loop
     plot_all        = sbp.plot_all_variables
     n_clrbar_ticks  = sbp.n_clrbar_ticks
-    #T               = sbp.T
     # Display parameters
     x_f             = sbp.x_0 + sbp.L_x_dis
     z_b             = sbp.z_0 - sbp.L_z_dis
@@ -196,12 +200,12 @@ def main(filename, start, count, output):
             for n, task in enumerate(tasks):
                 if (plot_all == False):
                     # Plot stratification profile on the left
-                    ax0 = plot_vp_on_left(l_vp, sbp.snapshots_dir, sbp.vp_snap_dir, mfig, sbp.buffer, sbp.extra_buffer, sbp.vp_dis_ratio, y_lims)
+                    ax0 = plot_vp_on_left(l_vp, sbp.snapshots_dir, sbp.vp_snap_dir, mfig, sbp.buffer, sbp.extra_buffer, sbp.vp_dis_ratio, sbp.abs_div, y_lims)
                     if r_vp!=None:
-                        ax1 = plot_vp_on_right(r_vp, sbp.snapshots_dir, sbp.vp_snap_dir, mfig, sbp.buffer, sbp.extra_buffer, sbp.vp_dis_ratio, y_lims)
+                        ax1 = plot_vp_on_right(r_vp, sbp.snapshots_dir, sbp.vp_snap_dir, mfig, sbp.buffer, sbp.extra_buffer, sbp.vp_dis_ratio, sbp.abs_div, y_lims)
                     # shift n so that animation is on the right side
                     n = 1
-                plot_one_task(n, ncols, mfig, file, task, index, x_lims, y_lims, n_clrbar_ticks)
+                plot_one_task(n, ncols, mfig, file, task, index, x_lims, y_lims, n_clrbar_ticks, sbp.abs_div)
             # Add title to frame
             add_frame_title(fig, file, index, title_func)
             # Save figure

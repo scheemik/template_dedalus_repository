@@ -51,7 +51,7 @@ class DimWrapper:
             return self.basis.elements
 
 
-def plot_bot_mod(dset, image_axes, data_slices, x_limits=None, y_limits=None, n_cb_ticks=3, image_scales=(0,0), clim=None, even_scale=False, cmap='RdBu_r', axes=None, figkw={}, title=None, func=None):
+def plot_bot_mod(dset, image_axes, data_slices, x_limits=None, y_limits=None, n_cb_ticks=3, image_scales=(0,0), clim=None, even_scale=False, cmap='RdBu_r', axes=None, figkw={}, title=None, func=None, abs_div=None):
     """
     Plot a 2d slice of the grid data of a dset/field.
 
@@ -63,9 +63,9 @@ def plot_bot_mod(dset, image_axes, data_slices, x_limits=None, y_limits=None, n_
         Data axes to use for image x and y axes
     data_slices: tuple of slices, ints
         Slices selecting image data from global data
-    x_lims: [float, float]
+    x_lims: [float, float], optional
         Lower and upper plotting limits on the horizontal axis
-    y_lims: [float, float]
+    y_lims: [float, float], optional
         Lower and upper plotting limits on the vertical axis
     n_cb_ticks: int
         The number of ticks on the top colorbar
@@ -85,6 +85,8 @@ def plot_bot_mod(dset, image_axes, data_slices, x_limits=None, y_limits=None, n_
         Title for plot (default: dataset name)
     func : function(xmesh, ymesh, data), optional
         Function to apply to selected meshes and data before plotting (default: None)
+    abs_div : float, optional
+        The value in z of the dividing line between the domain of interest and the absorption layer
 
     """
 
@@ -163,6 +165,10 @@ def plot_bot_mod(dset, image_axes, data_slices, x_limits=None, y_limits=None, n_
         paxes.set_xlim(x_limits)
     if (y_limits != None):
         paxes.set_ylim(y_limits)
+
+    # Plotting the horizontal divide between absorption layer and region of interest
+    if abs_div != None:
+        paxes.axhline(y=abs_div, color='gray', ls='--')
 
     return paxes, caxes
 
