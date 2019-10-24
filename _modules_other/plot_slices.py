@@ -24,23 +24,37 @@ from plot_tools_mod import plot_bot_3d_mod
 # Helper functions
 
 # Sets parameters according to the switchboard settings
-def flip_the_switches(plot_all_variables, plot_sponge_profile, use_sst, T):
+def flip_the_switches(plot_all_variables, plot_sl_profile, plot_rf_profile, use_sst, T):
     if plot_all_variables:
         tasks = ['b', 'p', 'u', 'w']
         nrows, ncols = 2, 2
+        l_vp = None
+        r_vp = None
     else:
         tasks = ['w']
-        if plot_sponge_profile:
+        if plot_sl_profile:
             nrows, ncols = 1, 3
+            r_vp = {'vp_name':   "Sponge Layer",
+                    'vp_task':   'sl',
+                    'vp_xlabel':r'$C_\nu$'}
         else:
             nrows, ncols = 1, 2
-    if use_sst:
+            r_vp = None
+        if plot_rf_profile:
+            l_vp = {'vp_name':   "Rayleigh Friction",
+                    'vp_task':   'rf',
+                    'vp_xlabel':r'$C_{rf}$ (s$^{-1}$)'}
+        else:
+            l_vp = {'vp_name':   "Background Profile",
+                    'vp_task':   'bp',
+                    'vp_xlabel':r'$N$ (s$^{-1}$)'}
+    if use_sst: # Stop Simulation Time, opposed to Stop Simulation Period
         title_str = r'{:}, $t$ = {:2.3f}'
         time_factor = 1.0
     else:
         title_str = r'{:}, $t/T$ = {:2.3f}'
         time_factor = T
-    return tasks, nrows, ncols, title_str, time_factor
+    return tasks, nrows, ncols, title_str, time_factor, l_vp, r_vp
 
 # Adds the title to a frame
 def add_frame_title(fig, file, index, title_func):
@@ -105,13 +119,13 @@ def fixed_aspect_ratio(ax, ratio, ylims=None):
         yrange = ylims[1]-ylims[0]
     ax.set_aspect(ratio*(xrange/yrange), adjustable='box')
 
-def plot_bp_on_left(snap_dir, vp_snaps, mfig, buffer, extra_buffer, dis_ratio, ylims=None):
+def plot_vp_on_left(l_vp, snap_dir, vp_snaps, mfig, buffer, extra_buffer, dis_ratio, ylims=None):
     axes0 = mfig.add_axes(0, 0, [0, 0, 1.3, 1])#, sharey=axes1)
-    axes0.set_title('Background profile')
-    axes0.set_xlabel(r'$N$ (s$^{-1}$)')
+    axes0.set_title(l_vp['vp_name'])
+    axes0.set_xlabel(l_vp['vp_xlabel'])
     axes0.set_ylabel(r'$z$ (m)')
     # Get arrays of background profile values
-    hori, vert = extract_vp_snapshot('bp', snap_dir, vp_snaps)
+    hori, vert = extract_vp_snapshot(l_vp['vp_task'], snap_dir, vp_snaps)
     axes0.plot(hori, vert, 'k-')
     # Add buffers around the edge to make plot look nice
     add_vp_buffers(axes0, buffer, extra_buffer, ylims)
@@ -120,13 +134,13 @@ def plot_bp_on_left(snap_dir, vp_snaps, mfig, buffer, extra_buffer, dis_ratio, y
     return axes0
 
 # Adds sponge layer profile on top of background profile plot
-def add_sponge_profile(snap_dir, vp_snaps, mfig, buffer, extra_buffer, dis_ratio, ylims=None):
+def plot_vp_on_right(r_vp, snap_dir, vp_snaps, mfig, buffer, extra_buffer, dis_ratio, ylims=None):
     axes0 = mfig.add_axes(0, 2, [0, 0, 1.3, 1])
-    axes0.set_title('Sponge layer')
-    axes0.set_xlabel(r'$\nu$ (m$^{2}$/s)')
+    axes0.set_title(r_vp['vp_name'])
+    axes0.set_xlabel(r_vp['vp_xlabel'])
     axes0.set_ylabel(r'$z$ (m)')
     # Get arrays of background profile values
-    hori, vert = extract_vp_snapshot('sl', snap_dir, vp_snaps)
+    hori, vert = extract_vp_snapshot(r_vp['vp_task'], snap_dir, vp_snaps)
     axes0.plot(hori, vert, 'k-')
     # Add buffers around the edge to make plot look nice
     add_vp_buffers(axes0, buffer, extra_buffer, ylims)
@@ -162,7 +176,7 @@ def main(filename, start, count, output):
     font = {'size' : sbp.font_size}
     plt.rc('font', **font)
     # Set parameters based on switches
-    tasks, nrows, ncols, title_str, time_factor = flip_the_switches(plot_all, sbp.plot_sponge, sbp.use_stop_sim_time, sbp.T)
+    tasks, nrows, ncols, title_str, time_factor, l_vp, r_vp = flip_the_switches(plot_all, sbp.plot_sponge, sbp.plot_rf, sbp.use_stop_sim_time, sbp.T)
     # Plot settings
     scale   = sbp.scale
     dpi     = sbp.dpi
@@ -182,9 +196,9 @@ def main(filename, start, count, output):
             for n, task in enumerate(tasks):
                 if (plot_all == False):
                     # Plot stratification profile on the left
-                    ax0 = plot_bp_on_left(sbp.snapshots_dir, sbp.vp_snap_dir, mfig, sbp.buffer, sbp.extra_buffer, sbp.vp_dis_ratio, y_lims)
-                    if sbp.plot_sponge:
-                        ax1 = add_sponge_profile(sbp.snapshots_dir, sbp.vp_snap_dir, mfig, sbp.buffer, sbp.extra_buffer, sbp.vp_dis_ratio, y_lims)
+                    ax0 = plot_vp_on_left(l_vp, sbp.snapshots_dir, sbp.vp_snap_dir, mfig, sbp.buffer, sbp.extra_buffer, sbp.vp_dis_ratio, y_lims)
+                    if r_vp!=None:
+                        ax1 = plot_vp_on_right(r_vp, sbp.snapshots_dir, sbp.vp_snap_dir, mfig, sbp.buffer, sbp.extra_buffer, sbp.vp_dis_ratio, y_lims)
                     # shift n so that animation is on the right side
                     n = 1
                 plot_one_task(n, ncols, mfig, file, task, index, x_lims, y_lims, n_clrbar_ticks)
