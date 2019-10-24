@@ -21,13 +21,15 @@ import switchboard as sbp
 # Top boundary of Rayleigh friction
 z_rf_top        = sbp.z_sim_f               # [m]
 # Thickness of Rayleigh friction layer
-rf_thickness    = sbp.lam_z              # [m]
+rf_thickness    = 2*sbp.lam_z               # [m]
 # Bottom boundary of Rayleigh friction layer
 z_rf_bot        = z_rf_top - rf_thickness   # [m]
 # Slope of Rayleigh friction layer ramp
 slope           = 20.0                      # []
+# Damping time scale for waves? to set max_coeff
+tau_d           = 3                         # [s]
 # Maximum coefficient ramped to at end of Rayleigh friction
-max_coeff       = 0.6                      # []
+max_coeff       = 0.6                       # []
 
 ###############################################################################
 # Rayleigh friction function
