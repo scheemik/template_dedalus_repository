@@ -36,7 +36,7 @@ if __name__ == '__main__':
     arguments = docopt(__doc__)
     gif_file = arguments.get('FILENAME')
     png_dir = arguments.get('FRAMES_PATH')
-    print('Gif saving to ', gif_file)
+    print('Gif saving to', gif_file)
 
 images = []
 # need to sort because os.listdir returns a list of arbitrary order
