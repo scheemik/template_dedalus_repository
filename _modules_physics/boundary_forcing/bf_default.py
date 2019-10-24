@@ -53,18 +53,19 @@ bf_slope  = 35
 win_lams  = 1
 # Width of window
 win_width = lam_x * win_lams
+# Buffer to avoid periodic boundary wrapping
+buff = 1.0*win_width
 # Check if 1/2 window width fits to the left of display domain
 Dis_buff_x= sbp.Dis_buff_x
-if (0.5 * win_width < Dis_buff_x):
+if (0.5 * win_width + buff < Dis_buff_x):
     # It will fit, put 1/2 on left, 1/2 on right
     x_sim_0  = sbp.x_sim_0
     bfl_edge = x_sim_0 - lam_x/2.0
     bfr_edge = x_sim_0 + lam_x/2.0
 else:
     # It will not fit, put as far left as possible
-    x_0      = sbp.x_0
-    bfl_edge = x_0
-    bfr_edge = x_0 + lam_x
+    bfl_edge = sbp.x_0 + buff
+    bfr_edge = bfl_edge + lam_x
 
 ###############################################################################
 # Polarization relation from Cushman-Roisin and Beckers eq (13.7)
