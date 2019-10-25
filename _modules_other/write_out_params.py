@@ -35,7 +35,7 @@ nx      = int(sbp.n_x)
 nz      = int(sbp.n_z)
 # Domain size
 Lx      = float(sbp.L_x)
-Lz      = float(sbp.L_z) # not including the sponge layer
+Lz      = float(sbp.L_z)
 # Timing of simulation
 use_sst = sbp.use_stop_sim_time
 stop_t  = sbp.stop_sim_time
