@@ -96,8 +96,6 @@ snap_max_writes = 50
 take_bp_snaps   = True
 # Sponge layer snapshot parameters
 take_sl_snaps   = True
-if take_sl_snaps==False:
-    plot_sponge = False
 # Rayleigh friction snapshot parameters
 take_rf_snaps   = True
 
@@ -230,6 +228,8 @@ build_bp_array = bp.build_bp_array
 # Need to add the path before every import
 sys.path.insert(0, p_module_dir)
 import sponge_layer as sl
+if take_sl_snaps==False:
+    plot_sponge = False
 if use_sponge==True:
     # The sponge layer profile generator function
     build_sl_array = sl.build_sl_array
