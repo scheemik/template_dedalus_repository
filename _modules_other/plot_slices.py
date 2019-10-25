@@ -23,8 +23,21 @@ from plot_tools_mod import plot_bot_3d_mod
 ###############################################################################
 # Helper functions
 
+def build_vp_dicts():
+    bp_dict = {'vp_name':   "Background Profile",
+            'vp_task':   'bp',
+            'vp_xlabel':r'$N$ (s$^{-1}$)'}
+    sl_dict = {'vp_name':   "Sponge Layer",
+            'vp_task':   'sl',
+            'vp_xlabel':r'$C_\nu$'}
+    rf_dict = {'vp_name':   "Rayleigh Friction",
+            'vp_task':   'rf',
+            'vp_xlabel':r'$C_{rf}$ (s$^{-1}$)'}
+    return bp_dict, sl_dict, rf_dict
+
 # Sets parameters according to the switchboard settings
 def flip_the_switches(plot_all_variables, plot_sl_profile, plot_rf_profile, use_sst, T):
+    bp_dict, sl_dict, rf_dict = build_vp_dicts()
     if plot_all_variables:
         tasks = ['b', 'p', 'u', 'w']
         nrows, ncols = 2, 2
@@ -34,20 +47,14 @@ def flip_the_switches(plot_all_variables, plot_sl_profile, plot_rf_profile, use_
         tasks = ['w']
         if plot_sl_profile:
             nrows, ncols = 1, 3
-            r_vp = {'vp_name':   "Sponge Layer",
-                    'vp_task':   'sl',
-                    'vp_xlabel':r'$C_\nu$'}
+            r_vp = sl_dict
         else:
             nrows, ncols = 1, 2
             r_vp = None
         if plot_rf_profile:
-            l_vp = {'vp_name':   "Rayleigh Friction",
-                    'vp_task':   'rf',
-                    'vp_xlabel':r'$C_{rf}$ (s$^{-1}$)'}
+            l_vp = rf_dict
         else:
-            l_vp = {'vp_name':   "Background Profile",
-                    'vp_task':   'bp',
-                    'vp_xlabel':r'$N$ (s$^{-1}$)'}
+            l_vp = bp_dict
     if use_sst: # Stop Simulation Time, opposed to Stop Simulation Period
         title_str = r'{:}, $t$ = {:2.3f}'
         time_factor = 1.0
@@ -119,6 +126,16 @@ def fixed_aspect_ratio(ax, ratio, ylims=None):
         yrange = ylims[1]-ylims[0]
     ax.set_aspect(ratio*(xrange/yrange), adjustable='box')
 
+def make_vp_plot(axes0, hori, vert, buffer, extra_buffer, ylims, dis_ratio, abs_line):
+    axes0.plot(hori, vert, 'k-')
+    # Add buffers around the edge to make plot look nice
+    add_vp_buffers(axes0, buffer, extra_buffer, ylims)
+    # Force display aspect ratio
+    fixed_aspect_ratio(axes0, dis_ratio, ylims)
+    # Add horizontal line to divide absorption layer
+    axes0.axhline(y=abs_line, color='gray', ls='--')
+    return axes0
+
 # Adds vertical profile plot to the left of animation
 def plot_vp_on_left(l_vp, snap_dir, vp_snaps, mfig, buffer, extra_buffer, dis_ratio, abs_line, ylims=None):
     axes0 = mfig.add_axes(0, 0, [0, 0, 1.3, 1])#, sharey=axes1)
@@ -127,13 +144,7 @@ def plot_vp_on_left(l_vp, snap_dir, vp_snaps, mfig, buffer, extra_buffer, dis_ra
     axes0.set_ylabel(r'$z$ (m)')
     # Get arrays of background profile values
     hori, vert = extract_vp_snapshot(l_vp['vp_task'], snap_dir, vp_snaps)
-    axes0.plot(hori, vert, 'k-')
-    # Add buffers around the edge to make plot look nice
-    add_vp_buffers(axes0, buffer, extra_buffer, ylims)
-    # Force display aspect ratio
-    fixed_aspect_ratio(axes0, dis_ratio, ylims)
-    # Add horizontal line to divide absorption layer
-    axes0.axhline(y=abs_line, color='gray', ls='--')
+    make_vp_plot(axes0, hori, vert, buffer, extra_buffer, ylims, dis_ratio, abs_line)
     return axes0
 
 # Adds vertical profile plot to the right of animation
@@ -144,13 +155,7 @@ def plot_vp_on_right(r_vp, snap_dir, vp_snaps, mfig, buffer, extra_buffer, dis_r
     axes0.set_ylabel(r'$z$ (m)')
     # Get arrays of background profile values
     hori, vert = extract_vp_snapshot(r_vp['vp_task'], snap_dir, vp_snaps)
-    axes0.plot(hori, vert, 'k-')
-    # Add buffers around the edge to make plot look nice
-    add_vp_buffers(axes0, buffer, extra_buffer, ylims)
-    # Force display aspect ratio
-    fixed_aspect_ratio(axes0, dis_ratio, ylims)
-    # Add horizontal line to divide absorption layer
-    axes0.axhline(y=abs_line, color='gray', ls='--')
+    make_vp_plot(axes0, hori, vert, buffer, extra_buffer, ylims, dis_ratio, abs_line)
     return axes0
 
 ###############################################################################
