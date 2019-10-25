@@ -54,7 +54,7 @@ win_lams  = 1
 # Width of window
 win_width = lam_x * win_lams
 # Buffer to avoid periodic boundary wrapping
-buff = 1.0*win_width
+buff = 0.5*win_width
 # Check if 1/2 window width fits to the left of display domain
 Dis_buff_x= sbp.Dis_buff_x
 if (0.5 * win_width + buff < Dis_buff_x):
