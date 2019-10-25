@@ -13,7 +13,7 @@ import numpy as np
 # Boundary forcing
 bf_module       = 'bf_default'
 # Background profile
-bp_module       = 'bp_N_const'
+bp_module       = 'bp_default'
 # Sponge layer
 sl_module       = 'sl_default'
 # Sponge layer
@@ -39,7 +39,7 @@ def add_p_module(p_module_dir, p_module, module_name_str):
     #     print(p_module + '.py not found. Was it selected previously?')
 
 # If this is the root thread, then do all this stuff
-if rank==0:
+if rank==0 and os.path.isfile('new_exp.txt'):
     print('Preparing physics modules')
     print('')
     # Add path to _modules-physics so python knows to look there on imports
@@ -61,3 +61,5 @@ if rank==0:
             if dir!='__pycache__':
                 dir_path = p_module_dir + dir
                 rmtree(dir_path, ignore_errors=True)
+    # Remove new experiment file
+    os.remove('./new_exp.txt')
