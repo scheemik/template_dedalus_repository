@@ -36,7 +36,7 @@ def build_vp_dicts():
     return bp_dict, sl_dict, rf_dict
 
 # Sets parameters according to the switchboard settings
-def flip_the_switches(plot_all_variables, plot_sl_profile, plot_rf_profile, use_sst, T):
+def flip_the_switches(plot_all_variables, plot_sl_profile, plot_rf_profile, use_sponge, use_sst, T):
     bp_dict, sl_dict, rf_dict = build_vp_dicts()
     if plot_all_variables:
         tasks = ['b', 'p', 'u', 'w']
@@ -45,16 +45,16 @@ def flip_the_switches(plot_all_variables, plot_sl_profile, plot_rf_profile, use_
         r_vp = None
     else:
         tasks = ['w']
-        if plot_sl_profile:
-            nrows, ncols = 1, 3
+        l_vp = bp_dict
+        nrows, ncols = 1, 3
+        if use_sponge and plot_sl_profile:
             r_vp = sl_dict
         else:
-            nrows, ncols = 1, 2
-            r_vp = None
-        if plot_rf_profile:
-            l_vp = rf_dict
-        else:
-            l_vp = bp_dict
+            if plot_rf_profile:
+                r_vp = rf_dict
+            else:
+                nrows, ncols = 1, 2
+                r_vp = None
     if use_sst: # Stop Simulation Time, opposed to Stop Simulation Period
         title_str = r'{:}, $t$ = {:2.3f}'
         time_factor = 1.0
@@ -159,6 +159,8 @@ def plot_vp_on_right(r_vp, snap_dir, vp_snaps, mfig, buffer, extra_buffer, dis_r
     return axes0
 
 ###############################################################################
+###############################################################################
+
 def main(filename, start, count, output):
     """Save plot of specified tasks for given range of analysis writes."""
 
@@ -185,7 +187,7 @@ def main(filename, start, count, output):
     font = {'size' : sbp.font_size}
     plt.rc('font', **font)
     # Set parameters based on switches
-    tasks, nrows, ncols, title_str, time_factor, l_vp, r_vp = flip_the_switches(plot_all, sbp.plot_sponge, sbp.plot_rf, sbp.use_stop_sim_time, sbp.T)
+    tasks, nrows, ncols, title_str, time_factor, l_vp, r_vp = flip_the_switches(plot_all, sbp.plot_sponge, sbp.plot_rf, sbp.use_sponge, sbp.use_stop_sim_time, sbp.T)
     # Plot settings
     scale   = sbp.scale
     dpi     = sbp.dpi
