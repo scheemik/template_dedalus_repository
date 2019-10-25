@@ -65,6 +65,7 @@ echo "New experiment directory: /_experiments/${NAME}"
 echo ''
 echo '--Populating experiment directory--'
 echo ''
+touch _experiments/$NAME/new_exp.txt
 if [ -e $code_file ]
 then
 	cp $code_file _experiments/$NAME
