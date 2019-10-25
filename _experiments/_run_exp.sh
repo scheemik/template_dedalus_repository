@@ -134,6 +134,18 @@ else
 	echo 'Module selection file not found'
 fi
 ###############################################################################
+# Sanity check by plotting vertical profiles and boundary forcing
+echo ''
+echo '--Creating plots for sanity check--'
+# Check if output directory exists
+if [ ! -e $output_dir ]
+then
+	echo "Creating $output_dir directory"
+	mkdir $output_dir
+fi
+RUN_NAME=${DATETIME}_${NAME}
+python3 ${modules_o_dir}/sanity_plots.py $NAME $RUN_NAME
+###############################################################################
 # Create (or prepend) log file if running code
 #	if (VER = 0, 1, 2)
 LOG_FILE=LOG_${NAME}.txt
@@ -273,7 +285,7 @@ if [ $VER -eq 0 ] || [ $VER -eq 2 ] || [ $VER -eq 3 ]
 then
 	echo ''
 	echo '--Creating gif--'
-	gif_name="${output_dir}/${DATETIME}_${NAME}.gif"
+	gif_name="${output_dir}/${RUN_NAME}.gif"
 	# Check if output directory exists
 	if [ ! -e $output_dir ]
 	then

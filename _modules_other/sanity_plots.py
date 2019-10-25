@@ -3,10 +3,11 @@ A script to plot the vertical profiles (if used) and boundary forcing before exe
 Needs to be run from the experiment directory
 
 Usage:
-    sanity_plots.py NAME
+    sanity_plots.py NAME RUN
 
 Options:
-    NAME	            # -n, Name of simulation run
+    NAME	            # -n, Name of experiment
+    RUN                 # Denotation of specific run of experiment (usually a datetime)
 
 """
 
@@ -25,6 +26,7 @@ import matplotlib.gridspec as gridspec
 if __name__ == '__main__':
     arguments = docopt(__doc__)
     NAME = str(arguments['NAME'])
+    RUN  = str(arguments['RUN'])
 
 ###############################################################################
 # Fetch parameters from switchboard file
@@ -159,4 +161,4 @@ A      = float(sbp.A)
 lam_x  = sbp.lam_x
 
 fig.suptitle(NAME)
-fig.savefig('outputs/sanity_plots.png', dpi=sbp.dpi)
+fig.savefig('outputs/' + RUN + '_sanity_plots.png', dpi=sbp.dpi)
