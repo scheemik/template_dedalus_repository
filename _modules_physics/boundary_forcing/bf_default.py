@@ -48,7 +48,7 @@ A         = 2.0e-4
 # Forcing amplitude ramp (number of oscillations)
 nT        = 3.0
 # Slope of window edges
-bf_slope  = 35
+bf_slope  = 15
 # Number of horizontal wavelengths that fit into the window
 win_lams  = 1
 # Width of window
@@ -82,3 +82,14 @@ fu      = "-BFu*sin(kx*x + kz*z - omega*t)*window*ramp"
 fw      = " BFw*sin(kx*x + kz*z - omega*t)*window*ramp"
 fb      = "-BFb*cos(kx*x + kz*z - omega*t)*window*ramp"
 fp      = "-BFp*sin(kx*x + kz*z - omega*t)*window*ramp"
+
+###############################################################################
+# A function recreating the window for plotting purposes
+#window    = "(1/2)*(tanh(slope*(x-left_edge))+1)*(1/2)*(tanh(slope*(-x+right_edge))+1)"
+def build_bf_window(x, slope, l_edge, r_edge):
+    bf_win_array = (1/2)*(np.tanh(slope*(x-l_edge))+1)*(1/2)*(np.tanh(slope*(-x+r_edge))+1)
+    return bf_win_array
+
+def build_win_array(x):
+    WIN_array = build_bf_window(x, bf_slope, bfl_edge, bfr_edge)
+    return WIN_array
