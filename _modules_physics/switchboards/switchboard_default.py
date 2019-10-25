@@ -12,7 +12,7 @@ import numpy as np
 # Simulation parameters
 
 # Number of grid points in each dimension
-n_x = 256                   # []
+n_x = 512                   # []
 n_z = 512                   # []
 # Dealias factor
 dealias = 3/2               # []
