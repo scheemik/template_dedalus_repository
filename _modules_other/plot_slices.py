@@ -54,7 +54,7 @@ def flip_the_switches(plot_all_variables, plot_sl_profile, plot_rf_profile, use_
                 r_vp = rf_dict
             else:
                 nrows, ncols = 1, 2
-                r_vp = None
+                r_vp = rf_dict
     if use_sst: # Stop Simulation Time, opposed to Stop Simulation Period
         title_str = r'{:}, $t$ = {:2.3f}'
         time_factor = 1.0
@@ -111,7 +111,7 @@ def add_vp_buffers(ax, buffer, extra_buffer, ylims=None):
         ytop   = yvals[1] + buffer
         ybott  = yvals[0]
     else:
-        ytop   = ylims[1]
+        ytop   = ylims[1] + buffer
         ybott  = ylims[0]
     ax.set_ylim(ybott, ytop)
 
@@ -126,8 +126,42 @@ def fixed_aspect_ratio(ax, ratio, ylims=None):
         yrange = ylims[1]-ylims[0]
     ax.set_aspect(ratio*(xrange/yrange), adjustable='box')
 
-def make_vp_plot(axes0, hori, vert, buffer, extra_buffer, ylims, dis_ratio, abs_line):
+# Set a fixed aspect ratio on matplotlib plots regardless of axis units
+def fixed_aspect_ratio2(ax, ratio, ylims=None):
+    # Does not work for twin axes plots
+    xvals,yvals = ax.get_xlim(), ax.get_ylim()
+    xrange = xvals[1]-xvals[0]
+    if ylims==None:
+        yrange = yvals[1]-yvals[0]
+    else:
+        yrange = ylims[1]-ylims[0]
+    aspect_ratio = ratio*(xrange/yrange)
+    ax.set_aspect(aspect_ratio, adjustable='datalim')
+
+def make_twin_plot(axes0, hori, vert, buffer, extra_buffer, ylims, dis_ratio, abs_line, rhori=None, rvert=None, twin=False):
     axes0.plot(hori, vert, 'k-')
+    # Add buffers around the edge to make plot look nice
+    add_vp_buffers(axes0, buffer, extra_buffer, ylims)
+    if twin:
+        axes1 = axes0.twiny()
+        axes1.plot(rhori, rvert, 'g-')
+        axes1.tick_params(axis='x', colors='g')
+        # Add buffers around the edge to make plot look nice
+        add_vp_buffers(axes1, buffer, extra_buffer, ylims)
+        # Force display aspect ratio
+        fixed_aspect_ratio2(axes0, dis_ratio, ylims)
+        fixed_aspect_ratio2(axes1, dis_ratio, ylims)
+    else:
+        # Force display aspect ratio
+        fixed_aspect_ratio(axes0, dis_ratio, ylims)
+    # Add horizontal line to divide absorption layer
+    axes0.axhline(y=abs_line, color='gray', ls='--')
+    return axes0
+
+def make_vp_plot(axes0, hori, vert, buffer, extra_buffer, ylims, dis_ratio, abs_line, rhori=None, rvert=None, twin=False):
+    axes0.plot(hori, vert, 'k-')
+    if twin:
+        axes0.plot(rhori, rvert, 'g-')
     # Add buffers around the edge to make plot look nice
     add_vp_buffers(axes0, buffer, extra_buffer, ylims)
     # Force display aspect ratio
@@ -137,14 +171,17 @@ def make_vp_plot(axes0, hori, vert, buffer, extra_buffer, ylims, dis_ratio, abs_
     return axes0
 
 # Adds vertical profile plot to the left of animation
-def plot_vp_on_left(l_vp, snap_dir, vp_snaps, mfig, buffer, extra_buffer, dis_ratio, abs_line, ylims=None):
+def plot_vp_on_left(l_vp, r_vp, snap_dir, vp_snaps, mfig, buffer, extra_buffer, dis_ratio, abs_line, ylims=None, twin=False):
     axes0 = mfig.add_axes(0, 0, [0, 0, 1.3, 1])#, sharey=axes1)
     axes0.set_title(l_vp['vp_name'])
     axes0.set_xlabel(l_vp['vp_xlabel'])
     axes0.set_ylabel(r'$z$ (m)')
     # Get arrays of background profile values
-    hori, vert = extract_vp_snapshot(l_vp['vp_task'], snap_dir, vp_snaps)
-    make_vp_plot(axes0, hori, vert, buffer, extra_buffer, ylims, dis_ratio, abs_line)
+    lhori, lvert = extract_vp_snapshot(l_vp['vp_task'], snap_dir, vp_snaps)
+    # Get arrays of background profile values
+    rhori, rvert = extract_vp_snapshot(r_vp['vp_task'], snap_dir, vp_snaps)
+    make_twin_plot(axes0, lhori, lvert, buffer, extra_buffer, ylims, dis_ratio, abs_line, rhori, rvert, twin)
+    #make_vp_plot(axes0, hori, vert, buffer, extra_buffer, ylims, dis_ratio, abs_line)
     return axes0
 
 # Adds vertical profile plot to the right of animation
@@ -207,7 +244,7 @@ def main(filename, start, count, output):
             for n, task in enumerate(tasks):
                 if (plot_all == False):
                     # Plot stratification profile on the left
-                    ax0 = plot_vp_on_left(l_vp, sbp.snapshots_dir, sbp.vp_snap_dir, mfig, sbp.buffer, sbp.extra_buffer, sbp.vp_dis_ratio, sbp.abs_div, y_lims)
+                    ax0 = plot_vp_on_left(l_vp, r_vp, sbp.snapshots_dir, sbp.vp_snap_dir, mfig, sbp.buffer, sbp.extra_buffer, sbp.vp_dis_ratio, sbp.abs_div, y_lims, sbp.plot_twin)
                     if r_vp!=None:
                         ax1 = plot_vp_on_right(r_vp, sbp.snapshots_dir, sbp.vp_snap_dir, mfig, sbp.buffer, sbp.extra_buffer, sbp.vp_dis_ratio, sbp.abs_div, y_lims)
                     # shift n so that animation is on the right side
