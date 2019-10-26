@@ -17,7 +17,7 @@ n_z = 512                   # []
 # Dealias factor
 dealias = 3/2               # []
 # Stopping conditions for the simulation
-stop_n_periods = 1          # [] oscillation periods
+stop_n_periods = 15          # [] oscillation periods
 stop_wall_time = 180        # [minutes]
 stop_iteration = np.inf     # []
 stop_sim_time  = 3          # [s] to be calculated from stop_n_periods later
@@ -34,7 +34,7 @@ adapt_dt = False             # {T/F}
 
 # Dimensions of simulated domain
 L_x = 1.5                   # [m]
-L_z = 0.5                   # [m] Does not include absorbing bottom layer
+L_z = 1.0                   # [m] Does not include absorbing bottom layer
 
 # Constraints on display domain
 #   If True, display domain will be exactly the simulated domain
@@ -70,9 +70,10 @@ g           = 9.81          # [m/s^2] Acceleration due to gravity
 # If True, plots b, p, u, and w. If false, plots profile and w
 plot_all_variables = False
 # If True, the sponge layer plot will be plotted to the right of the animation
-plot_sponge        = True
+plot_sponge        = False
 # If True, the Rayleigh friction plot will replace background profile
-plot_rf            = True
+plot_rf            = False
+plot_twin          = False
 # Fudge factor to make plots look nicer
 buffer = 0.04
 # Extra buffer for a constant vertical profile
