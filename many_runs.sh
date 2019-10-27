@@ -47,7 +47,7 @@ fi
 echo ''
 echo '--Starting many runs--'
 echo ''
-declare -a arr=("N_const" "sl_th_1" "sl_th_2" "sl_th_3" "sl_th_4")
+declare -a arr=("sl_th_1" "sl_th_4")
 for exp_name in "${arr[@]}"
 do
 	# Check if this experiment has a run file
