@@ -57,13 +57,11 @@ if rank==0:
     if (len(arg_array) != 2):
         print("Wrong number of arguments passed to core code")
         print("")
-    #print('Core code filename:', filename)
-    #print('Using switchboard:', switchboard)
-    #print("")
 
 ###############################################################################
 # Import SwitchBoard Parameters (sbp)
-#   This also runs the switchboard file, which will move files around
+#   This also runs the switchboard file, which will move files around when the code is run for the first time
+#   This import statement assumes the switchboard is in the same directory as the core code
 import switchboard as sbp
 
 # Call parameters by sbp.some_param. For example:
@@ -146,7 +144,20 @@ RF['g'] = RF_array
 problem.parameters['RF'] = RF
 
 ###############################################################################
-# Equations of motion (non-linear terms on RHS)
+# Equations of motion
+#   Mass conservation equation
+problem.add_equation(sbp.eq1_mc)
+#   Equation of state (in terms of buoyancy)
+problem.add_equation(sbp.eq2_es)
+#   Horizontal momentum equation
+problem.add_equation(sbp.eq3_hm)
+#   Vertical momentum equation
+problem.add_equation(sbp.eq4_vm)
+# Required for solving differential equations in Chebyshev dimension
+problem.add_equation(sbp.eq5_bz)
+problem.add_equation(sbp.eq6_uz)
+problem.add_equation(sbp.eq7_wz)
+"""
 #   Mass conservation equation
 problem.add_equation("dx(u) + wz = 0")
 #   Equation of state (in terms of buoyancy)
@@ -162,11 +173,23 @@ problem.add_equation("dt(w) -SL*NU*dx(dx(w)) - NU*dz(wz) + dz(p) + RF*w - b"
 problem.add_equation("bz - dz(b) = 0")
 problem.add_equation("uz - dz(u) = 0")
 problem.add_equation("wz - dz(w) = 0")
-
+"""
 ###############################################################################
 # Boundary contitions
 #	Using Fourier basis for x automatically enforces periodic bc's
 #   Left is bottom, right is top
+# Solid top/bottom boundaries
+problem.add_bc(sbp.bc1)
+problem.add_bc(sbp.bc2)
+# No-slip top/bottom boundaries?
+problem.add_bc(sbp.bc3, condition=sbp.bc3_cond) # redunant in constant mode (nx==0)
+problem.add_bc(sbp.bc4)
+# Buoyancy = zero at top/bottom
+problem.add_bc(sbp.bc5)
+problem.add_bc(sbp.bc6)
+# Sets gauge pressure to zero in the constant mode
+problem.add_bc(sbp.bc7, condition=sbp.bc7_cond) # required because of above redundancy
+"""
 # Solid top/bottom boundaries
 problem.add_bc("left(u) = 0")
 problem.add_bc("right(u) = right(fu)")
@@ -181,6 +204,7 @@ problem.add_bc("left(b) = 0")
 problem.add_bc("right(b) = right(fb)")
 # Sets gauge pressure to zero in the constant mode
 problem.add_bc("left(p) = 0", condition="(nx == 0)") # required because of above redundancy
+"""
 
 ###############################################################################
 # Build solver

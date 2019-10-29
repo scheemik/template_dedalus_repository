@@ -17,7 +17,7 @@ n_z = 512                   # []
 # Dealias factor
 dealias = 3/2               # []
 # Stopping conditions for the simulation
-stop_n_periods = 15          # [] oscillation periods
+stop_n_periods = 0.3          # [] oscillation periods
 stop_wall_time = 180        # [minutes]
 stop_iteration = np.inf     # []
 stop_sim_time  = 3          # [s] to be calculated from stop_n_periods later
@@ -135,7 +135,11 @@ flow_name       = 'Lin_Criterion'
 flow_log_message= 'Max linear criterion = {0:f}'
 
 ###############################################################################
+
+###############################################################################
 ################    Shouldn't need to edit below here    #####################
+###############################################################################
+
 ###############################################################################
 # Calculating domain parameters
 
@@ -158,14 +162,6 @@ z_sim_0 = z_0 + Dis_buff_z
 # Lower right corner of simulated domain
 x_sim_f = x_sim_0 + L_x
 z_sim_f = z_sim_0 - L_z
-
-###############################################################################
-# Select physics modules from select_modules.py file
-import select_modules as select
-# Boundary forcing
-bf_module       = select.bf_module
-# Background profile
-bp_module       = select.bp_module
 
 ###############################################################################
 # Imports for preparing physics modules
@@ -213,6 +209,31 @@ if use_stop_sim_time == False:
 # Set restart simulation parameters
 restart_add_time = stop_sim_time
 restart_file  = 'restart.h5'
+
+###############################################################################
+# Equations of Motion and Boundary Conditions
+
+# Need to add the path before every import
+sys.path.insert(0, p_module_dir)
+import eqs_and_bcs as eq
+# Equations of motion
+eq1_mc      = eq.eq1_mc
+eq2_es      = eq.eq2_es
+eq3_hm      = eq.eq3_hm
+eq4_vm      = eq.eq4_vm
+eq5_bz      = eq.eq5_bz
+eq6_uz      = eq.eq6_uz
+eq7_wz      = eq.eq7_wz
+# Boundary contitions
+bc1         = eq.bc1_u_bot
+bc2         = eq.bc2_u_top
+bc3         = eq.bc3_w_bot
+bc3_cond    = eq.bc3_w_cond
+bc4         = eq.bc4_w_top
+bc5         = eq.bc5_b_bot
+bc6         = eq.bc6_b_top
+bc7         = eq.bc7_p_bot
+bc7_cond    = eq.bc7_p_cond
 
 ###############################################################################
 # Background Density Profile

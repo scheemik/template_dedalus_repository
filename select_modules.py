@@ -10,13 +10,15 @@ import numpy as np
 ###############################################################################
 # Select physics modules
 
+# Equations of motion and boundary conditions
+eq_module       = 'eq_default'
 # Boundary forcing
 bf_module       = 'bf_default'
 # Background profile
 bp_module       = 'bp_default'
 # Sponge layer
 sl_module       = 'sl_default'
-# Sponge layer
+# Rayleigh friction
 rf_module       = 'rf_default'
 
 ###############################################################################
@@ -46,6 +48,7 @@ if rank==0 and os.path.isfile('new_exp.txt'):
     import sys
     p_module_dir = './_modules_physics/'
 
+    add_p_module(p_module_dir, eq_module, 'eqs_and_bcs')
     add_p_module(p_module_dir, bf_module, 'boundary_forcing')
     add_p_module(p_module_dir, bp_module, 'background_profile')
     add_p_module(p_module_dir, sl_module, 'sponge_layer')
