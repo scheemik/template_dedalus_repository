@@ -3,30 +3,15 @@ Core code of Dedalus script
 
 Modified by Mikhail Schee from the script for 2D Rayleigh-Benard convection in the Dedalus example files.
 
-This script is NOT meant to be run directly.
+*This script is NOT meant to be run directly.*
 
-The parameters of an experiment are controlled through the switchboard file.
-To start a new experiment, run the `make_new_exp.sh` script using the `-n` flag to specify the experiment's name and the `-s` flag to specify the switchboard file.
-    $ sh make_new_exp.sh -n my_new_exp -s switchboard-default.py
+To make a new experiment, run:
+    $ bash make_new_exp.sh -n <my_new_exp>
 
-This will create a new directory for your experiment under `_experiments`. Edit the switchboard file in that directory to specify the parameters of the experiment before running.
+This will create a new directory for your experiment under `_experiments`. Edit the switchboard and select_modules files in that directory to specify parameters of the experiment before running.
 
-To run an experiment, run the `run.sh` script with the `-n`, `-c`, `-l`, `-v` flags, as specified in that script's header. Running an experiment again will overwrite the old outputs.
-    $ sh run.sh -n my_new_exp -c 2 -l 1 -v 1
-
----
-This script can restart the simulation from the last save of the original
-output to extend the integration.  This requires that the output files from
-the original simulation are merged, and the last is symlinked or copied to
-`restart.h5`.
-
-To run the original example and the restart, you could use:
-    $ mpiexec -n 4 python3 rayleigh_benard.py
-    $ mpiexec -n 4 python3 -m dedalus merge_procs snapshots
-    $ ln -s snapshots/snapshots_s2.h5 restart.h5
-    $ mpiexec -n 4 python3 rayleigh_benard.py
-
-The simulations should take a few process-minutes to run.
+To run an experiment, run (-c, -l, and -v are optional):
+    $ bash run.sh -n <my_new_exp> -c 2 -l 1 -v 1
 
 """
 
@@ -60,13 +45,13 @@ if rank==0:
 
 ###############################################################################
 # Import SwitchBoard Parameters (sbp)
-#   This also runs the switchboard file, which will move files around when the code is run for the first time
-#   This import statement assumes the switchboard is in the same directory as the core code
+#   This runs the switchboard file, which moves files around when the code is run for the first time
+#   This import assumes the switchboard is in the same directory as the core code
 import switchboard as sbp
 
 # Call parameters by sbp.some_param. For example:
-nx = sbp.n_x #256
-nz = sbp.n_z #64
+nx = sbp.n_x
+nz = sbp.n_z
 
 ###############################################################################
 # Create bases and domain
