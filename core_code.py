@@ -144,67 +144,24 @@ RF['g'] = RF_array
 problem.parameters['RF'] = RF
 
 ###############################################################################
-# Equations of motion
-#   Mass conservation equation
+# Equations of motion - See physics module eqs_and_bcs
 problem.add_equation(sbp.eq1_mc)
-#   Equation of state (in terms of buoyancy)
 problem.add_equation(sbp.eq2_es)
-#   Horizontal momentum equation
 problem.add_equation(sbp.eq3_hm)
-#   Vertical momentum equation
 problem.add_equation(sbp.eq4_vm)
-# Required for solving differential equations in Chebyshev dimension
 problem.add_equation(sbp.eq5_bz)
 problem.add_equation(sbp.eq6_uz)
 problem.add_equation(sbp.eq7_wz)
-"""
-#   Mass conservation equation
-problem.add_equation("dx(u) + wz = 0")
-#   Equation of state (in terms of buoyancy)
-problem.add_equation("dt(b) - KA*(dx(dx(b)) + dz(bz))"
-                    + "= -((N0*BP)**2)*w - (u*dx(b) + w*bz)")
-#   Horizontal momentum equation
-problem.add_equation("dt(u) -SL*NU*dx(dx(u)) - NU*dz(uz) + dx(p) + RF*u"
-                    + "= - (u*dx(u) + w*uz)")
-#   Vertical momentum equation
-problem.add_equation("dt(w) -SL*NU*dx(dx(w)) - NU*dz(wz) + dz(p) + RF*w - b"
-                    + "= - (u*dx(w) + w*wz)")
-# Required for solving differential equations in Chebyshev dimension
-problem.add_equation("bz - dz(b) = 0")
-problem.add_equation("uz - dz(u) = 0")
-problem.add_equation("wz - dz(w) = 0")
-"""
+
 ###############################################################################
-# Boundary contitions
-#	Using Fourier basis for x automatically enforces periodic bc's
-#   Left is bottom, right is top
-# Solid top/bottom boundaries
+# Boundary contitions - See physics module eqs_and_bcs
 problem.add_bc(sbp.bc1)
 problem.add_bc(sbp.bc2)
-# No-slip top/bottom boundaries?
 problem.add_bc(sbp.bc3, condition=sbp.bc3_cond) # redunant in constant mode (nx==0)
 problem.add_bc(sbp.bc4)
-# Buoyancy = zero at top/bottom
 problem.add_bc(sbp.bc5)
 problem.add_bc(sbp.bc6)
-# Sets gauge pressure to zero in the constant mode
-problem.add_bc(sbp.bc7, condition=sbp.bc7_cond) # required because of above redundancy
-"""
-# Solid top/bottom boundaries
-problem.add_bc("left(u) = 0")
-problem.add_bc("right(u) = right(fu)")
-# Free top/bottom boundaries
-#problem.add_bc("left(uz) = 0")
-#problem.add_bc("right(uz) = 0")
-# No-slip top/bottom boundaries?
-problem.add_bc("left(w) = 0", condition="(nx != 0)") # redunant in constant mode (nx==0)
-problem.add_bc("right(w) = right(fw)")
-# Buoyancy = zero at top/bottom
-problem.add_bc("left(b) = 0")
-problem.add_bc("right(b) = right(fb)")
-# Sets gauge pressure to zero in the constant mode
-problem.add_bc("left(p) = 0", condition="(nx == 0)") # required because of above redundancy
-"""
+problem.add_bc(sbp.bc7, condition=sbp.bc7_cond) # because of above redundancy
 
 ###############################################################################
 # Build solver
@@ -216,8 +173,6 @@ logger.info('Solver built')
 if not pathlib.Path(sbp.restart_file).exists():
 
     # Initial conditions
-    #x = domain.grid(0)
-    #z = domain.grid(1)
     b = solver.state['b']
     bz = solver.state['bz']
 
