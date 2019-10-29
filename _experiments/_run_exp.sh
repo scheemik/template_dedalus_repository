@@ -60,6 +60,8 @@ then
 	echo "-v, No version specified, using VER=$VER"
 fi
 
+# The command and arguments for running scripts with mpi
+mpiexec_command="mpiexec"
 # The directory in which this code is being run
 Project_directory="$(pwd)"
 Running_directory="${Project_directory}/_experiments/${NAME}"
@@ -89,11 +91,11 @@ write_out_script='write_out_params.py'
 ###############################################################################
 echo ''
 echo '--Checking experiment directory--'
-if [ -e _experiments/$NAME ]
+if [ -e _experiments/${NAME} ]
 then
 	echo 'Experiment directory found'
 else
-	echo "Experiment directory for $NAME not found. Aborting script."
+	echo "Experiment directory for ${NAME} not found. Aborting script."
 	exit 1
 fi
 
@@ -118,7 +120,7 @@ fi
 ###############################################################################
 echo ''
 echo '--Navigating to experiment directory--'
-cd _experiments/$NAME
+cd _experiments/${NAME}
 echo 'Done'
 ###############################################################################
 ###############################################################################
@@ -128,7 +130,7 @@ echo ''
 echo '--Selecting physics modules--'
 if [ -e select_modules.py ]
 then
-	mpiexec -n $CORES python3 select_modules.py
+	${mpiexec_command} -n ${CORES} python3 select_modules.py
 	echo 'Modules selected'
 else
 	echo 'Module selection file not found'
@@ -138,17 +140,17 @@ fi
 echo ''
 echo '--Creating plots for sanity check--'
 # Check if output directory exists
-if [ ! -e $output_dir ]
+if [ ! -e ${output_dir} ]
 then
-	echo "Creating $output_dir directory"
-	mkdir $output_dir
+	echo "Creating ${output_dir} directory"
+	mkdir ${output_dir}
 fi
 RUN_NAME=${DATETIME}_${NAME}
-python3 ${modules_o_dir}/sanity_plots.py $NAME $RUN_NAME
+python3 ${modules_o_dir}/sanity_plots.py ${NAME} ${RUN_NAME}
 ###############################################################################
 # Create (or prepend) log file if running code
 #	if (VER = 0, 1, 2)
-LOG_FILE=LOG_${NAME}.txt
+LOG_FILE=${NAME}_Log.txt
 if [ $VER -eq 0 ] || [ $VER -eq 1 ] || [ $VER -eq 2 ] || [ $VER -eq 5 ]
 then
 	echo ''
@@ -202,7 +204,7 @@ then
     then
         echo "Running Dedalus script for local pc"
         # mpiexec uses -n flag for number of processes to use
-        mpiexec -n $CORES python3 $code_file $switch_file
+        ${mpiexec_command} -n $CORES python3 $code_file $switch_file
         echo ""
     fi
     # If running on Niagara
@@ -210,7 +212,7 @@ then
     then
         echo "Running Dedalus script for Niagara"
         # mpiexec uses -n flag for number of processes to use
-        mpiexec -n $CORES python3.6 $code_file $switch_file
+        ${mpiexec_command} -n $CORES python3.6 $code_file $switch_file
         echo ""
     fi
 	echo 'Done running script'
@@ -238,7 +240,7 @@ then
 		echo "Snapshots already merged"
 	else
 		echo "Merging snapshots"
-		mpiexec -n $CORES python3 $merge_file $snapshot_path
+		${mpiexec_command} -n $CORES python3 $merge_file $snapshot_path
 	fi
 	# Check if there are auxiliary snapshots to merge
 	for f in ${snapshot_path}/*; do
@@ -254,7 +256,7 @@ then
 				echo "Already merged $f"
 			else
 				echo "Merging $f"
-				mpiexec -n $CORES python3 $merge_file $f
+				${mpiexec_command} -n $CORES python3 $merge_file $f
 			fi
 		fi
 	done
@@ -274,7 +276,7 @@ then
 		rm -rf frames
 	fi
 	echo "Plotting 2d slices"
-	mpiexec -n $CORES python3 $plot_file $NAME $snapshot_path/*.h5
+	${mpiexec_command} -n $CORES python3 $plot_file $NAME $snapshot_path/*.h5
 	echo 'Done plotting frames'
 fi
 

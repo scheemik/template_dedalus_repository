@@ -61,7 +61,7 @@ lam_x  = sbp.lam_x
 # Write out to file
 
 # Name of log file
-logfile = '../' + NAME + '/LOG_' + NAME + '.txt'
+logfile = '../' + NAME + '/' + NAME + '_Log.txt'
 # Write params to log file
 with open(logfile, 'a') as the_file:
     the_file.write('--Simulation Parameters--\n')
