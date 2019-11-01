@@ -137,10 +137,16 @@ then
 	echo "Creating ${output_dir} directory"
 	mkdir ${output_dir}
 fi
+# Check if output subdirectory exists
+if [ ! -e ${output_dir}/${RUN_NAME} ]
+then
+	echo "Creating ${RUN_NAME} directory"
+	mkdir ${output_dir}/${RUN_NAME}
+fi
 ###############################################################################
 # Create (or prepend) log file if running code
 #	if (VER = 0, 1, 2)
-LOG_FILE=${output_dir}/${RUN_NAME}_Log.txt
+LOG_FILE=${output_dir}/${RUN_NAME}/${RUN_NAME}_Log.txt
 if [ $VER -eq 0 ] || [ $VER -eq 1 ] || [ $VER -eq 2 ] || [ $VER -eq 5 ]
 then
 	echo ''
@@ -190,7 +196,10 @@ then
 	echo 'Pause for sanity check of log file and plots.'
 	read -p 'Press enter to continue or Ctrl+c to cancel.'
 fi
-
+###############################################################################
+# Start run of this experiment
+echo ''
+echo "--Starting run of experiment ${NAME}--"
 # Check if this will be run locally or on supercomputer
 if [ $LOC -eq 1 ]
 then

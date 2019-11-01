@@ -91,7 +91,7 @@ frames_path='frames'
 # Name of gif creation file
 gif_cre_file="${modules_o_dir}/create_gif.py"
 # Name of output directory
-output_dir='outputs'
+output_dir="outputs/${RUN_NAME}"
 
 ###############################################################################
 # run the script

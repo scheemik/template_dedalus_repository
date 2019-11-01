@@ -161,4 +161,4 @@ A      = float(sbp.A)
 lam_x  = sbp.lam_x
 
 fig.suptitle(NAME)
-fig.savefig('outputs/' + RUN + '_sanity_plots.png', dpi=sbp.dpi)
+fig.savefig('outputs/' + RUN + '/' + RUN + '_sanity_plots.png', dpi=sbp.dpi)
