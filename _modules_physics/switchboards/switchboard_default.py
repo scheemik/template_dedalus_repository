@@ -118,6 +118,15 @@ vp_snap_dicts = [
             'vp_task_name':    'rf'}
             ]
 
+# Auxiliary snapshot directory
+aux_snap_dir = 'aux_snapshots'
+
+# Energy flux parameters
+# Records snapshots of all vertical energy flux components separately
+take_ef_comp  = True
+# Records snapshots of total vertical energy flux
+take_ef_snaps = True
+
 ###############################################################################
 # CFL parameters
 CFL_cadence     = 10
@@ -282,6 +291,16 @@ if use_rayleigh_friction==True:
             L_z_dis = L_z
 else:
     build_rf_array = rf.build_no_rf_array
+
+###############################################################################
+# Energy Flux Measurements
+
+# Need to add the path before every import
+sys.path.insert(0, p_module_dir)
+import energy_flux as ef
+if take_ef_snaps==False and take_ef_comp==False:
+    plot_ef = False
+ef_snap_dicts = ef.ef_snap_dicts
 
 ###############################################################################
 # Cleaning up the _modules-physics directory tree
