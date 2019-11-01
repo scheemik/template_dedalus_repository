@@ -209,6 +209,14 @@ if sbp.take_vp_snaps:
         if vp_dict['take_vp_snaps']:
             vp_snapshots.add_task(vp_dict['vp_task'], layout='g', name=vp_dict['vp_task_name'])
 
+# Add file handler for auxiliary snapshots
+aux_snapshots = add_new_file_handler(sbp.snapshots_dir + '/' + sbp.aux_snap_dir, dt=dt)
+# Add file handlers for all energy flux components
+if sbp.take_ef_snaps or sbp.take_ef_comp:
+    for ef_dict in sbp.ef_snap_dicts:
+        if ef_dict['take_ef_snaps']:
+            aux_snapshots.add_task(ef_dict['ef_task'], layout='g', name=ef_dict['ef_task_name'])
+
 ###############################################################################
 # CFL
 CFL = flow_tools.CFL(solver, initial_dt=dt, cadence=sbp.CFL_cadence,
