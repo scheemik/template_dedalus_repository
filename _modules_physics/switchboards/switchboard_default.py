@@ -50,10 +50,24 @@ Dis_buff_z = 0.0            # [m]
 abs_div = -L_z              # [m] The dividing line of the absorbing layer
 
 ###############################################################################
-# Bottom diffusion parameters
+# ON / OFF Switches for Modules / Physics
 
-use_sponge            = False
-use_rayleigh_friction = True
+# Terms in equations of motion
+viscous_term            = True
+pressure_term           = True
+advection_term          = True
+buoancy_term            = True
+diffusivity_term        = True
+rotation_term           = False
+
+# Diffusion / dissipation of reflections
+use_sponge              = False
+use_rayleigh_friction   = True
+
+# Measurements
+take_ef_comp  = True # Energy flux terms recorded separately
+# Records snapshots of total vertical energy flux
+take_ef_snaps = True # Total energy flux recorded
 
 ###############################################################################
 # Physical parameters
@@ -126,12 +140,6 @@ vp_snap_dicts = [
 
 # Auxiliary snapshot directory
 aux_snap_dir = 'aux_snapshots'
-
-# Energy flux parameters
-# Records snapshots of all vertical energy flux components separately
-take_ef_comp  = True
-# Records snapshots of total vertical energy flux
-take_ef_snaps = True
 
 ###############################################################################
 # CFL parameters
