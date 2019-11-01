@@ -147,7 +147,7 @@ fi
 # Create (or prepend) log file if running code
 #	if (VER = 0, 1, 2)
 LOG_FILE=${output_dir}/${RUN_NAME}/${RUN_NAME}_Log.txt
-if [ $VER -eq 0 ] || [ $VER -eq 1 ] || [ $VER -eq 2 ] || [ $VER -eq 5 ]
+if [ $VER -eq 0 ] || [ $VER -eq 1 ] || [ $VER -eq 2 ] || [ $VER -eq 3 ] || [ $VER -eq 4 ] || [ $VER -eq 5 ]
 then
 	echo ''
 	echo '--Creating experiment log file--'
@@ -171,7 +171,7 @@ then
 	#	This way, the most recent run's information is at the top
 	echo -e "${LINE0}\n${LINE1}\n${LINE2}\n${LINE3}\n${LINE4}\n${LINE5}\n${LINE6}\n${LINE7}\n${LINE8}\n${LINE9}\n$(cat ${LOG_FILE})" > $LOG_FILE
 fi
-if [ $VER -eq 0 ] || [ $VER -eq 1 ] || [ $VER -eq 2 ] || [ $VER -eq 5 ]
+if [ $VER -eq 0 ] || [ $VER -eq 1 ] || [ $VER -eq 2 ] || [ $VER -eq 3 ] || [ $VER -eq 4 ] || [ $VER -eq 5 ]
 then
 	if [ -e $LOG_FILE ]
 	then
@@ -190,7 +190,8 @@ then
 	python3 ${modules_o_dir}/sanity_plots.py ${NAME} ${RUN_NAME}
 fi
 ###############################################################################
-# Pause for sanity check
+# Pause for sanity check if requested
+#	Always pauses if submitting to a supercomputer
 if [ $SANITY -eq 1 ] || [ $LOC -eq 0 ]
 then
 	echo 'Pause for sanity check of log file and plots.'
