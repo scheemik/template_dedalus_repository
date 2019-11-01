@@ -3,10 +3,11 @@ If the keep (-k) option is set to 1, this script will write out
 parameters of the experiment to the relevant log file
 
 Usage:
-    write_out_params.py NAME
+    write_out_params.py NAME RUN_NAME
 
 Options:
     NAME	            # -n, Name of simulation run
+    RUN_NAME            # -r, Name of particular run of simulation
 
 """
 
@@ -21,6 +22,7 @@ from docopt import docopt
 if __name__ == '__main__':
     arguments = docopt(__doc__)
     NAME = str(arguments['NAME'])
+    RUN_NAME = str(arguments['RUN_NAME'])
 
 ###############################################################################
 # Fetch parameters from switchboard file
@@ -61,7 +63,7 @@ lam_x  = sbp.lam_x
 # Write out to file
 
 # Name of log file
-logfile = '../' + NAME + '/' + NAME + '_Log.txt'
+logfile = '../' + NAME + '/outputs/' + RUN_NAME + '_Log.txt'
 # Write params to log file
 with open(logfile, 'a') as the_file:
     the_file.write('--Simulation Parameters--\n')

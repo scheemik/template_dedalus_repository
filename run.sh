@@ -7,6 +7,9 @@
 #				-v <version: what scripts to run>
 #				-s <sanity: pause to check setup before running>
 
+# Current datetime
+DATETIME=`date +"%Y-%m-%d_%Hh%M"`
+
 # if:
 # VER = 0 (Full)
 #	-> run the script, merge, plot frames, create gif, create mp4, etc
@@ -126,31 +129,25 @@ else
 	echo 'Module selection file not found'
 fi
 ###############################################################################
-# Sanity check by plotting vertical profiles and boundary forcing
+# Create a name for this particular run
 RUN_NAME=${DATETIME}_${NAME}
-if [ $SANITY -eq 1 ] || [ $LOC -eq 0 ]
+# Check if output directory exists
+if [ ! -e ${output_dir} ]
 then
-	echo ''
-	echo '--Creating plots for sanity check--'
-	# Check if output directory exists
-	if [ ! -e ${output_dir} ]
-	then
-		echo "Creating ${output_dir} directory"
-		mkdir ${output_dir}
-	fi
-	python3 ${modules_o_dir}/sanity_plots.py ${NAME} ${RUN_NAME}
+	echo "Creating ${output_dir} directory"
+	mkdir ${output_dir}
 fi
 ###############################################################################
 # Create (or prepend) log file if running code
 #	if (VER = 0, 1, 2)
-LOG_FILE=${NAME}_Log.txt
+LOG_FILE=${output_dir}/${RUN_NAME}_Log.txt
 if [ $VER -eq 0 ] || [ $VER -eq 1 ] || [ $VER -eq 2 ] || [ $VER -eq 5 ]
 then
 	echo ''
 	echo '--Creating experiment log file--'
 	touch $LOG_FILE
 	LINE0="----------------------------------------------"
-	LINE1="Log update: ${DATETIME}"
+	LINE1="Log for: ${RUN_NAME}"
 	LINE2=""
 	LINE3="--Run options--"
 	LINE4=""
@@ -172,11 +169,19 @@ if [ $VER -eq 0 ] || [ $VER -eq 1 ] || [ $VER -eq 2 ] || [ $VER -eq 5 ]
 then
 	if [ -e $LOG_FILE ]
 	then
-		python3 ${modules_o_dir}/${write_out_script} ${NAME}
+		python3 ${modules_o_dir}/${write_out_script} ${NAME} ${RUN_NAME}
 		echo 'Done creating log file'
 	else
 		echo 'Log file not found'
 	fi
+fi
+###############################################################################
+# Sanity check by plotting vertical profiles and boundary forcing
+if [ $SANITY -eq 1 ] || [ $LOC -eq 0 ]
+then
+	echo ''
+	echo '--Creating plots for sanity check--'
+	python3 ${modules_o_dir}/sanity_plots.py ${NAME} ${RUN_NAME}
 fi
 ###############################################################################
 # Pause for sanity check
@@ -194,7 +199,7 @@ then
 	then
 		echo "Executing experiment run file: run_${NAME}.sh"
 		echo ''
-		bash run_${NAME}.sh -n $NAME -c $CORES -l $LOC -v $VER
+		bash run_${NAME}.sh -n $NAME -r $RUN_NAME -c $CORES -l $LOC -v $VER
 	else
 		echo 'Experiment run file does not exist. Aborting script'
 		exit 1

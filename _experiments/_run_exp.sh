@@ -2,6 +2,7 @@
 # A bash script to run the Dedalus python code
 # Optionally takes in arguments:
 #	$ sh _run_exp.sh -n <name of experiment> <- not optional
+#					 -r <run name>
 #					 -c <cores>
 #					 -l <local(1) or Niagara(0)>
 #					 -v <version: what scripts to run>
@@ -23,11 +24,12 @@ DATETIME=`date +"%Y-%m-%d_%Hh%M"`
 # VER = 5
 #	-> run the script, merge
 
-while getopts n:c:l:v:k:x:z: option
+while getopts n:r:c:l:v: option
 do
 	case "${option}"
 		in
 		n) NAME=${OPTARG};;
+		r) RUN_NAME=${OPTARG};;
 		c) CORES=${OPTARG};;
 		l) LOC=${OPTARG};;
 		v) VER=${OPTARG};;
@@ -43,6 +45,11 @@ if [ -z "$NAME" ]
 then
 	echo "-n, No name specified, aborting script"
 	exit 1
+fi
+if [ -z "$RUN_NAME" ]
+then
+	RUN_NAME=${DATETIME}_${NAME}
+	echo "-r, No run name specified, using RUN_NAME=$RUN_NAME"
 fi
 if [ -z "$CORES" ]
 then
@@ -85,9 +92,6 @@ frames_path='frames'
 gif_cre_file="${modules_o_dir}/create_gif.py"
 # Name of output directory
 output_dir='outputs'
-
-# Create the name of this particular run
-RUN_NAME=${DATETIME}_${NAME}
 
 ###############################################################################
 # run the script
@@ -203,7 +207,6 @@ then
 		echo "Overwriting $gif_name"
 		rm $gif_name
 	fi
-	#echo "${output_dir}/${DATETIME}_${NAME}.gif"
 	files=/$frames_path/*
 	if [ -e $frames_path ] && [ ${#files[@]} -gt 0 ]
 	then
