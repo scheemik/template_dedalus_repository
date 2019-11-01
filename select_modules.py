@@ -10,16 +10,25 @@ import numpy as np
 ###############################################################################
 # Select physics modules
 
-# Equations of motion and boundary conditions
-eq_module       = 'eq_default'
-# Boundary forcing
-bf_module       = 'bf_default'
-# Background profile
-bp_module       = 'bp_default'
-# Sponge layer
-sl_module       = 'sl_default'
-# Rayleigh friction
-rf_module       = 'rf_default'
+module_dicts = [
+            {'module_name':    'eqs_and_bcs',
+             'pick_this_one':  'eq_default'},
+
+            {'module_name':    'boundary_forcing',
+             'pick_this_one':  'bf_default'},
+
+            {'module_name':    'background_profile',
+             'pick_this_one':  'bp_default'},
+
+            {'module_name':    'sponge_layer',
+             'pick_this_one':  'sl_default'},
+
+            {'module_name':    'rayleigh_friction',
+             'pick_this_one':  'rf_default'},
+
+            {'module_name':    'energy_flux',
+             'pick_this_one':  'ef_default'},
+            ]
 
 ###############################################################################
 ################    Shouldn't need to edit below here    #####################
@@ -46,11 +55,8 @@ if rank==0 and os.path.isfile('new_exp.txt'):
     import sys
     p_module_dir = './_modules_physics/'
 
-    add_p_module(p_module_dir, eq_module, 'eqs_and_bcs')
-    add_p_module(p_module_dir, bf_module, 'boundary_forcing')
-    add_p_module(p_module_dir, bp_module, 'background_profile')
-    add_p_module(p_module_dir, sl_module, 'sponge_layer')
-    add_p_module(p_module_dir, rf_module, 'rayleigh_friction')
+    for mod_dict in module_dicts:
+        add_p_module(p_module_dir, mod_dict['pick_this_one'], mod_dict['module_name'])
 
 ###############################################################################
 # Cleaning up the _modules-physics directory tree
