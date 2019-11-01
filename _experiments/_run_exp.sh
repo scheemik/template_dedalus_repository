@@ -2,9 +2,9 @@
 # A bash script to run the Dedalus python code
 # Optionally takes in arguments:
 #	$ sh _run_exp.sh -n <name of experiment> <- not optional
-#				-c <cores>
-#				-l <local(1) or Niagara(0)>
-#				-v <version: what scripts to run>
+#					 -c <cores>
+#					 -l <local(1) or Niagara(0)>
+#					 -v <version: what scripts to run>
 
 # Current datetime
 DATETIME=`date +"%Y-%m-%d_%Hh%M"`
@@ -85,109 +85,6 @@ frames_path='frames'
 gif_cre_file="${modules_o_dir}/create_gif.py"
 # Name of output directory
 output_dir='outputs'
-# Name of write out params to log file script
-write_out_script='write_out_params.py'
-
-###############################################################################
-echo ''
-echo '--Checking experiment directory--'
-if [ -e _experiments/${NAME} ]
-then
-	echo 'Experiment directory found'
-else
-	echo "Experiment directory for ${NAME} not found. Aborting script."
-	exit 1
-fi
-
-###############################################################################
-# Checking modules
-if [ -e _experiments/${NAME}/${modules_o_dir} ]
-then
-	echo 'Other module files found'
-else
-	echo 'Other module files not found. Aborting script'
-	exit 1
-fi
-if [ -e _experiments/${NAME}/${modules_p_dir} ]
-then
-	echo 'Physics module files found'
-else
-	echo 'Physics module files not found. Aborting script'
-	exit 1
-fi
-
-###############################################################################
-###############################################################################
-echo ''
-echo '--Navigating to experiment directory--'
-cd _experiments/${NAME}
-echo 'Done'
-###############################################################################
-###############################################################################
-# Rearranging modules
-#	Call select modules script to move around the modules as needed
-echo ''
-echo '--Selecting physics modules--'
-if [ -e select_modules.py ]
-then
-	${mpiexec_command} -n ${CORES} python3 select_modules.py
-	echo 'Modules selected'
-else
-	echo 'Module selection file not found'
-fi
-###############################################################################
-# Sanity check by plotting vertical profiles and boundary forcing
-RUN_NAME=${DATETIME}_${NAME}
-if [ $VER != 1 ]
-then
-	echo ''
-	echo '--Creating plots for sanity check--'
-	# Check if output directory exists
-	if [ ! -e ${output_dir} ]
-	then
-		echo "Creating ${output_dir} directory"
-		mkdir ${output_dir}
-	fi
-	python3 ${modules_o_dir}/sanity_plots.py ${NAME} ${RUN_NAME}
-fi
-###############################################################################
-# Create (or prepend) log file if running code
-#	if (VER = 0, 1, 2)
-LOG_FILE=${NAME}_Log.txt
-if [ $VER -eq 0 ] || [ $VER -eq 1 ] || [ $VER -eq 2 ] || [ $VER -eq 5 ]
-then
-	echo ''
-	echo '--Creating experiment log file--'
-	touch $LOG_FILE
-	LINE0="----------------------------------------------"
-	LINE1="Log update: ${DATETIME}"
-	LINE2=""
-	LINE3="--Run options--"
-	LINE4=""
-	LINE5="-n, Experiment name = ${NAME}"
-	LINE6="-c, Number of cores = ${CORES}"
-	if [ $LOC -eq 1 ]
-	then
-		LINE7="-l, (${LOC}) Simulation run on local pc"
-	else
-		LINE7="-l, (${LOC}) Simulation run on Niagara"
-	fi
-	LINE8="-v, Version of run = ${VER}"
-	LINE9=""
-	# This pre-pends the information to the log file
-	#	This way, the most recent run's information is at the top
-	echo -e "${LINE0}\n${LINE1}\n${LINE2}\n${LINE3}\n${LINE4}\n${LINE5}\n${LINE6}\n${LINE7}\n${LINE8}\n${LINE9}\n$(cat ${LOG_FILE})" > $LOG_FILE
-fi
-if [ $VER -eq 0 ] || [ $VER -eq 1 ] || [ $VER -eq 2 ] || [ $VER -eq 5 ]
-then
-	if [ -e $LOG_FILE ]
-	then
-		python3 ${modules_o_dir}/${write_out_script} ${NAME}
-		echo 'Done creating log file'
-	else
-		echo 'Log file not found'
-	fi
-fi
 
 ###############################################################################
 # run the script

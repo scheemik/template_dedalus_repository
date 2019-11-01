@@ -37,8 +37,6 @@ def add_p_module(p_module_dir, p_module, module_name_str):
     if os.path.isfile(pm_path):
         copy2(pm_path, p_module_dir + module_name_str + '.py')
         print('Using ' + p_module + '.py')
-    # else:
-    #     print(p_module + '.py not found. Was it selected previously?')
 
 # If this is the root thread, then do all this stuff
 if rank==0 and os.path.isfile('new_exp.txt'):
