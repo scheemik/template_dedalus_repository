@@ -66,7 +66,7 @@ g           = 9.81          # [m/s^2] Acceleration due to gravity
 ###############################################################################
 # Plotting parameters
 
-# Frames and animation
+# Vertical profile and Wave field animation
 # If True, plots b, p, u, and w. If false, plots profile and w
 plot_all_variables = False
 # If True, the sponge layer plot will be plotted to the right of the animation
@@ -74,6 +74,12 @@ plot_sponge        = False
 # If True, the Rayleigh friction plot will replace background profile
 plot_rf            = False
 plot_twin          = False
+
+# Auxiliary snapshot plots
+plot_ef_total = True
+plot_ef_comps = False
+
+# Miscellaneous
 # Fudge factor to make plots look nicer
 buffer = 0.04
 # Extra buffer for a constant vertical profile
