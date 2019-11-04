@@ -60,8 +60,11 @@ echo '--Logging in to Niagara--'
 ssh -i ~/.ssh/niagarasshkeys mschee@niagara.scinet.utoronto.ca << EOF
 echo ''
 cd ${DIRECTORY}/${SUBDIRECT}
+echo "Pulling from git:"
 git pull
-cd _experiments/${NAME}
+echo ''
+cp -r _experiments/${NAME} ${SCRATCH}/${DIRECTORY}/${SUBDIRECT}_experiments/
+cd ${SCRATCH}${SCRATCH}/${DIRECTORY}/${SUBDIRECT}_experiments/${NAME}
 ls
 EOF
 #ssh -XY mschee@graham.computecanada.ca
