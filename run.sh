@@ -3,7 +3,8 @@
 # Takes in arguments:
 #	$ sh run.sh -n <name of experiment> <- not optional
 #				-c <cores>
-#				-l <local(1) or Niagara(0)>
+#				-l <local(1) or HPC(0)>
+#				-h <HPC resource: Niagara, Graham, etc.>
 #				-v <version: what scripts to run>
 #				-s <sanity: pause to check setup before running>
 
@@ -24,13 +25,14 @@ DATETIME=`date +"%Y-%m-%d_%Hh%M"`
 # VER = 5
 #	-> run the script, merge
 
-while getopts n:c:l:v:s: option
+while getopts n:c:l:h:v:s: option
 do
 	case "${option}"
 		in
 		n) NAME=${OPTARG};;
 		c) CORES=${OPTARG};;
 		l) LOC=${OPTARG};;
+		h) HPC=${OPTARG};;
 		v) VER=${OPTARG};;
 		s) SANITY=${OPTARG};;
 	esac
@@ -63,8 +65,22 @@ then
 	echo "-s, No sanity specified, using SANITY=$SANITY"
 fi
 
+###############################################################################
+# Check which HPC resource is specified, if needed
+if [ $LOC -eq 0 ]
+then
+	if [ -z "$HPC" ]
+	then
+		HPC='Niagara'
+		echo "-h, No HPC resource specified, using HPC=$HPC"
+	fi
+fi
+
+###############################################################################
 # The command and arguments for running scripts with mpi
 mpiexec_command="mpiexec"
+# Location of the modules-HPC directory
+modules_h_dir='_modules_HPC'
 # Location of the modules-other directory
 modules_o_dir='_modules_other'
 # Location of the modules-physics directory
@@ -215,9 +231,14 @@ then
 		exit 1
 	fi
 else
-	# Go back up to project directory
-	cd ..
-	cd ..
-	echo "Calling script to submit to supercomputer"
-	bash submit_to_Niagara.sh -n $NAME -r $RUN_NAME -c $CORES
+	# Check if the specified HPC submit script exists
+	HPC_sub_script=${modules_h_dir}/${HPC}_job_submit.sh
+	if [ -e $HPC_sub_script ]
+	then
+		echo "Calling script to submit to ${HPC}"
+		bash ${HPC_sub_script} -n $NAME -r $RUN_NAME -c $CORES
+	else
+		echo "Submit script for ${HPC} does not exist. Aborting script"
+		exit 1
+	fi
 fi
