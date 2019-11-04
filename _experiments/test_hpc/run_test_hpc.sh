@@ -4,7 +4,7 @@
 #	$ sh _run_exp.sh -n <name of experiment> <- not optional
 #					 -r <run name>
 #					 -c <cores>
-#					 -l <local(1) or Niagara(0)>
+#					 -l <local(1) or HPC(0)>
 #					 -v <version: what scripts to run>
 
 # Current datetime
@@ -58,7 +58,7 @@ then
 fi
 if [ -z "$LOC" ]
 then
-	LOC=1 # 1 if local, 0 if on Niagara
+	LOC=1 # 1 if local, 0 if on HPC
 	echo "-l, No version specified, using LOC=$LOC"
 fi
 if [ -z "$VER" ]

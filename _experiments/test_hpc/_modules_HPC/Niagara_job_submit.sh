@@ -52,10 +52,12 @@ git push
 ###############################################################################
 # Prepare scratch
 DATE=`date +"%m-%d_%Hh%M"`
+JOBNAME=$RUN_NAME
 DIRECTORY='Dedalus_Projects'
 SUBDIRECT='template_dedalus_repository'
 NHOME='/home/n/ngrisoua/mschee'
 NSCRATCH='/scratch/n/ngrisoua/mschee'
+LANCEUR_SCRIPT='_modules_HPC/Niagara_lanceur.slrm'
 
 echo ''
 echo '--Logging in to Niagara--'
@@ -71,18 +73,11 @@ echo "Copying experiment to scratch directory"
 cp -r ${NHOME}/${DIRECTORY}/${SUBDIRECT}/_experiments/${NAME} ${NSCRATCH}/${DIRECTORY}/${SUBDIRECT}/_experiments/${NAME}
 cd ${NSCRATCH}/${DIRECTORY}/${SUBDIRECT}/_experiments/${NAME}
 pwd
-ls
+sbatch --job-name=$JOBNAME $LANCEUR_SCRIPT -n ${NAME} -r ${RUN_NAME} -c ${CORES}
+squeue -u mschee
 EOF
 #ssh -XY mschee@graham.computecanada.ca
 
-# Go into directory of job to run
-#cd ${HOME}/${DIRECTORY}/${SUBDIRECT}
-# Pull from github the latest version of that project
-#git pull
-# Copy that into the scratch directory
-#cp -r ${HOME}/${DIRECTORY}/${SUBDIRECT} ${SCRATCH}/${DIRECTORY}/${RUN_DIR}
-#mv ${SCRATCH}/${DIRECTORY}/${RUN_DIR}/${SUBDIRECT} ${SCRATCH}/${DIRECTORY}/${RUN_DIR}/${JOBNAME}
-#cd ${SCRATCH}/${DIRECTORY}/${RUN_DIR}/${JOBNAME}
 
 # Submit the job
 #sbatch --job-name=$JOBNAME lanceur.slrm -c $CORES -n $NAME
