@@ -7,39 +7,41 @@
 #SBATCH --time=0-00:20  # d-HH:MM
 
 # Optionally takes in arguments:
-#	$ sbatch lanceur.slrm -c <cores>
-#                         -n <name>
-#                         -x <n_x>
-#                         -z <n_z>
+#	$ sbatch Niagara_lanceur.slrm -n <exp_name> <- not optional
+#								  -r <run name>
+#								  -c <cores>
 
-while getopts c:n:x:z: option
+# Current datetime
+DATETIME=`date +"%Y-%m-%d_%Hh%M"`
+
+while getopts n:r:c: option
 do
 	case "${option}"
 		in
-		c) CORES=${OPTARG};;
 		n) NAME=${OPTARG};;
-		x) N_X=${OPTARG};;
-		z) N_Z=${OPTARG};;
+		r) RUN_NAME=${OPTARG};;
+		c) CORES=${OPTARG};;
 	esac
 done
 
 # check to see if arguments were passed
+if [ -z "$NAME" ]
+then
+	echo "-n, No name specified, aborting script"
+	exit 1
+fi
+if [ -z "$RUN_NAME" ]
+then
+	RUN_NAME=${DATETIME}_${NAME}
+	echo "-r, No run name specified, using RUN_NAME=$RUN_NAME"
+fi
 if [ -z "$CORES" ]
 then
-    CORES=40
+    CORES=32
 	echo "No number of cores specified, using CORES=${CORES}"
 fi
-if [ -z "$N_X" ]
-then
-    N_X=256
-	echo "No N_X value specified, using N_X=${N_X}"
-fi
-if [ -z "$N_Z" ]
-then
-    N_Z=64
-	echo "No N_Z value specified, using N_Z=${N_Z}"
-fi
 
+# Load module stack
 module purge
 module load python/3.6.5 #intelpython3
 module load intel/2018.2
@@ -53,9 +55,9 @@ export FFTW_PATH="$SCINET_FFTW_MPI_ROOT"
 export MPI_PATH="$I_MPI_ROOT"
 export MPLBACKEND=pdf
 
-source ${HOME}/Dedalus/Stack_test/venv/bin/activate
+source ${HOME}/Dedalus_Projects/venv/bin/activate
 
-sh run.sh -n $NAME -c $CORES -l 0 -v 1 -k 1 -x $N_X -z $N_Z
+bash ../run_${NAME}.sh -n $NAME -r $RUN_NAME -c $CORES -l 0 -v 1
 
 deactivate
 
