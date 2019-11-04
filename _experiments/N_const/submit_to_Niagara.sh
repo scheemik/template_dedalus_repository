@@ -65,8 +65,18 @@ git pull
 echo ''
 cd
 pwd
-cp -r ${DIRECTORY}/${SUBDIRECT}/_experiments/${NAME} $SCRATCH/${DIRECTORY}/${SUBDIRECT}/_experiments/${NAME}
-cd ${SCRATCH}/${DIRECTORY}/${SUBDIRECT}/_experiments/${NAME}
+ls
+cd ${DIRECTORY}
+pwd
+ls
+cd ${SUBDIRECT}
+pwd
+ls
+cd _experiments
+pwd
+ls
+cd ${NAME}
+pwd
 ls
 EOF
 #ssh -XY mschee@graham.computecanada.ca
