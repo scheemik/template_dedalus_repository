@@ -183,7 +183,7 @@ then
 fi
 ###############################################################################
 # Sanity check by plotting vertical profiles and boundary forcing
-if [ $SANITY -eq 1 ] || [ $LOC -eq 0 ]
+if [ $SANITY -eq 1 ] #|| [ $LOC -eq 0 ]
 then
 	echo ''
 	echo '--Creating plots for sanity check--'
@@ -192,7 +192,7 @@ fi
 ###############################################################################
 # Pause for sanity check if requested
 #	Always pauses if submitting to a supercomputer
-if [ $SANITY -eq 1 ] || [ $LOC -eq 0 ]
+if [ $SANITY -eq 1 ] #|| [ $LOC -eq 0 ]
 then
 	echo 'Pause for sanity check of log file and plots.'
 	read -p 'Press enter to continue or Ctrl+c to cancel.'
