@@ -65,7 +65,7 @@ git pull
 echo ''
 cd
 pwd
-cp -r ${DIRECTORY}/${SUBDIRECT}_experiments/${NAME} $SCRATCH/${DIRECTORY}/${SUBDIRECT}/_experiments/${NAME}
+cp -r ${DIRECTORY}/${SUBDIRECT}/_experiments/${NAME} $SCRATCH/${DIRECTORY}/${SUBDIRECT}/_experiments/${NAME}
 cd ${SCRATCH}/${DIRECTORY}/${SUBDIRECT}/_experiments/${NAME}
 ls
 EOF
