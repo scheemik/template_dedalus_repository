@@ -8,7 +8,8 @@ code_file='core_code.py'
 switch_dir='_modules_physics/switchboards'
 select_mod_file='select_modules.py'
 run_file='_experiments/_run_exp.sh'
-submit_file='submit_to_Niagara.sh'
+# Location of the modules-HPC directory
+modules_h_dir='_modules_HPC'
 # Location of the modules-other directory
 modules_o_dir='_modules_other'
 # Location of the modules-physics directory
@@ -100,17 +101,25 @@ else
 	echo "No run file found. Aborting script"
 	exit 1
 fi
-if [ -e $submit_file ]
-then
-	cp $submit_file _experiments/${NAME}
-	echo "Copied $submit_file"
-else
-	echo "No submit file found. Aborting script"
-	exit 1
-fi
 
 ###############################################################################
 # Adding modules
+# Populate directory with other modules if needed
+if [ -e _experiments/${NAME}/${modules_h_dir} ]
+then
+	echo 'HPC module files already added'
+else
+	echo ''
+	echo '--Adding HPC module files--'
+	echo ''
+	if [ -e $modules_h_dir ]
+	then
+		cp -r $modules_h_dir _experiments/$NAME
+		echo "Copied $modules_h_dir"
+	else
+		echo "Cannot find HPC modules"
+	fi
+fi
 # Populate directory with other modules if needed
 if [ -e _experiments/${NAME}/${modules_o_dir} ]
 then
