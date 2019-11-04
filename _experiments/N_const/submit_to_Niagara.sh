@@ -54,8 +54,12 @@ SUBDIRECT='template_dedalus_repository'
 RUN_DIR='runs'
 
 echo "Log in to Niagara:"
-set -x # echos each command as it is executed
-ssh -XY mschee@niagara.scinet.utoronto.ca 'ls && cd $SCRATCH && ls'
+#set -x # echos each command as it is executed
+ssh -XY mschee@niagara.scinet.utoronto.ca << EOF
+ls
+cd $SCRATCH
+ls
+EOF
 #ssh -XY mschee@graham.computecanada.ca
 
 # Go into directory of job to run
