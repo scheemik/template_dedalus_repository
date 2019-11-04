@@ -63,8 +63,9 @@ cd ${DIRECTORY}/${SUBDIRECT}
 echo "Pulling from git:"
 git pull
 echo ''
-cp -r _experiments/${NAME} $SCRATCH/${DIRECTORY}/${SUBDIRECT}/_experiments/${NAME}
-cd ${SCRATCH}${SCRATCH}/${DIRECTORY}/${SUBDIRECT}/_experiments/${NAME}
+cd $HOME
+cp -r ${DIRECTORY}/${SUBDIRECT}_experiments/${NAME} $SCRATCH/${DIRECTORY}/${SUBDIRECT}/_experiments/${NAME}
+cd ${SCRATCH}/${DIRECTORY}/${SUBDIRECT}/_experiments/${NAME}
 ls
 EOF
 #ssh -XY mschee@graham.computecanada.ca
