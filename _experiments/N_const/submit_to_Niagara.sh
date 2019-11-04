@@ -39,7 +39,7 @@ LOC=0
 
 # Push specified experiment to git, using -f to override .git/info/exclude
 git add -f _experiments/${NAME}/*
-git commit -m "Added ${NAME} to be run on the supercomputer"
+git commit -m "Added ${NAME} to run ${RUN_NAME} on supercomputer"
 git push
 
 # Prepare scratch
@@ -53,8 +53,9 @@ DIRECTORY='Dedalus'
 SUBDIRECT='template_dedalus_repository'
 RUN_DIR='runs'
 
-#set -x # echos each command as it is executed
-
+echo "Log in to Niagara:"
+set -x # echos each command as it is executed
+niagara
 # Go into directory of job to run
 #cd ${HOME}/${DIRECTORY}/${SUBDIRECT}
 # Pull from github the latest version of that project
