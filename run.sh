@@ -4,7 +4,7 @@
 #	$ sh run.sh -n <name of experiment> <- not optional
 #				-c <cores>
 #				-l <local(1) or HPC(0)>
-#				-h <HPC resource: Niagara, Graham>
+#				-h <HPC resource: Niagara, Graham, etc.>
 #				-v <version: what scripts to run>
 #				-s <sanity: pause to check setup before running>
 
