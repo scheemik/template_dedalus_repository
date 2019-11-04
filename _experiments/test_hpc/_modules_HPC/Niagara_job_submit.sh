@@ -46,7 +46,7 @@ pwd
 ###############################################################################
 # Push specified experiment to git, using -f to override .git/info/exclude
 git add -f _experiments/${NAME}/*
-git commit -m "Added ${NAME} to run ${RUN_NAME} on supercomputer"
+git commit -m "Added ${NAME} to run ${RUN_NAME} on Niagara"
 git push
 
 ###############################################################################
@@ -73,6 +73,7 @@ echo "Copying experiment to scratch directory"
 cp -r ${NHOME}/${DIRECTORY}/${SUBDIRECT}/_experiments/${NAME} ${NSCRATCH}/${DIRECTORY}/${SUBDIRECT}/_experiments/
 cd ${NSCRATCH}/${DIRECTORY}/${SUBDIRECT}/_experiments/${NAME}
 pwd
+git pull
 sbatch --job-name=$JOBNAME $LANCEUR_SCRIPT -n ${NAME} -r ${RUN_NAME} -c ${CORES}
 squeue -u mschee
 EOF
