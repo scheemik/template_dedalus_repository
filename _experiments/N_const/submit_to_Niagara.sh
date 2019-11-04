@@ -52,6 +52,8 @@ JOBNAME="${DATE}_${NAME}"
 DIRECTORY='Dedalus_Projects'
 SUBDIRECT='template_dedalus_repository'
 RUN_DIR='runs'
+NHOME='/home/n/ngrisoua/mschee'
+NSCRATCH='/scratch/n/ngrisoua/mschee'
 
 echo ''
 echo '--Logging in to Niagara--'
@@ -63,20 +65,8 @@ cd ${DIRECTORY}/${SUBDIRECT}
 echo "Pulling from git:"
 git pull
 echo ''
-cp -r ${HOME}/${DIRECTORY}/${SUBDIRECT}/_experiments/${NAME}/ ${SCRATCH}/${DIRECTORY}/${SUBDIRECT}/_experiments/${NAME}
-cd
-pwd
-ls
-cd ${DIRECTORY}
-pwd
-ls
-cd ${SUBDIRECT}
-pwd
-ls
-cd _experiments
-pwd
-ls
-cd ${NAME}
+cp -r ${NHOME}/${DIRECTORY}/${SUBDIRECT}/_experiments/${NAME} ${NSCRATCH}/${DIRECTORY}/${SUBDIRECT}/_experiments/${NAME}
+cd ${NSCRATCH}/${DIRECTORY}/${SUBDIRECT}/_experiments/${NAME}
 pwd
 ls
 EOF
