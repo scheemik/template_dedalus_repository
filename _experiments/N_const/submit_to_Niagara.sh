@@ -54,8 +54,9 @@ SUBDIRECT='template_dedalus_repository'
 RUN_DIR='runs'
 
 echo "Log in to Niagara:"
-#set -x # echos each command as it is executed
-ssh -XY mschee@niagara.scinet.utoronto.ca << EOF
+# Log in to Niagara, execute commands until EOF, then exit
+#ssh -XY mschee@niagara.scinet.utoronto.ca << EOF
+ssh -i ~/.ssh/niagarasshkeys mschee@niagara.scinet.utoronto.ca << EOF
 ls
 cd $SCRATCH
 ls
