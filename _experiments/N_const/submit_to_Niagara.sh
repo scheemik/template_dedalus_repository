@@ -55,7 +55,7 @@ RUN_DIR='runs'
 
 echo "Log in to Niagara:"
 set -x # echos each command as it is executed
-ssh -XY mschee@niagara.scinet.utoronto.ca
+ssh -XY mschee@niagara.scinet.utoronto.ca 'ls'
 #ssh -XY mschee@graham.computecanada.ca
 
 # Go into directory of job to run
