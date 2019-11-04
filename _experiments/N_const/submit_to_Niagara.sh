@@ -49,16 +49,19 @@ DATE=`date +"%m-%d_%Hh%M"`
 #printf -v CO "%02d" $CORES
 JOBNAME="${DATE}_${NAME}"
 #JOBNAME="$DATE-2D_RB-n$CO"
-DIRECTORY='Dedalus'
+DIRECTORY='Dedalus_Projects'
 SUBDIRECT='template_dedalus_repository'
 RUN_DIR='runs'
 
-echo "Log in to Niagara:"
+echo ''
+echo '--Logging in to Niagara--'
 # Log in to Niagara, execute commands until EOF, then exit
-#ssh -XY mschee@niagara.scinet.utoronto.ca << EOF
+#	The -i flag points to an rsa file so I don't need to enter my password
 ssh -i ~/.ssh/niagarasshkeys mschee@niagara.scinet.utoronto.ca << EOF
 ls
-cd $SCRATCH
+echo ''
+echo ${DIRECTORY}
+cd ${DIRECTORY}
 ls
 EOF
 #ssh -XY mschee@graham.computecanada.ca
