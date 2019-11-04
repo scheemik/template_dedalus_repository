@@ -3,18 +3,16 @@
 # To be run from experiment directory after called by run.sh
 # Takes in arguments:
 #	$ bash pull_HPC_exp.sh  -n <exp_name>
-#							-r <run name>
 #							-h <HPC resource: Niagara, Graham, etc.>
 
 # Current datetime
 DATETIME=`date +"%Y-%m-%d_%Hh%M"`
 
-while getopts n:r:h: option
+while getopts n:h: option
 do
 	case "${option}"
 		in
 		n) NAME=${OPTARG};;
-		r) RUN_NAME=${OPTARG};;
 		h) HPC=${OPTARG};;
 	esac
 done
@@ -23,11 +21,6 @@ done
 if [ -z "$NAME" ]
 then
 	echo "-n, No name specified, aborting script"
-	exit 1
-fi
-if [ -z "$RUN_NAME" ]
-then
-	echo "-r, No run name specified, aborting script"
 	exit 1
 fi
 if [ -z "$HPC" ]
@@ -53,7 +46,7 @@ echo ''
 cd ${NSCRATCH}/${DIRECTORY}/${SUBDIRECT}
 echo "Pushing ${NAME} to git:"
 git add -f _experiments/${NAME}/*
-git commit -m "Moving ${RUN_NAME} from HPC to local"
+git commit -m "Moving ${NAME} from HPC to local"
 git push
 echo ''
 EOF
