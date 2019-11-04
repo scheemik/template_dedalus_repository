@@ -58,10 +58,10 @@ echo '--Logging in to Niagara--'
 # Log in to Niagara, execute commands until EOF, then exit
 #	The -i flag points to an rsa file so I don't need to enter my password
 ssh -i ~/.ssh/niagarasshkeys mschee@niagara.scinet.utoronto.ca << EOF
-ls
 echo ''
-echo ${DIRECTORY}
-cd ${DIRECTORY}
+cd ${DIRECTORY}/${SUBDIRECT}
+git pull
+cd _experiments/${NAME}
 ls
 EOF
 #ssh -XY mschee@graham.computecanada.ca
