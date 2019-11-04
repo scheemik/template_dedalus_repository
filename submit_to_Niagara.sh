@@ -39,7 +39,7 @@ LOC=0
 
 # Push specified experiment to git, using -f to override .git/info/exclude
 git add -f _experiments/${NAME}/*
-git commit -m "Added ${NAME} to be run on the supercomputer"
+git commit -m "Added ${NAME} to run ${RUN_NAME} on supercomputer"
 git push
 
 # Prepare scratch
@@ -53,7 +53,16 @@ DIRECTORY='Dedalus'
 SUBDIRECT='template_dedalus_repository'
 RUN_DIR='runs'
 
-#set -x # echos each command as it is executed
+echo ''
+echo '--Logging in to Niagara--'
+# Log in to Niagara, execute commands until EOF, then exit
+#	The -i flag points to an rsa file so I don't need to enter my password
+ssh -i ~/.ssh/niagarasshkeys mschee@niagara.scinet.utoronto.ca << EOF
+ls
+cd $SCRATCH
+ls
+EOF
+#ssh -XY mschee@graham.computecanada.ca
 
 # Go into directory of job to run
 #cd ${HOME}/${DIRECTORY}/${SUBDIRECT}
