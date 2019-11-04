@@ -63,6 +63,7 @@ cd ${DIRECTORY}/${SUBDIRECT}
 echo "Pulling from git:"
 git pull
 echo ''
+cp -r ${HOME}/${DIRECTORY}/${SUBDIRECT}/_experiments/${NAME}/ ${SCRATCH}/${DIRECTORY}/${SUBDIRECT}/_experiments/${NAME}
 cd
 pwd
 ls
