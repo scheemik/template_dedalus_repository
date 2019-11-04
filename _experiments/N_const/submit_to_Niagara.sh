@@ -55,7 +55,9 @@ RUN_DIR='runs'
 
 echo "Log in to Niagara:"
 set -x # echos each command as it is executed
-niagara
+ssh -XY mschee@niagara.scinet.utoronto.ca
+#ssh -XY mschee@graham.computecanada.ca
+
 # Go into directory of job to run
 #cd ${HOME}/${DIRECTORY}/${SUBDIRECT}
 # Pull from github the latest version of that project
