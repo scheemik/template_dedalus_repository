@@ -215,5 +215,9 @@ then
 		exit 1
 	fi
 else
+	# Go back up to project directory
+	cd ..
+	cd ..
 	echo "Calling script to submit to supercomputer"
+	bash submit_to_Niagara.sh -n $NAME -r $RUN_NAME -c $CORES
 fi
