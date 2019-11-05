@@ -78,11 +78,4 @@ squeue -u mschee
 EOF
 #ssh -XY mschee@graham.computecanada.ca
 
-
-# Submit the job
-#sbatch --job-name=$JOBNAME lanceur.slrm -c $CORES -n $NAME
-
-# Check the queue
-#squeue -u mschee
-
 echo 'Done'
