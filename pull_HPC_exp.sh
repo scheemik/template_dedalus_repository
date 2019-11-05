@@ -44,16 +44,19 @@ echo '--Logging in to Niagara--'
 ssh -i ~/.ssh/niagarasshkeys mschee@niagara.scinet.utoronto.ca << EOF
 echo ''
 cd ${NSCRATCH}/${DIRECTORY}/${SUBDIRECT}
-echo "Pushing ${NAME} to git:"
+echo "Adding ${NAME} to git"
 git add -f _experiments/${NAME}/*
+echo "Commiting"
 git commit -m "Moving ${NAME} from HPC to local"
-git push
+echo "Pushing from scratch directory"
+git config --global push.default simple
+git push -f origin master
+cd ${NHOME}/${DIRECTORY}/${SUBDIRECT}
 echo ''
 EOF
-#ssh -XY mschee@graham.computecanada.ca
-
 
 # Pull HPC experiment to local
+echo "Pulling ${NAME} to local"
 git pull
 
 echo 'Done'
