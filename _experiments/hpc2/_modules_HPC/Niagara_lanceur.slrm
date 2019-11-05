@@ -41,7 +41,7 @@ then
 	echo "No number of cores specified, using CORES=${CORES}"
 fi
 
-#SBATCH --output=outputs/${RUN_NAME}/slurm_%j.out
+#SBATCH --output=outputs/slurm_%j.out
 
 # Load module stack
 module purge
