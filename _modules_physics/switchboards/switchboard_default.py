@@ -111,7 +111,7 @@ dpi         = 100
 # Snapshot parameters
 snapshots_dir   = 'snapshots'
 snap_dt         = 0.25
-snap_max_writes = 50
+snap_max_writes = 25
 
 # Background profile snapshot parameters
 take_bp_snaps   = True
