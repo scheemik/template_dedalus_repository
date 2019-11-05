@@ -2,6 +2,7 @@
 #SBATCH --account=def-ngrisoua
 #SBATCH --mail-user=mschee@physics.utoronto.ca
 #SBATCH --mail-type=ALL
+#SBATCH --output=outputs/slurm_%j.out
 #SBATCH --ntasks-per-node=40
 #SBATCH --nodes=1
 #SBATCH --time=0-00:20  # d-HH:MM
