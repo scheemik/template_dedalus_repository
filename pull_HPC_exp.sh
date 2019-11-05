@@ -43,6 +43,7 @@ echo '--Logging in to Niagara--'
 #	The -i flag points to an rsa file so I don't need to enter my password
 ssh -i ~/.ssh/niagarasshkeys mschee@niagara.scinet.utoronto.ca << EOF
 echo ''
+echo "Navigating to ${NSCRATCH}/${DIRECTORY}/${SUBDIRECT}"
 cd ${NSCRATCH}/${DIRECTORY}/${SUBDIRECT}
 echo "Adding ${NAME} to git"
 git add -f _experiments/${NAME}/*
@@ -51,7 +52,9 @@ git commit -m "Moving ${NAME} from HPC to local"
 echo "Pushing from scratch directory"
 git config --global push.default simple
 git push -f origin master
+cd 
 cd ${NHOME}/${DIRECTORY}/${SUBDIRECT}
+git pull
 echo ''
 EOF
 
