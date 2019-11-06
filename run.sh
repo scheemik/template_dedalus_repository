@@ -44,15 +44,31 @@ then
 	echo "-n, No name specified, aborting script"
 	exit 1
 fi
-if [ -z "$CORES" ]
-then
-	CORES=2
-	echo "-c, No number of cores specified, using CORES=$CORES"
-fi
 if [ -z "$LOC" ]
 then
 	LOC=1 # 1 if local, 0 if on Niagara
 	echo "-l, No locality specified, using LOC=$LOC"
+fi
+###############################################################################
+# Check which HPC resource is specified, if needed
+if [ $LOC -eq 0 ]
+then
+	if [ -z "$HPC" ]
+	then
+		HPC='Niagara'
+		echo "-h, No HPC resource specified, using HPC=$HPC"
+	fi
+	if [ -z "$CORES" ]
+	then
+		CORES=32
+		echo "-c, No number of cores specified, using CORES=$CORES"
+	fi
+fi
+###############################################################################
+if [ -z "$CORES" ]
+then
+	CORES=2
+	echo "-c, No number of cores specified, using CORES=$CORES"
 fi
 if [ -z "$VER" ]
 then
@@ -63,17 +79,6 @@ if [ -z "$SANITY" ]
 then
 	SANITY=1
 	echo "-s, No sanity specified, using SANITY=$SANITY"
-fi
-
-###############################################################################
-# Check which HPC resource is specified, if needed
-if [ $LOC -eq 0 ]
-then
-	if [ -z "$HPC" ]
-	then
-		HPC='Niagara'
-		echo "-h, No HPC resource specified, using HPC=$HPC"
-	fi
 fi
 
 ###############################################################################
@@ -139,7 +144,7 @@ echo ''
 echo '--Selecting physics modules--'
 if [ -e select_modules.py ]
 then
-	${mpiexec_command} -n ${CORES} python3 select_modules.py
+	python3 select_modules.py
 	echo 'Modules selected'
 else
 	echo 'Module selection file not found'
@@ -179,7 +184,7 @@ then
 	then
 		LINE7="-l, (${LOC}) Simulation run on local pc"
 	else
-		LINE7="-l, (${LOC}) Simulation run on Niagara"
+		LINE7="-l, (${LOC}) Simulation run on ${HPC}"
 	fi
 	LINE8="-v, Version of run = ${VER}"
 	LINE9=""
