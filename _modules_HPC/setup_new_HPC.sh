@@ -56,5 +56,6 @@ ssh -i ~/.ssh/id_rsa ${USER}@${SERVER} << EOF
 echo ""
 pwd
 echo "Checking for remote ssh keys"
+ls ~/.ssh
 
 EOF
