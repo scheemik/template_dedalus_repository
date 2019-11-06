@@ -10,12 +10,13 @@
 # Current datetime
 DATETIME=`date +"%Y-%m-%d_%Hh%M"`
 
-while getopts n:r:c: option
+while getopts n:r:h:c: option
 do
 	case "${option}"
 		in
 		n) NAME=${OPTARG};;
 		r) RUN_NAME=${OPTARG};;
+		h) HPC=${OPTARG};;
 		c) CORES=${OPTARG};;
 	esac
 done
@@ -69,12 +70,19 @@ then
 	LANCEUR_SCRIPT='_modules_HPC/Niagara_lanceur.slrm'
 	SSH_KEY='~/.ssh/niagarasshkeys'
 	SSH_LOGIN='mschee@niagara.scinet.utoronto.ca'
+elif [ $HPC = 'Graham' ]
+then
+	NHOME='/home/mschee'
+	NSCRATCH='/scratch/mschee'
+	LANCEUR_SCRIPT='_modules_HPC/Graham_lanceur.slrm'
+	SSH_KEY='~/.ssh/graham-ssh-key'
+	SSH_LOGIN='mschee@graham.computecanada.ca'
 fi
 
 echo ''
 echo "--Logging in to ${HPC}--"
 # Log in to HPC, execute commands until EOF, then exit
-#	The -i flag points to an rsa file so I don't need to enter my password
+#	The -i flag points to an rsa file so I shouldn't need to enter my password
 ssh -i $SSH_KEY $SSH_LOGIN << EOF
 echo ''
 cd ${DIRECTORY}/${SUBDIRECT}
@@ -88,6 +96,5 @@ pwd
 sbatch --job-name=$JOBNAME $LANCEUR_SCRIPT -n ${NAME} -r ${RUN_NAME} -c ${CORES}
 squeue -u mschee
 EOF
-#ssh -XY mschee@graham.computecanada.ca
 
 echo 'Done'

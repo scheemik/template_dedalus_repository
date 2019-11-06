@@ -34,14 +34,26 @@ fi
 DATE=`date +"%m-%d_%Hh%M"`
 DIRECTORY='Dedalus_Projects'
 SUBDIRECT='template_dedalus_repository'
-NHOME='/home/n/ngrisoua/mschee'
-NSCRATCH='/scratch/n/ngrisoua/mschee'
+
+if [ $HPC = 'Niagara' ]
+then
+	NHOME='/home/n/ngrisoua/mschee'
+	NSCRATCH='/scratch/n/ngrisoua/mschee'
+	SSH_KEY='~/.ssh/niagarasshkeys'
+	SSH_LOGIN='mschee@niagara.scinet.utoronto.ca'
+elif [ $HPC = 'Graham' ]
+then
+	NHOME='/home/mschee'
+	NSCRATCH='/scratch/mschee'
+	SSH_KEY='~/.ssh/graham-ssh-key'
+	SSH_LOGIN='mschee@graham.computecanada.ca'
+fi
 
 echo ''
-echo '--Logging in to Niagara--'
-# Log in to Niagara, execute commands until EOF, then exit
+echo "--Logging in to ${HPC}--"
+# Log in to HPC, execute commands until EOF, then exit
 #	The -i flag points to an rsa file so I don't need to enter my password
-ssh -i ~/.ssh/niagarasshkeys mschee@niagara.scinet.utoronto.ca << EOF
+ssh -i $SSH_KEY $SSH_LOGIN << EOF
 echo ''
 echo "Navigating to ${NSCRATCH}/${DIRECTORY}/${SUBDIRECT}"
 cd ${NSCRATCH}/${DIRECTORY}/${SUBDIRECT}
@@ -52,7 +64,7 @@ git commit -m "Moving ${NAME} from HPC to local"
 echo "Pushing from scratch directory"
 git config --global push.default simple
 git push -f origin master
-cd 
+cd
 cd ${NHOME}/${DIRECTORY}/${SUBDIRECT}
 git pull
 echo ''

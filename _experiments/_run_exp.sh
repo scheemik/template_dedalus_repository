@@ -117,7 +117,7 @@ then
     # If running on Niagara
     if [ $LOC -eq 0 ]
     then
-        echo "Running Dedalus script for Niagara"
+        echo "Running Dedalus script for remote HPC"
         # mpiexec uses -n flag for number of processes to use
         ${mpiexec_command} -n $CORES python3.6 $code_file $switch_file
         echo ""
