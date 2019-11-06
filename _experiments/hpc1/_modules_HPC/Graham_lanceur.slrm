@@ -4,6 +4,7 @@
 #SBATCH --mail-type=ALL
 #SBATCH --output=outputs/slurm_%j.out
 #SBATCH --mem=12GB
+#SBATCH --ntasks-per-node=32
 #SBATCH --nodes=1
 #SBATCH --time=0-00:20  # d-HH:MM
 
