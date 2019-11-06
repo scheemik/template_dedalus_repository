@@ -10,12 +10,13 @@
 # Current datetime
 DATETIME=`date +"%Y-%m-%d_%Hh%M"`
 
-while getopts n:r:c: option
+while getopts n:r:h:c: option
 do
 	case "${option}"
 		in
 		n) NAME=${OPTARG};;
 		r) RUN_NAME=${OPTARG};;
+		h) HPC=${OPTARG};;
 		c) CORES=${OPTARG};;
 	esac
 done
