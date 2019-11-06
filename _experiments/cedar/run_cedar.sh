@@ -69,6 +69,7 @@ fi
 
 # The command and arguments for running scripts with mpi
 mpiexec_command="mpiexec"
+python_ver='python3.7'
 # The directory in which this code is being run
 Project_directory="$(pwd)"
 Running_directory="${Project_directory}/_experiments/${NAME}"
@@ -119,7 +120,7 @@ then
     then
         echo "Running Dedalus script for remote HPC"
         # mpiexec uses -n flag for number of processes to use
-        ${mpiexec_command} -n $CORES python3.6 $code_file $switch_file
+        ${mpiexec_command} -n $CORES $python_ver $code_file $switch_file
         echo ""
     fi
 	echo 'Done running script'
