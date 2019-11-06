@@ -1,0 +1,151 @@
+/scratch/mschee/Dedalus_Projects/template_dedalus_repository/_experiments/hpc1
+
+Begin run script
+
+
+--Running script--
+Running Dedalus script for remote HPC
+Traceback (most recent call last):
+  File "core_code.py", line 19, in <module>
+    from mpi4py import MPI
+ImportError: /cvmfs/soft.computecanada.ca/nix/var/nix/profiles/16.09/lib/librt.so.1: symbol __recv, version GLIBC_PRIVATE not defined in file libc.so.6 with link time reference
+Traceback (most recent call last):
+  File "core_code.py", line 19, in <module>
+    from mpi4py import MPI
+ImportError: /cvmfs/soft.computecanada.ca/nix/var/nix/profiles/16.09/lib/librt.so.1: symbol __recv, version GLIBC_PRIVATE not defined in file libc.so.6 with link time reference
+Traceback (most recent call last):
+  File "core_code.py", line 19, in <module>
+    from mpi4py import MPI
+ImportError: /cvmfs/soft.computecanada.ca/nix/var/nix/profiles/16.09/lib/librt.so.1: symbol __recv, version GLIBC_PRIVATE not defined in file libc.so.6 with link time reference
+Traceback (most recent call last):
+  File "core_code.py", line 19, in <module>
+    from mpi4py import MPI
+ImportError: /cvmfs/soft.computecanada.ca/nix/var/nix/profiles/16.09/lib/librt.so.1: symbol __recv, version GLIBC_PRIVATE not defined in file libc.so.6 with link time reference
+Traceback (most recent call last):
+  File "core_code.py", line 19, in <module>
+    from mpi4py import MPI
+ImportError: /cvmfs/soft.computecanada.ca/nix/var/nix/profiles/16.09/lib/librt.so.1: symbol __recv, version GLIBC_PRIVATE not defined in file libc.so.6 with link time reference
+Traceback (most recent call last):
+  File "core_code.py", line 19, in <module>
+    from mpi4py import MPI
+ImportError: /cvmfs/soft.computecanada.ca/nix/var/nix/profiles/16.09/lib/librt.so.1: symbol __recv, version GLIBC_PRIVATE not defined in file libc.so.6 with link time reference
+Traceback (most recent call last):
+  File "core_code.py", line 19, in <module>
+    from mpi4py import MPI
+ImportError: /cvmfs/soft.computecanada.ca/nix/var/nix/profiles/16.09/lib/librt.so.1: symbol __recv, version GLIBC_PRIVATE not defined in file libc.so.6 with link time reference
+Traceback (most recent call last):
+  File "core_code.py", line 19, in <module>
+    from mpi4py import MPI
+ImportError: /cvmfs/soft.computecanada.ca/nix/var/nix/profiles/16.09/lib/librt.so.1: symbol __recv, version GLIBC_PRIVATE not defined in file libc.so.6 with link time reference
+Traceback (most recent call last):
+  File "core_code.py", line 19, in <module>
+    from mpi4py import MPI
+ImportError: /cvmfs/soft.computecanada.ca/nix/var/nix/profiles/16.09/lib/librt.so.1: symbol __recv, version GLIBC_PRIVATE not defined in file libc.so.6 with link time reference
+Traceback (most recent call last):
+  File "core_code.py", line 19, in <module>
+    from mpi4py import MPI
+ImportError: /cvmfs/soft.computecanada.ca/nix/var/nix/profiles/16.09/lib/librt.so.1: symbol __recv, version GLIBC_PRIVATE not defined in file libc.so.6 with link time reference
+Traceback (most recent call last):
+  File "core_code.py", line 19, in <module>
+    from mpi4py import MPI
+ImportError: /cvmfs/soft.computecanada.ca/nix/var/nix/profiles/16.09/lib/librt.so.1: symbol __recv, version GLIBC_PRIVATE not defined in file libc.so.6 with link time reference
+Traceback (most recent call last):
+  File "core_code.py", line 19, in <module>
+    from mpi4py import MPI
+ImportError: /cvmfs/soft.computecanada.ca/nix/var/nix/profiles/16.09/lib/librt.so.1: symbol __recv, version GLIBC_PRIVATE not defined in file libc.so.6 with link time reference
+Traceback (most recent call last):
+  File "core_code.py", line 19, in <module>
+    from mpi4py import MPI
+ImportError: /cvmfs/soft.computecanada.ca/nix/var/nix/profiles/16.09/lib/librt.so.1: symbol __recv, version GLIBC_PRIVATE not defined in file libc.so.6 with link time reference
+Traceback (most recent call last):
+  File "core_code.py", line 19, in <module>
+    from mpi4py import MPI
+ImportError: /cvmfs/soft.computecanada.ca/nix/var/nix/profiles/16.09/lib/librt.so.1: symbol __recv, version GLIBC_PRIVATE not defined in file libc.so.6 with link time reference
+Traceback (most recent call last):
+  File "core_code.py", line 19, in <module>
+    from mpi4py import MPI
+ImportError: /cvmfs/soft.computecanada.ca/nix/var/nix/profiles/16.09/lib/librt.so.1: symbol __recv, version GLIBC_PRIVATE not defined in file libc.so.6 with link time reference
+Traceback (most recent call last):
+  File "core_code.py", line 19, in <module>
+    from mpi4py import MPI
+ImportError: /cvmfs/soft.computecanada.ca/nix/var/nix/profiles/16.09/lib/librt.so.1: symbol __recv, version GLIBC_PRIVATE not defined in file libc.so.6 with link time reference
+Traceback (most recent call last):
+  File "core_code.py", line 19, in <module>
+    from mpi4py import MPI
+ImportError: /cvmfs/soft.computecanada.ca/nix/var/nix/profiles/16.09/lib/librt.so.1: symbol __recv, version GLIBC_PRIVATE not defined in file libc.so.6 with link time reference
+Traceback (most recent call last):
+  File "core_code.py", line 19, in <module>
+    from mpi4py import MPI
+ImportError: /cvmfs/soft.computecanada.ca/nix/var/nix/profiles/16.09/lib/librt.so.1: symbol __recv, version GLIBC_PRIVATE not defined in file libc.so.6 with link time reference
+Traceback (most recent call last):
+  File "core_code.py", line 19, in <module>
+    from mpi4py import MPI
+ImportError: /cvmfs/soft.computecanada.ca/nix/var/nix/profiles/16.09/lib/librt.so.1: symbol __recv, version GLIBC_PRIVATE not defined in file libc.so.6 with link time reference
+Traceback (most recent call last):
+  File "core_code.py", line 19, in <module>
+    from mpi4py import MPI
+ImportError: /cvmfs/soft.computecanada.ca/nix/var/nix/profiles/16.09/lib/librt.so.1: symbol __recv, version GLIBC_PRIVATE not defined in file libc.so.6 with link time reference
+Traceback (most recent call last):
+  File "core_code.py", line 19, in <module>
+    from mpi4py import MPI
+ImportError: /cvmfs/soft.computecanada.ca/nix/var/nix/profiles/16.09/lib/librt.so.1: symbol __recv, version GLIBC_PRIVATE not defined in file libc.so.6 with link time reference
+Traceback (most recent call last):
+  File "core_code.py", line 19, in <module>
+    from mpi4py import MPI
+ImportError: /cvmfs/soft.computecanada.ca/nix/var/nix/profiles/16.09/lib/librt.so.1: symbol __recv, version GLIBC_PRIVATE not defined in file libc.so.6 with link time reference
+Traceback (most recent call last):
+  File "core_code.py", line 19, in <module>
+    from mpi4py import MPI
+ImportError: /cvmfs/soft.computecanada.ca/nix/var/nix/profiles/16.09/lib/librt.so.1: symbol __recv, version GLIBC_PRIVATE not defined in file libc.so.6 with link time reference
+Traceback (most recent call last):
+  File "core_code.py", line 19, in <module>
+    from mpi4py import MPI
+ImportError: /cvmfs/soft.computecanada.ca/nix/var/nix/profiles/16.09/lib/librt.so.1: symbol __recv, version GLIBC_PRIVATE not defined in file libc.so.6 with link time reference
+Traceback (most recent call last):
+  File "core_code.py", line 19, in <module>
+    from mpi4py import MPI
+ImportError: /cvmfs/soft.computecanada.ca/nix/var/nix/profiles/16.09/lib/librt.so.1: symbol __recv, version GLIBC_PRIVATE not defined in file libc.so.6 with link time reference
+Traceback (most recent call last):
+  File "core_code.py", line 19, in <module>
+    from mpi4py import MPI
+ImportError: /cvmfs/soft.computecanada.ca/nix/var/nix/profiles/16.09/lib/librt.so.1: symbol __recv, version GLIBC_PRIVATE not defined in file libc.so.6 with link time reference
+Traceback (most recent call last):
+  File "core_code.py", line 19, in <module>
+    from mpi4py import MPI
+ImportError: /cvmfs/soft.computecanada.ca/nix/var/nix/profiles/16.09/lib/librt.so.1: symbol __recv, version GLIBC_PRIVATE not defined in file libc.so.6 with link time reference
+Traceback (most recent call last):
+  File "core_code.py", line 19, in <module>
+    from mpi4py import MPI
+ImportError: /cvmfs/soft.computecanada.ca/nix/var/nix/profiles/16.09/lib/librt.so.1: symbol __recv, version GLIBC_PRIVATE not defined in file libc.so.6 with link time reference
+Traceback (most recent call last):
+  File "core_code.py", line 19, in <module>
+    from mpi4py import MPI
+ImportError: /cvmfs/soft.computecanada.ca/nix/var/nix/profiles/16.09/lib/librt.so.1: symbol __recv, version GLIBC_PRIVATE not defined in file libc.so.6 with link time reference
+Traceback (most recent call last):
+  File "core_code.py", line 19, in <module>
+    from mpi4py import MPI
+ImportError: /cvmfs/soft.computecanada.ca/nix/var/nix/profiles/16.09/lib/librt.so.1: symbol __recv, version GLIBC_PRIVATE not defined in file libc.so.6 with link time reference
+Traceback (most recent call last):
+  File "core_code.py", line 19, in <module>
+    from mpi4py import MPI
+ImportError: /cvmfs/soft.computecanada.ca/nix/var/nix/profiles/16.09/lib/librt.so.1: symbol __recv, version GLIBC_PRIVATE not defined in file libc.so.6 with link time reference
+Traceback (most recent call last):
+  File "core_code.py", line 19, in <module>
+    from mpi4py import MPI
+ImportError: /cvmfs/soft.computecanada.ca/nix/var/nix/profiles/16.09/lib/librt.so.1: symbol __recv, version GLIBC_PRIVATE not defined in file libc.so.6 with link time reference
+-------------------------------------------------------
+Primary job  terminated normally, but 1 process returned
+a non-zero exit code.. Per user-direction, the job has been aborted.
+-------------------------------------------------------
+--------------------------------------------------------------------------
+mpiexec detected that one or more processes exited with non-zero status, thus causing
+the job to be terminated. The first process to do so was:
+
+  Process name: [[20868,1],17]
+  Exit code:    1
+--------------------------------------------------------------------------
+
+Done running script
+
+Done running experiment
+
