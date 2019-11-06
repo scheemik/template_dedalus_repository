@@ -232,11 +232,11 @@ then
 	fi
 else
 	# Check if the specified HPC submit script exists
-	HPC_sub_script=${modules_h_dir}/${HPC}_job_submit.sh
+	HPC_sub_script=${modules_h_dir}/HPC_job_submit.sh
 	if [ -e $HPC_sub_script ]
 	then
 		echo "Calling script to submit to ${HPC}"
-		bash ${HPC_sub_script} -n $NAME -r $RUN_NAME -c $CORES
+		bash ${HPC_sub_script} -n $NAME -r $RUN_NAME -h $HPC -c $CORES
 	else
 		echo "Submit script for ${HPC} does not exist. Aborting script"
 		exit 1
