@@ -1,0 +1,36 @@
+----------------------------------------------
+Log for: 2019-11-06_16h04_cedar
+
+--Run options--
+
+-n, Experiment name = cedar
+-c, Number of cores = 32
+-l, (0) Simulation run on Cedar
+-v, Version of run = 1
+
+
+--Simulation Parameters--
+
+Horizontal grid points:       n_x = 512
+Vertical   grid points:       n_z = 512
+
+Sim Runtime (periods):              0.3
+Sim Runtime (seconds):              2.665755327611195
+
+--Simulation Domain Parameters--
+
+Horizontal extent (m):        L_x = 1.5
+Vertical   extent (m):        L_z = 1.3949191405799009
+
+--Boundary Forcing Parameters--
+
+Characteristic wavenumber:      k = 45.0
+
+Forcing frequency (s^-1):   omega = 0.7071
+Forcing angle (rad):        theta = 0.785407753397449
+Forcing angle (deg):        theta = 45.00054946652557
+
+Forcing period (s):             T = 8.885851092037317
+Forcing amplitude:              A = 0.0002
+
+Horizontal wavelength (m):  lam_x = 0.19746335760082925
