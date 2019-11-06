@@ -39,14 +39,20 @@ if [ $HPC = 'Niagara' ]
 then
 	NHOME='/home/n/ngrisoua/mschee'
 	NSCRATCH='/scratch/n/ngrisoua/mschee'
-	SSH_KEY='~/.ssh/niagarasshkeys'
+	SSH_KEY='~/.ssh/id_rsa'
 	SSH_LOGIN='mschee@niagara.scinet.utoronto.ca'
 elif [ $HPC = 'Graham' ]
 then
 	NHOME='/home/mschee'
 	NSCRATCH='/scratch/mschee'
-	SSH_KEY='~/.ssh/graham-ssh-key'
+	SSH_KEY='~/.ssh/id_rsa'
 	SSH_LOGIN='mschee@graham.computecanada.ca'
+elif [ $HPC = 'Cedar' ]
+then
+	NHOME='/home/mschee'
+	NSCRATCH='/scratch/mschee'
+	SSH_KEY='~/.ssh/id_rsa'
+	SSH_LOGIN='mschee@cedar.computecanada.ca'
 fi
 
 echo ''
