@@ -1,0 +1,27 @@
+/scratch/mschee/Dedalus_Projects/template_dedalus_repository/_experiments/ced_test
+
+Begin run script
+
+
+--Running script--
+Running Dedalus script for remote HPC
+2019-11-07 06:55:11,291 pencil 0/32 INFO :: Building pencil matrix 1/8 (~12%) Elapsed: 0s, Remaining: 2s, Rate: 3.7e+00/s
+2019-11-07 06:55:11,553 pencil 0/32 INFO :: Building pencil matrix 2/8 (~25%) Elapsed: 1s, Remaining: 2s, Rate: 3.8e+00/s
+2019-11-07 06:55:11,813 pencil 0/32 INFO :: Building pencil matrix 3/8 (~38%) Elapsed: 1s, Remaining: 1s, Rate: 3.8e+00/s
+2019-11-07 06:55:12,082 pencil 0/32 INFO :: Building pencil matrix 4/8 (~50%) Elapsed: 1s, Remaining: 1s, Rate: 3.8e+00/s
+2019-11-07 06:55:12,339 pencil 0/32 INFO :: Building pencil matrix 5/8 (~62%) Elapsed: 1s, Remaining: 1s, Rate: 3.8e+00/s
+2019-11-07 06:55:12,597 pencil 0/32 INFO :: Building pencil matrix 6/8 (~75%) Elapsed: 2s, Remaining: 1s, Rate: 3.8e+00/s
+2019-11-07 06:55:12,854 pencil 0/32 INFO :: Building pencil matrix 7/8 (~88%) Elapsed: 2s, Remaining: 0s, Rate: 3.8e+00/s
+2019-11-07 06:55:13,106 pencil 0/32 INFO :: Building pencil matrix 8/8 (~100%) Elapsed: 2s, Remaining: 0s, Rate: 3.8e+00/s
+2019-11-07 06:55:13,111 __main__ 0/32 INFO :: Solver built
+2019-11-07 06:55:13,449 __main__ 0/32 INFO :: Sim end period: 0.300000
+2019-11-07 06:55:13,450 __main__ 0/32 INFO :: Starting loop
+--------------------------------------------------------------------------
+mpiexec noticed that process rank 30 with PID 4641 on node cdr732 exited on signal 9 (Killed).
+--------------------------------------------------------------------------
+
+Done running script
+
+Done running experiment
+
+slurmstepd: error: Detected 3 oom-kill event(s) in step 30471378.batch cgroup. Some of your processes may have been killed by the cgroup out-of-memory handler.
