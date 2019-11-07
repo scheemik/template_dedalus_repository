@@ -1,0 +1,76 @@
+The following modules were not unloaded:
+  (Use "module --force purge" to unload all):
+
+  1) NiaEnv/2018a
+/gpfs/fs0/scratch/n/ngrisoua/mschee/Dedalus_Projects/template_dedalus_repository/_experiments/hpc2
+
+Begin run script
+
+
+--Running script--
+Removing old snapshots
+Running Dedalus script for Niagara
+2019-11-06 21:20:16,747 pencil 0/32 INFO :: Building pencil matrix 1/8 (~12%) Elapsed: 0s, Remaining: 2s, Rate: 4.1e+00/s
+2019-11-06 21:20:16,956 pencil 0/32 INFO :: Building pencil matrix 2/8 (~25%) Elapsed: 0s, Remaining: 1s, Rate: 4.4e+00/s
+2019-11-06 21:20:17,157 pencil 0/32 INFO :: Building pencil matrix 3/8 (~38%) Elapsed: 1s, Remaining: 1s, Rate: 4.6e+00/s
+2019-11-06 21:20:17,351 pencil 0/32 INFO :: Building pencil matrix 4/8 (~50%) Elapsed: 1s, Remaining: 1s, Rate: 4.7e+00/s
+2019-11-06 21:20:17,542 pencil 0/32 INFO :: Building pencil matrix 5/8 (~62%) Elapsed: 1s, Remaining: 1s, Rate: 4.8e+00/s
+2019-11-06 21:20:17,741 pencil 0/32 INFO :: Building pencil matrix 6/8 (~75%) Elapsed: 1s, Remaining: 0s, Rate: 4.8e+00/s
+2019-11-06 21:20:17,939 pencil 0/32 INFO :: Building pencil matrix 7/8 (~88%) Elapsed: 1s, Remaining: 0s, Rate: 4.9e+00/s
+2019-11-06 21:20:18,129 pencil 0/32 INFO :: Building pencil matrix 8/8 (~100%) Elapsed: 2s, Remaining: 0s, Rate: 4.9e+00/s
+2019-11-06 21:20:18,132 __main__ 0/32 INFO :: Solver built
+2019-11-06 21:20:18,176 __main__ 0/32 INFO :: Sim end period: 0.300000
+2019-11-06 21:20:18,176 __main__ 0/32 INFO :: Starting loop
+2019-11-06 21:20:33,404 __main__ 0/32 INFO :: Iteration: 1, t/T: 1.406731e-02, dt/T: 1.406731e-02
+2019-11-06 21:20:33,404 __main__ 0/32 INFO :: Max linear criterion = 0.000000
+2019-11-06 21:20:37,118 __main__ 0/32 INFO :: Iteration: 11, t/T: 1.547404e-01, dt/T: 1.406731e-02
+2019-11-06 21:20:37,118 __main__ 0/32 INFO :: Max linear criterion = 0.001799
+2019-11-06 21:20:40,729 __main__ 0/32 INFO :: Iteration: 21, t/T: 2.954135e-01, dt/T: 1.406731e-02
+2019-11-06 21:20:40,729 __main__ 0/32 INFO :: Max linear criterion = 0.001898
+2019-11-06 21:20:41,075 solvers 0/32 INFO :: Simulation stop time reached.
+2019-11-06 21:20:41,076 __main__ 0/32 INFO :: Iterations: 22
+2019-11-06 21:20:41,076 __main__ 0/32 INFO :: Sim end period: 0.309481
+2019-11-06 21:20:41,076 __main__ 0/32 INFO :: Run time: 22.90 sec
+2019-11-06 21:20:41,076 __main__ 0/32 INFO :: Run time: 0.203550 cpu-hr
+
+Done running script
+
+Done running experiment
+
+
+scontrol show jobid 2019243
+JobId=2019243 JobName=2019-11-06_10h09_hpc2
+   UserId=mschee(3079212) GroupId=ngrisoua(6002522) MCS_label=N/A
+   Priority=196204 Nice=0 Account=def-ngrisoua QOS=normal
+   JobState=COMPLETED Reason=None Dependency=(null)
+   Requeue=0 Restarts=0 BatchFlag=1 Reboot=0 ExitCode=0:0
+   RunTime=00:00:43 TimeLimit=00:20:00 TimeMin=N/A
+   SubmitTime=2019-11-06T10:11:50 EligibleTime=2019-11-06T10:11:50
+   StartTime=2019-11-06T21:19:58 EndTime=2019-11-06T21:20:41 Deadline=N/A
+   PreemptTime=None SuspendTime=None SecsPreSuspend=0
+   LastSchedEval=2019-11-06T21:19:58
+   Partition=compute AllocNode:Sid=nia-login03:453236
+   ReqNodeList=(null) ExcNodeList=(null)
+   NodeList=nia0427
+   BatchHost=nia0427
+   NumNodes=1 NumCPUs=80 NumTasks=40 CPUs/Task=1 ReqB:S:C:T=0:0:*:*
+   TRES=cpu=80,node=1,billing=40
+   Socks/Node=* NtasksPerN:B:S:C=40:0:*:* CoreSpec=*
+   MinCPUsNode=40 MinMemoryNode=0 MinTmpDiskNode=0
+   Features=(null) DelayBoot=00:00:00
+   Gres=(null) Reservation=(null)
+   OverSubscribe=NO Contiguous=0 Licenses=(null) Network=(null)
+   Command=/gpfs/fs0/scratch/n/ngrisoua/mschee/Dedalus_Projects/template_dedalus_repository/_experiments/hpc2/_modules_HPC/Niagara_lanceur.slrm -n hpc2 -r 2019-11-06_10h09_hpc2 -c 32
+   WorkDir=/gpfs/fs0/scratch/n/ngrisoua/mschee/Dedalus_Projects/template_dedalus_repository/_experiments/hpc2
+   StdErr=/gpfs/fs0/scratch/n/ngrisoua/mschee/Dedalus_Projects/template_dedalus_repository/_experiments/hpc2/outputs/slurm_2019243.out
+   StdIn=/dev/null
+   StdOut=/gpfs/fs0/scratch/n/ngrisoua/mschee/Dedalus_Projects/template_dedalus_repository/_experiments/hpc2/outputs/slurm_2019243.out
+   Power=
+   
+
+sacct -j 2019243
+       JobID    JobName    Account    Elapsed  MaxVMSize     MaxRSS  SystemCPU    UserCPU ExitCode 
+------------ ---------- ---------- ---------- ---------- ---------- ---------- ---------- -------- 
+2019243      2019-11-0+ def-ngris+   00:00:43                        00:41.118  13:57.660      0:0 
+2019243.bat+      batch def-ngris+   00:00:43 174550832K  31461684K  00:41.117  13:57.660      0:0 
+2019243.ext+     extern def-ngris+   00:00:43    168876K      1272K  00:00.001   00:00:00      0:0 
