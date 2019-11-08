@@ -18,7 +18,7 @@ module_dicts = [
              'pick_this_one':  'bf_default'},
 
             {'module_name':    'background_profile',
-             'pick_this_one':  'bp_default'},
+             'pick_this_one':  'bp_N_const'},
 
             {'module_name':    'sponge_layer',
              'pick_this_one':  'sl_default'},
