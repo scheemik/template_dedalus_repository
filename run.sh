@@ -19,11 +19,7 @@ DATETIME=`date +"%Y-%m-%d_%Hh%M"`
 # VER = 2
 #	-> run the script, merge
 # VER = 3
-# 	-> merge, plot frames, and create a gif
-# VER = 4
-#	-> create mp4 from frames
-# VER = 5
-#	-> run the script, merge
+#	-> run the script, merge, plot frames
 
 while getopts n:c:l:h:v:s: option
 do
@@ -166,9 +162,9 @@ then
 fi
 ###############################################################################
 # Create (or prepend) log file if running code
-#	if (VER = 0, 1, 2)
+#	if (VER = 0, 1, 2, 3)
 LOG_FILE=${output_dir}/${RUN_NAME}/${RUN_NAME}_Log.txt
-if [ $VER -eq 0 ] || [ $VER -eq 1 ] || [ $VER -eq 2 ] || [ $VER -eq 3 ] || [ $VER -eq 4 ] || [ $VER -eq 5 ]
+if [ $VER -eq 0 ] || [ $VER -eq 1 ] || [ $VER -eq 2 ] || [ $VER -eq 3 ]
 then
 	echo ''
 	echo '--Creating experiment log file--'

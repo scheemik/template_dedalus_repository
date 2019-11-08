@@ -16,13 +16,9 @@ DATETIME=`date +"%Y-%m-%d_%Hh%M"`
 # VER = 1
 #	-> run the script
 # VER = 2
-#	-> run the script, merge, plot frames, and create gif
-# VER = 3
-# 	-> merge, plot frames, and create a gif
-# VER = 4
-#	-> create mp4 from frames
-# VER = 5
 #	-> run the script, merge
+# VER = 3
+#	-> run the script, merge, plot frames
 
 while getopts n:r:c:l:v: option
 do
@@ -97,8 +93,8 @@ output_dir="outputs/${RUN_NAME}"
 
 ###############################################################################
 # run the script
-#	if (VER = 0, 1, 2)
-if [ $VER -eq 0 ] || [ $VER -eq 1 ] || [ $VER -eq 2 ] || [ $VER -eq 5 ]
+#	if (VER = 0, 1, 2, 3)
+if [ $VER -eq 0 ] || [ $VER -eq 1 ] || [ $VER -eq 2 ] || [ $VER -eq 3 ]
 then
 	echo ''
 	echo '--Running script--'
@@ -130,7 +126,7 @@ fi
 ###############################################################################
 # merge snapshots
 #	if (VER = 0, 2, 3)
-if [ $VER -eq 0 ] || [ $VER -eq 2 ] || [ $VER -eq 3 ] || [ $VER -eq 5 ]
+if [ $VER -eq 0 ] || [ $VER -eq 2 ] || [ $VER -eq 3 ]
 then
 	echo ''
 	echo '--Merging snapshots--'
@@ -174,8 +170,8 @@ fi
 
 ###############################################################################
 # plot frames - note: already checked if snapshots exist in step above
-#	if (VER = 0, 2, 3)
-if [ $VER -eq 0 ] || [ $VER -eq 2 ] || [ $VER -eq 3 ]
+#	if (VER = 0, 3)
+if [ $VER -eq 0 ] || [ $VER -eq 3 ]
 then
 	echo ''
 	echo '--Plotting frames--'
@@ -191,8 +187,8 @@ fi
 
 ###############################################################################
 # create gif
-#	if (VER = 0, 2, 3)
-if [ $VER -eq 0 ] || [ $VER -eq 2 ] || [ $VER -eq 3 ]
+#	if (VER = 5)
+if [ $VER -eq 5 ]
 then
 	echo ''
 	echo '--Creating gif--'
@@ -222,8 +218,8 @@ fi
 
 ###############################################################################
 # create mp4
-#	if (VER = 0, 4)
-if [ $VER -eq 0 ] || [ $VER -eq 4 ]
+#	if (VER = 4)
+if [ $VER -eq 4 ]
 then
 	echo ''
 	echo '--Creating mp4--'

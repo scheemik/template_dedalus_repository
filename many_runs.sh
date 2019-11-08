@@ -13,9 +13,7 @@
 # VER = 2
 #	-> run the script, merge
 # VER = 3
-# 	-> merge, plot frames, and create a gif
-# VER = 4
-#	-> create mp4 from frames
+#	-> run the script, merge, plot frames
 
 while getopts c:l:v: option
 do
