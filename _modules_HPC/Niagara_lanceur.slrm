@@ -59,7 +59,7 @@ export MPLBACKEND=pdf
 source ${HOME}/Dedalus_Projects/venv/bin/activate
 
 pwd
-bash ./run_${NAME}.sh -n $NAME -r $RUN_NAME -c $CORES -l 0 -v 1
+bash ./run_${NAME}.sh -n $NAME -r $RUN_NAME -c $CORES -l 0 -v 3
 
 deactivate
 
