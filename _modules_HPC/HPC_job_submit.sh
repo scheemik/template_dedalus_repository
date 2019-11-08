@@ -106,14 +106,20 @@ EOF
 # A bit of a round-about way to make sure I never try to transfer the snapshots folder
 echo "Copying ${NAME} from local to ${HPC} scratch directory"
 cd ${LOCAL_DIR}/${SUBDIRECT}/_experiments/${NAME}
-for file in ./*
-do
-	if [ ${file} != './snapshots' ]
-	then
-		#echo $file
-		scp -r $file ${SSH_LOGIN}:${NSCRATCH}/${DIRECTORY}/${SUBDIRECT}/_experiments/${NAME}
-	fi
-done
+if [ -e snapshots ]
+then
+	for file in ./*
+	do
+		if [ ${file} != './snapshots' ]
+		then
+			#echo $file
+			scp -r $file ${SSH_LOGIN}:${NSCRATCH}/${DIRECTORY}/${SUBDIRECT}/_experiments/${NAME}
+		fi
+	done
+else
+	cd ..
+	scp -r ${NAME} ${SSH_LOGIN}:${NSCRATCH}/${DIRECTORY}/${SUBDIRECT}/_experiments
+fi
 
 echo ''
 echo "--Logging in to ${HPC}--"
