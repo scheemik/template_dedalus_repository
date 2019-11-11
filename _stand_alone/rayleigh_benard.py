@@ -113,6 +113,8 @@ else:
 
 # Integration parameters
 solver.stop_sim_time = stop_sim_time
+solver.stop_wall_time = np.inf
+solver.stop_iteration = np.inf
 
 # Analysis
 snapshots = solver.evaluator.add_file_handler('snapshots', sim_dt=0.25, max_writes=50, mode=fh_mode)
@@ -131,7 +133,7 @@ flow.add_property("sqrt(u*u + w*w) / R", name='Re')
 try:
     logger.info('Starting loop')
     start_time = time.time()
-    while solver.proceed:
+    while solver.ok:
         dt = CFL.compute_dt()
         dt = solver.step(dt)
         if (solver.iteration-1) % 10 == 0:
