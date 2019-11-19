@@ -7,13 +7,15 @@
 #SBATCH --nodes=1
 #SBATCH --time=0-00:20
 
-export FFTW_PATH=$EBROOTFFTW
-export MPI_PATH=$EBROOTOPENMPI
-export FFTW_STATIC=1
-export OMPI_MCA_mpi_warn_on_fork=0
+export HDF5_MPI=ON
+export LDSHARED="icc -shared"
+export FFTW_PATH="$SCINET_FFTW_MPI_ROOT"
+export MPI_PATH="$I_MPI_ROOT"
+export MPLBACKEND=pdf
 
+module purge
 module load python/3.6.5 intel/2018.2 intelmpi/2018.2 fftw-mpi/3.3.7 hdf5-mpi/1.10.2
-source $HOME/Dedalus_Projects/venv/bin/activate
+source ${HOME}/Dedalus_Projects/venv/bin/activate
 
 pwd
 mpiexec -n 32 python3.6 rayleigh_benard.py
