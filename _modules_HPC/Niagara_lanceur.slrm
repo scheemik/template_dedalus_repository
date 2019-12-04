@@ -43,6 +43,8 @@ then
 fi
 
 # Load module stack
+# module loading sets values of environment variables
+#   so have these commands before the `export` lines
 module purge
 module load python/3.6.5 #intelpython3
 module load intel/2018.2
