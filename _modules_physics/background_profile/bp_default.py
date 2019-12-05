@@ -56,7 +56,7 @@ def Repro_profile(z, n, ml_b, ml_t, slope, N_1, N_2):
         # calculate height of pseudo delta bumps as midpoint between N1 and N2
         bump_h = max(N_1, N_2) - 0.5*abs(N_1-N_2)
         for i in range(n):
-            c_i = z_b + (height/2.0 + i*height)
+            c_i = ml_b + (height/2.0 + i*height)
             values += vpf.tanh_bump(z, bump_h, slope, c_i, 0.05)
     return values
 
