@@ -56,7 +56,7 @@ abs_div = -L_z              # [m] The dividing line of the absorbing layer
 viscous_term            = True
 pressure_term           = True
 advection_term          = True
-buoancy_term            = True
+buoyancy_term           = True
 diffusivity_term        = True
 rotation_term           = False
 
