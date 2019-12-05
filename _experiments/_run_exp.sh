@@ -19,6 +19,8 @@ DATETIME=`date +"%Y-%m-%d_%Hh%M"`
 #	-> run the script, merge
 # VER = 3
 #	-> run the script, merge, plot frames
+# VER = 4
+#	-> create graphics
 
 while getopts n:r:c:l:v: option
 do
@@ -86,6 +88,8 @@ merge_file="${modules_o_dir}/merge.py"
 plot_file="${modules_o_dir}/plot_slices.py"
 # Path to frames
 frames_path='frames'
+# Name of graphics making file
+make_graphics_file="${modules_o_dir}/make_graphics.sh"
 # Name of gif creation file
 gif_cre_file="${modules_o_dir}/create_gif.py"
 # Name of output directory
@@ -169,75 +173,13 @@ then
 fi
 
 ###############################################################################
-# plot frames - note: already checked if snapshots exist in step above
-#	if (VER = 0, 3)
-if [ $VER -eq 0 ] || [ $VER -eq 3 ]
+# make graphics
+#	if (VER = 0, 3, 4)
+if [ $VER -eq 0 ] || [ $VER -eq 3 ] || [ $VER -eq 4 ]
 then
 	echo ''
-	echo '--Plotting frames--'
-	if [ -e frames ]
-	then
-		echo "Removing old frames"
-		rm -rf frames
-	fi
-	echo "Plotting 2d slices"
-	${mpiexec_command} -n $CORES python3 $plot_file $NAME $snapshot_path/*.h5
-	echo 'Done plotting frames'
-fi
-
-###############################################################################
-# create gif
-#	if (VER = 5)
-if [ $VER -eq 5 ]
-then
-	echo ''
-	echo '--Creating gif--'
-	gif_name="${output_dir}/${RUN_NAME}.gif"
-	# Check if output directory exists
-	if [ ! -e $output_dir ]
-	then
-		echo "Creating $output_dir directory"
-		mkdir $output_dir
-	fi
-	# Check if gis already exists
-	if [ -e $gif_name ]
-	then
-		echo "Overwriting $gif_name"
-		rm $gif_name
-	fi
-	files=/$frames_path/*
-	if [ -e $frames_path ] && [ ${#files[@]} -gt 0 ]
-	then
-		echo "Executing gif script"
-		python3 $gif_cre_file $gif_name $frames_path
-	else
-		echo "No frames found"
-	fi
-	echo 'Done with gif creation'
-fi
-
-###############################################################################
-# create mp4
-#	if (VER = 4)
-if [ $VER -eq 4 ]
-then
-	echo ''
-	echo '--Creating mp4--'
-	mp4_name="${DATETIME}_${NAME}.mp4"
-	# Check if frames exist
-	echo "Checking frames in ${frames_path}"
-	files=/$frames_path/*
-	if [ -e $frames_path ] && [ ${#files[@]} -gt 0 ]
-	then
-		echo "Executing mp4 command"
-		cd $frames_path/
-		ffmpeg -framerate 10 -i write_%06d.png -c:v libx264 -pix_fmt yuv420p $mp4_name
-		cd $Running_directory
-		mv $frames_path/$mp4_name ./$output_dir
-	else
-		echo "No frames found"
-	fi
-	echo 'Done with mp4 creation'
+	echo '--Making graphics--'
+	bash $make_graphics_file -n $NAME -r $RUN_NAME -c $CORES -l $LOC -v $VER
 fi
 
 echo ''

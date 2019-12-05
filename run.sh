@@ -21,11 +21,12 @@ DATETIME=`date +"%Y-%m-%d_%Hh%M"`
 # VER = 3
 #	-> run the script, merge, plot frames
 
-while getopts n:c:l:h:v:s: option
+while getopts n:r:c:l:h:v:s: option
 do
 	case "${option}"
 		in
 		n) NAME=${OPTARG};;
+		r) RUN_NAME=${OPTARG};;
 		c) CORES=${OPTARG};;
 		l) LOC=${OPTARG};;
 		h) HPC=${OPTARG};;
@@ -39,6 +40,11 @@ if [ -z "$NAME" ]
 then
 	echo "-n, No name specified, aborting script"
 	exit 1
+fi
+if [ -z "$RUN_NAME" ]
+then
+	RUN_NAME=${DATETIME}_${NAME}
+	echo "-r, No run name specified, using RUN_NAME=$RUN_NAME"
 fi
 if [ -z "$LOC" ]
 then
@@ -146,8 +152,6 @@ else
 	echo 'Module selection file not found'
 fi
 ###############################################################################
-# Create a name for this particular run
-RUN_NAME=${DATETIME}_${NAME}
 # Check if output directory exists
 if [ ! -e ${output_dir} ]
 then
