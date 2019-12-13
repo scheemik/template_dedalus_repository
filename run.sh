@@ -20,6 +20,10 @@ DATETIME=`date +"%Y-%m-%d_%Hh%M"`
 #	-> run the script, merge
 # VER = 3
 #	-> run the script, merge, plot frames
+# VER = 4
+#	-> create mp4
+# VER = 5
+#	-> create gif
 
 while getopts n:r:c:l:h:v:s: option
 do
@@ -41,10 +45,21 @@ then
 	echo "-n, No name specified, aborting script"
 	exit 1
 fi
+if [ -z "$VER" ]
+then
+	VER=1
+	echo "-v, No version specified, using VER=$VER"
+fi
 if [ -z "$RUN_NAME" ]
 then
-	RUN_NAME=${DATETIME}_${NAME}
-	echo "-r, No run name specified, using RUN_NAME=$RUN_NAME"
+	if [ $VER -eq 4 ]
+	then
+		echo "-r, No run name specified, aborting script"
+		exit 1
+	else
+		RUN_NAME=${DATETIME}_${NAME}
+		echo "-r, No run name specified, using RUN_NAME=$RUN_NAME"
+	fi
 fi
 if [ -z "$LOC" ]
 then
@@ -71,11 +86,6 @@ if [ -z "$CORES" ]
 then
 	CORES=2
 	echo "-c, No number of cores specified, using CORES=$CORES"
-fi
-if [ -z "$VER" ]
-then
-	VER=1
-	echo "-v, No version specified, using VER=$VER"
 fi
 if [ -z "$SANITY" ]
 then
@@ -192,7 +202,7 @@ then
 	#	This way, the most recent run's information is at the top
 	echo -e "${LINE0}\n${LINE1}\n${LINE2}\n${LINE3}\n${LINE4}\n${LINE5}\n${LINE6}\n${LINE7}\n${LINE8}\n${LINE9}\n$(cat ${LOG_FILE})" > $LOG_FILE
 fi
-if [ $VER -eq 0 ] || [ $VER -eq 1 ] || [ $VER -eq 2 ] || [ $VER -eq 3 ] || [ $VER -eq 4 ] || [ $VER -eq 5 ]
+if [ $VER -eq 0 ] || [ $VER -eq 1 ] || [ $VER -eq 2 ] || [ $VER -eq 3 ]
 then
 	if [ -e $LOG_FILE ]
 	then

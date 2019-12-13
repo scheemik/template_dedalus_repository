@@ -107,6 +107,9 @@ font_size   = 12
 scale       = 2.5
 dpi         = 100
 
+# Animation parameters
+fps = 15
+
 ###############################################################################
 # Snapshot parameters
 snapshots_dir   = 'snapshots'

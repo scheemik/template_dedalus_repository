@@ -20,7 +20,9 @@ DATETIME=`date +"%Y-%m-%d_%Hh%M"`
 # VER = 3
 #	-> run the script, merge, plot frames
 # VER = 4
-#	-> create graphics
+#	-> create mp4
+# VER = 5
+#	-> create gif
 
 while getopts n:r:c:l:v: option
 do
@@ -174,8 +176,8 @@ fi
 
 ###############################################################################
 # make graphics
-#	if (VER = 0, 3, 4)
-if [ $VER -eq 0 ] || [ $VER -eq 3 ] || [ $VER -eq 4 ]
+#	if (VER = 0, 3, 4, 5)
+if [ $VER -eq 0 ] || [ $VER -eq 3 ] || [ $VER -eq 4 ] || [ $VER -eq 5 ]
 then
 	echo ''
 	echo '--Making graphics--'

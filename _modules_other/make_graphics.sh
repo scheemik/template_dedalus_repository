@@ -19,6 +19,10 @@ DATETIME=`date +"%Y-%m-%d_%Hh%M"`
 #	-> run the script, merge
 # VER = 3
 #	-> run the script, merge, plot frames
+# VER = 4
+#	-> create mp4
+# VER = 5
+#	-> create gif
 
 while getopts n:r:c:l:v: option
 do
@@ -148,8 +152,8 @@ fi
 
 ###############################################################################
 # create gif
-#	if (VER = 0)
-if [ $VER -eq 0 ]
+#	if (VER = 0, 5)
+if [ $VER -eq 0 ] || [ $VER -eq 5 ]
 then
 	echo ''
 	echo '--Creating gif--'
@@ -170,7 +174,7 @@ then
 	if [ -e $frames_path ] && [ ${#files[@]} -gt 0 ]
 	then
 		echo "Executing gif script"
-		python3 $gif_cre_file $gif_name $frames_path
+		python3 $gif_cre_file $NAME $gif_name $frames_path
 	else
 		echo "No frames found"
 	fi
