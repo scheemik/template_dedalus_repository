@@ -2,6 +2,7 @@
 # A bash script to run the Dedalus python code for a certain experiment
 # Takes in arguments:
 #	$ sh run.sh -n <name of experiment> <- not optional
+#				-r <run name>
 #				-c <cores>
 #				-l <local(1) or HPC(0)>
 #				-h <HPC resource: Niagara, Graham, etc.>
@@ -19,7 +20,7 @@ DATETIME=`date +"%Y-%m-%d_%Hh%M"`
 # VER = 2
 #	-> run the script, merge
 # VER = 3
-#	-> run the script, merge, plot frames
+#	-> merge, plot frames
 # VER = 4
 #	-> create mp4
 # VER = 5
@@ -176,9 +177,9 @@ then
 fi
 ###############################################################################
 # Create (or prepend) log file if running code
-#	if (VER = 0, 1, 2, 3)
+#	if (VER = 0, 1, 2)
 LOG_FILE=${output_dir}/${RUN_NAME}/${RUN_NAME}_Log.txt
-if [ $VER -eq 0 ] || [ $VER -eq 1 ] || [ $VER -eq 2 ] || [ $VER -eq 3 ]
+if [ $VER -eq 0 ] || [ $VER -eq 1 ] || [ $VER -eq 2 ]
 then
 	echo ''
 	echo '--Creating experiment log file--'

@@ -18,7 +18,7 @@ DATETIME=`date +"%Y-%m-%d_%Hh%M"`
 # VER = 2
 #	-> run the script, merge
 # VER = 3
-#	-> run the script, merge, plot frames
+#	-> merge, plot frames
 # VER = 4
 #	-> create mp4
 # VER = 5
@@ -99,8 +99,8 @@ output_dir="outputs/${RUN_NAME}"
 
 ###############################################################################
 # run the script
-#	if (VER = 0, 1, 2, 3)
-if [ $VER -eq 0 ] || [ $VER -eq 1 ] || [ $VER -eq 2 ] || [ $VER -eq 3 ]
+#	if (VER = 0, 1, 2)
+if [ $VER -eq 0 ] || [ $VER -eq 1 ] || [ $VER -eq 2 ]
 then
 	echo ''
 	echo '--Running script--'

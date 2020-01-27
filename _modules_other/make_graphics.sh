@@ -18,7 +18,7 @@ DATETIME=`date +"%Y-%m-%d_%Hh%M"`
 # VER = 2
 #	-> run the script, merge
 # VER = 3
-#	-> run the script, merge, plot frames
+#	-> merge, plot frames
 # VER = 4
 #	-> create mp4
 # VER = 5
