@@ -12,17 +12,19 @@
 #	$ sbatch Cedar_lanceur.slrm -n <exp_name> <- not optional
 #								-r <run name>
 #								-c <cores>
+#								-v <version: what scripts to run>
 
 # Current datetime
 DATETIME=`date +"%Y-%m-%d_%Hh%M"`
 
-while getopts n:r:c: option
+while getopts n:r:c:v: option
 do
 	case "${option}"
 		in
 		n) NAME=${OPTARG};;
 		r) RUN_NAME=${OPTARG};;
 		c) CORES=${OPTARG};;
+		v) VER=${OPTARG};;
 	esac
 done
 
@@ -42,6 +44,11 @@ then
     CORES=32
 	echo "No number of cores specified, using CORES=${CORES}"
 fi
+if [ -z "$VER" ]
+then
+    VER=2
+	echo "No version specified, using VER=${VER}"
+fi
 
 # Load module stack
 # module loading sets values of environment variables
@@ -56,7 +63,7 @@ export OMPI_MCA_mpi_warn_on_fork=0
 source ${HOME}/Dedalus_Projects/venv/bin/activate
 
 pwd
-bash ./run_${NAME}.sh -n $NAME -r $RUN_NAME -c $CORES -l 0 -v 3
+bash ./run_${NAME}.sh -n $NAME -r $RUN_NAME -c $CORES -l 0 -v $VER
 
 deactivate
 

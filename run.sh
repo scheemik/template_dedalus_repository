@@ -252,7 +252,7 @@ else
 	if [ -e $HPC_sub_script ]
 	then
 		echo "Calling script to submit to ${HPC}"
-		bash ${HPC_sub_script} -n $NAME -r $RUN_NAME -h $HPC -c $CORES -S $SANITY
+		bash ${HPC_sub_script} -n $NAME -r $RUN_NAME -h $HPC -c $CORES -v $VER -s $SANITY
 	else
 		echo "Submit script for ${HPC} does not exist. Aborting script"
 		exit 1

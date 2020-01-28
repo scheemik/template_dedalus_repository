@@ -6,12 +6,13 @@
 #							 -r <run name>
 #							 -h <HPC resource: Niagara, Graham, etc.>
 #							 -c <cores>
+#							 -v <version: what scripts to run>
 #							 -s <sanity: pause to check setup before running>
 
 # Current datetime
 DATETIME=`date +"%Y-%m-%d_%Hh%M"`
 
-while getopts n:r:h:c:s: option
+while getopts n:r:h:c:v:s: option
 do
 	case "${option}"
 		in
@@ -19,6 +20,7 @@ do
 		r) RUN_NAME=${OPTARG};;
 		h) HPC=${OPTARG};;
 		c) CORES=${OPTARG};;
+		v) VER=${OPTARG};;
 		s) SANITY=${OPTARG};;
 	esac
 done
@@ -48,6 +50,11 @@ if [ -z "$SANITY" ]
 then
     SANITY=0
 	echo "No saity specified, using SANITY=${SANITY}"
+fi
+if [ -z "$VER" ]
+then
+    VER=2
+	echo "No version specified, using VER=${VER}"
 fi
 LOC=0
 
@@ -128,7 +135,7 @@ echo "--Logging in to ${HPC}--"
 ssh -i $SSH_KEY $SSH_LOGIN << EOF
 echo "We're in"
 cd ${NSCRATCH}/${DIRECTORY}/${SUBDIRECT}/_experiments/${NAME}
-sbatch --job-name=$JOBNAME $LANCEUR_SCRIPT -n ${NAME} -r ${RUN_NAME} -c ${CORES}
+sbatch --job-name=$JOBNAME $LANCEUR_SCRIPT -n ${NAME} -r ${RUN_NAME} -c ${CORES} -v ${VER}
 squeue -u mschee
 EOF
 
