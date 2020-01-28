@@ -106,10 +106,10 @@ then
 	echo ''
 	echo '--Running script--'
 	# Check if snapshots already exist. If so, remove them
-	if [ -e snapshots ]
+	if [ -e $snapshot_path ]
 	then
 		echo "Removing old snapshots"
-		rm -rf snapshots
+		rm -rf $snapshot_path
 	fi
     # If running on local pc
     if [ $LOC -eq 1 ]
@@ -128,6 +128,7 @@ then
         echo ""
     fi
 	echo 'Done running script'
+	mv snapshots $snapshot_path
 fi
 
 ###############################################################################
