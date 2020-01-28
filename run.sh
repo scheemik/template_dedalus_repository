@@ -214,20 +214,20 @@ then
 	fi
 fi
 ###############################################################################
-# Sanity check by plotting vertical profiles and boundary forcing
-if [ $SANITY -eq 1 ] #|| [ $LOC -eq 0 ]
+# Sanity check if running script
+#	if (VER = 0, 1, 2)
+if [ $SANITY -eq 1 ]
 then
-	echo ''
-	echo '--Creating plots for sanity check--'
-	python3 ${modules_o_dir}/sanity_plots.py ${NAME} ${RUN_NAME}
-fi
-###############################################################################
-# Pause for sanity check if requested
-#	Always pauses if submitting to a supercomputer
-if [ $SANITY -eq 1 ] #|| [ $LOC -eq 0 ]
-then
-	echo 'Pause for sanity check of log file and plots.'
-	read -p 'Press enter to continue or Ctrl+c to cancel.'
+	if [ $VER -eq 0 ] || [ $VER -eq 1 ] || [ $VER -eq 2 ]
+	then
+		# Plot vertical profiles and boundary forcing
+		echo ''
+		echo '--Creating plots for sanity check--'
+		python3 ${modules_o_dir}/sanity_plots.py ${NAME} ${RUN_NAME}
+		# Pause for sanity check if requested
+		echo 'Pause for sanity check of log file and plots.'
+		read -p 'Press enter to continue or Ctrl+c to cancel.'
+	fi
 fi
 ###############################################################################
 # Start run of this experiment
