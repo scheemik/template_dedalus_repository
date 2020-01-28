@@ -83,7 +83,8 @@ modules_o_dir='_modules_other'
 # Location of the modules-physics directory
 modules_p_dir='_modules_physics'
 # Path to snapshot files
-snapshot_path="snapshots"
+snapshot_path="outputs/${RUN_NAME}/snapshots"
+#snapshot_path="snapshots"
 # Name of merging file
 merge_file="${modules_o_dir}/merge.py"
 # Name of plotting file
