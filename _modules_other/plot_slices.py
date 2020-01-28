@@ -6,7 +6,7 @@ Usage:
 
 Options:
     EXP_NAME            # Name of experiment to add switchboard module path
-    --output=<dir>      # Output directory [default: ./frames]
+    --output=<dir>      # Output directory [default: ./outputs]
 
 """
 
@@ -244,9 +244,9 @@ def main(filename, start, count, output):
             for n, task in enumerate(tasks):
                 if (plot_all == False):
                     # Plot stratification profile on the left
-                    ax0 = plot_vp_on_left(l_vp, r_vp, sbp.snapshots_dir, sbp.vp_snap_dir, mfig, sbp.buffer, sbp.extra_buffer, sbp.vp_dis_ratio, sbp.abs_div, y_lims, sbp.plot_twin)
+                    ax0 = plot_vp_on_left(l_vp, r_vp, output_dir+'/'+sbp.snapshots_dir, sbp.vp_snap_dir, mfig, sbp.buffer, sbp.extra_buffer, sbp.vp_dis_ratio, sbp.abs_div, y_lims, sbp.plot_twin)
                     if r_vp!=None:
-                        ax1 = plot_vp_on_right(r_vp, sbp.snapshots_dir, sbp.vp_snap_dir, mfig, sbp.buffer, sbp.extra_buffer, sbp.vp_dis_ratio, sbp.abs_div, y_lims)
+                        ax1 = plot_vp_on_right(r_vp, output_dir+'/'+sbp.snapshots_dir, sbp.vp_snap_dir, mfig, sbp.buffer, sbp.extra_buffer, sbp.vp_dis_ratio, sbp.abs_div, y_lims)
                     # shift n so that animation is on the right side
                     n = 1
                 plot_one_task(n, ncols, mfig, file, task, index, x_lims, y_lims, n_clrbar_ticks, sbp.abs_div)
@@ -269,7 +269,8 @@ if __name__ == "__main__":
 
     NAME = str(args['EXP_NAME'])
 
-    output_path = pathlib.Path(args['--output']).absolute()
+    output_dir = str(args['--output'])
+    output_path = pathlib.Path(output_dir + '/frames').absolute()
     # Create output directory if needed
     with Sync() as sync:
         if sync.comm.rank == 0:

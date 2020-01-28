@@ -82,19 +82,20 @@ switch_file="switchboard"
 modules_o_dir='_modules_other'
 # Location of the modules-physics directory
 modules_p_dir='_modules_physics'
+# Name of output directory
+output_dir="outputs/${RUN_NAME}"
 # Path to snapshot files
-snapshot_path="outputs/${RUN_NAME}/snapshots"
+snapshot_path="${output_dir}/snapshots"
 #snapshot_path="snapshots"
 # Name of merging file
 merge_file="${modules_o_dir}/merge.py"
 # Name of plotting file
 plot_file="${modules_o_dir}/plot_slices.py"
 # Path to frames
-frames_path='frames'
+frames_path="${output_dir}/frames"
 # Name of gif creation file
 gif_cre_file="${modules_o_dir}/create_gif.py"
-# Name of output directory
-output_dir="outputs/${RUN_NAME}"
+
 
 ###############################################################################
 # Check to make sure snapshots folder exists
@@ -147,7 +148,7 @@ then
 		rm -rf frames
 	fi
 	echo "Plotting 2d slices"
-	${mpiexec_command} -n $CORES python3 $plot_file $NAME $snapshot_path/*.h5
+	${mpiexec_command} -n $CORES python3 $plot_file $NAME $snapshot_path/*.h5 --output=$output_dir
 	echo 'Done plotting frames'
 fi
 
