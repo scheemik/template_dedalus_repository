@@ -173,6 +173,14 @@ then
 			fi
 		fi
 	done
+	if [ -d "$f" ]
+	then
+		if [ $f == *"snapshots_s"* ]
+		then
+			echo "Removing un-merged snapshots ${f}"
+			rm -rf $f
+		fi
+	fi
 	echo 'Done merging snapshots'
 fi
 

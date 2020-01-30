@@ -5,7 +5,7 @@
 #				-r <run name>
 #				-c <cores>
 #				-l <local(1) or HPC(0)>
-#				-h <HPC resource: Niagara, Graham, etc.>
+#				-h <HPC resource: Niagara, Graham, Cedar, etc.>
 #				-v <version: what scripts to run>
 #				-s <sanity: pause to check setup before running>
 
