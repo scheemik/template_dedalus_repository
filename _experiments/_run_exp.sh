@@ -174,13 +174,15 @@ then
 		fi
 	done
 	pattern="snapshots_s"
-	if [ -d "$f" ]
-	then
-		case "$f" in
-			*${pattern}* ) echo "Removing un-merged snapshots ${f}" && rm -rf $f ;;
-			* ) ;;
-		esac
-	fi
+	for f in ${snapshot_path}/*; do
+		if [ -d "$f" ]
+		then
+			case "$f" in
+				*${pattern}* ) echo "Removing un-merged snapshots ${f}" && rm -rf $f ;;
+				* ) ;;
+			esac
+		fi
+	done
 	echo 'Done merging snapshots'
 fi
 
