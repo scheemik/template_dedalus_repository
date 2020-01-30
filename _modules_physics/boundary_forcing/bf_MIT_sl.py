@@ -21,7 +21,7 @@ N_0     = 1.0                   # [rad/s]
 # 2. Characteristic wavenumber
 k       = 45                    # [m^-1]
 # 3. Oscillation frequency
-omega   = 0.7071                # [rad s^-1]
+omega   = 0.67                # [rad s^-1]
 # Use the equations given in Cushman-Roisin and Beckers ch 13 for the rest:
 # 4. Angle of beam w.r.t. the horizontal (eq 13.6, dispersion relation)
 theta   = np.arccos(omega/N_0)  # [rad]
