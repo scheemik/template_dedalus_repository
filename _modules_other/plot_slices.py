@@ -82,7 +82,9 @@ def plot_one_task(n, ncols, mfig, file, task, index, x_lims, y_lims, n_clrbar_ti
     axes = mfig.add_axes(i, j, [0, 0, 1, 1])
     # Call 3D plotting helper, slicing in time
     dset = file['tasks'][task]
-    plot_bot_3d_mod(dset, 0, index, x_limits=x_lims, y_limits=y_lims, n_cb_ticks=n_clrbar_ticks, axes=axes, title=task, even_scale=True, abs_div=abs_line)
+    # title is usually equal to `task`
+    plot_bot_3d_mod(dset, 0, index, x_limits=x_lims, y_limits=y_lims, n_cb_ticks=n_clrbar_ticks, clim=[-1,1], axes=axes, title=r'Vertical Velocity $(m/s)$', even_scale=True, abs_div=abs_line)
+    #plot_bot_3d_mod(dset, 0, index, x_limits=x_lims, y_limits=y_lims, n_cb_ticks=n_clrbar_ticks, axes=axes, title=task, even_scale=True, abs_div=abs_line)
 
 # Extracts relevant arrays from a vertical profile snapshot
 def extract_vp_snapshot(task_name, snap_dir, vp_snaps):
@@ -228,7 +230,8 @@ def main(filename, start, count, output):
     # Plot settings
     scale   = sbp.scale
     dpi     = sbp.dpi
-    title_func = lambda sim_time: title_str.format(NAME, sim_time/time_factor)
+    title_func = lambda sim_time: title_str.format('',sim_time/time_factor)
+    #title_func = lambda sim_time: title_str.format(NAME, sim_time/time_factor)
     savename_func = lambda write: 'write_{:06}.png'.format(write)
     # Layout
     image = plot_tools.Box(AR, 1)
