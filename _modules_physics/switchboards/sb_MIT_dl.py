@@ -45,7 +45,7 @@ L_x_dis = 0.5               # [m] (should be leq simulated domain)
 L_z_dis = 0.5               # [m] (should be leq simulated domain)
 # Display buffer if dis_eq_sim==False (measured from top left corner)
 Dis_buff_x = 0.3            # [m]
-Dis_buff_z = 0.0            # [m]
+Dis_buff_z = 0.3            # [m]
 # Upper left corner of display domain is always (0, 0)
 abs_div = -L_z              # [m] The dividing line of the absorbing layer
 
