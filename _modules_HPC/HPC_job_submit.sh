@@ -114,7 +114,9 @@ EOF
 echo "Copying ${NAME} from local to ${HPC} scratch directory"
 cd ${LOCAL_DIR}/${SUBDIRECT}/_experiments/${NAME}
 cd ..
-rsync -a -v -e ssh --exclude='*snapshot*' ${NAME} ${SSH_LOGIN}:${NSCRATCH}/${DIRECTORY}/${SUBDIRECT}/_experiments/
+# Copy code files, but not the outputs.
+#	The run script will make sure the correct output directory exists
+rsync -a -v -e ssh --exclude='*outputs*' ${NAME} ${SSH_LOGIN}:${NSCRATCH}/${DIRECTORY}/${SUBDIRECT}/_experiments/
 
 # pattern="snapshot"
 # for file in ./*
@@ -124,21 +126,6 @@ rsync -a -v -e ssh --exclude='*snapshot*' ${NAME} ${SSH_LOGIN}:${NSCRATCH}/${DIR
 # 		* ) ;;
 # 	esac
 # done
-
-# if [ -e snapshots ]
-# then
-# 	for file in ./*
-# 	do
-# 		if [ ${file} != './snapshots' ]
-# 		then
-# 			#echo $file
-# 			scp -r $file ${SSH_LOGIN}:${NSCRATCH}/${DIRECTORY}/${SUBDIRECT}/_experiments/${NAME}
-# 		fi
-# 	done
-# else
-# 	cd ..
-# 	scp -r ${NAME} ${SSH_LOGIN}:${NSCRATCH}/${DIRECTORY}/${SUBDIRECT}/_experiments
-# fi
 
 echo ''
 echo "--Logging in to ${HPC}--"
