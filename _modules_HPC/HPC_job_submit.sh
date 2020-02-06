@@ -69,6 +69,7 @@ LANCEUR_SCRIPT="_modules_HPC/${HPC}_lanceur.slrm"
 USER='mschee'
 LOCAL='ngws19.atmosp.physics.utoronto.ca'
 LOCAL_DIR="/home/${USER}/Documents/Dedalus_Projects/example_projects"
+OUTPUT_DIR='outputs'
 
 if [ $HPC = 'Niagara' ]
 then
@@ -107,16 +108,18 @@ then
 	rm -rf ${NAME}
 fi
 mkdir ${NAME}
+mkdir ${NAME}/${OUTPUT_DIR}
 echo ''
 EOF
 
 # A bit of a round-about way to make sure I never try to transfer the snapshots folder
 echo "Copying ${NAME} from local to ${HPC} scratch directory"
-cd ${LOCAL_DIR}/${SUBDIRECT}/_experiments/${NAME}
-cd ..
-# Copy code files, but not the outputs.
-#	The run script will make sure the correct output directory exists
+cd ${LOCAL_DIR}/${SUBDIRECT}/_experiments
+# Copy code files, but not the outputs
 rsync -a -v -e ssh --exclude='*outputs*' ${NAME} ${SSH_LOGIN}:${NSCRATCH}/${DIRECTORY}/${SUBDIRECT}/_experiments/
+# Copy just the specific run output directory
+cd ${LOCAL_DIR}/${SUBDIRECT}/_experiments/${NAME}/${OUTPUT_DIR}
+rsync -a -v -e ssh --exclude='*snapshots*' --exclude='*frames*' ${RUN_NAME} ${SSH_LOGIN}:${NSCRATCH}/${DIRECTORY}/${SUBDIRECT}/_experiments/${NAME}/${OUTPUT_DIR}
 
 # pattern="snapshot"
 # for file in ./*
