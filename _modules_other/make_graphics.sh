@@ -142,10 +142,10 @@ if [ $VER -eq 0 ] || [ $VER -eq 3 ]
 then
 	echo ''
 	echo '--Plotting frames--'
-	if [ -e frames ]
+	if [ -e $frames_path ]
 	then
 		echo "Removing old frames"
-		rm -rf frames
+		rm -rf $frames_path
 	fi
 	echo "Plotting 2d slices"
 	${mpiexec_command} -n $CORES python3 $plot_file $NAME $snapshot_path/*.h5 --output=$output_dir
