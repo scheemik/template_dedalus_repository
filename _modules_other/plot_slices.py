@@ -83,7 +83,7 @@ def plot_one_task(n, ncols, mfig, file, task, index, x_lims, y_lims, n_clrbar_ti
     # Call 3D plotting helper, slicing in time
     dset = file['tasks'][task]
     # title is usually equal to `task`
-    plot_bot_3d_mod(dset, 0, index, x_limits=x_lims, y_limits=y_lims, n_cb_ticks=n_clrbar_ticks, clim=[-1,1], axes=axes, title=r'Vertical Velocity $(m/s)$', even_scale=True, abs_div=abs_line)
+    plot_bot_3d_mod(dset, 0, index, x_limits=x_lims, y_limits=y_lims, n_cb_ticks=n_clrbar_ticks, clim=[-1.3E-3,1.3E-3], axes=axes, title=r'Vertical Velocity $(m/s)$', even_scale=True, abs_div=abs_line)
     #plot_bot_3d_mod(dset, 0, index, x_limits=x_lims, y_limits=y_lims, n_cb_ticks=n_clrbar_ticks, axes=axes, title=task, even_scale=True, abs_div=abs_line)
 
 # Extracts relevant arrays from a vertical profile snapshot
