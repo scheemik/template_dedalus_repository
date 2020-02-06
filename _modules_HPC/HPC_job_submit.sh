@@ -113,20 +113,32 @@ EOF
 # A bit of a round-about way to make sure I never try to transfer the snapshots folder
 echo "Copying ${NAME} from local to ${HPC} scratch directory"
 cd ${LOCAL_DIR}/${SUBDIRECT}/_experiments/${NAME}
-if [ -e snapshots ]
-then
-	for file in ./*
-	do
-		if [ ${file} != './snapshots' ]
-		then
-			#echo $file
-			scp -r $file ${SSH_LOGIN}:${NSCRATCH}/${DIRECTORY}/${SUBDIRECT}/_experiments/${NAME}
-		fi
-	done
-else
-	cd ..
-	scp -r ${NAME} ${SSH_LOGIN}:${NSCRATCH}/${DIRECTORY}/${SUBDIRECT}/_experiments
-fi
+cd ..
+rsync -a -v -e ssh --exclude='*snapshot*' ${NAME} ${SSH_LOGIN}:${NSCRATCH}/${DIRECTORY}/${SUBDIRECT}/_experiments/
+
+# pattern="snapshot"
+# for file in ./*
+# do
+# 	case "$file" in
+# 		*${pattern}* ) scp -r $file ${SSH_LOGIN}:${NSCRATCH}/${DIRECTORY}/${SUBDIRECT}/_experiments/${NAME} ;;
+# 		* ) ;;
+# 	esac
+# done
+
+# if [ -e snapshots ]
+# then
+# 	for file in ./*
+# 	do
+# 		if [ ${file} != './snapshots' ]
+# 		then
+# 			#echo $file
+# 			scp -r $file ${SSH_LOGIN}:${NSCRATCH}/${DIRECTORY}/${SUBDIRECT}/_experiments/${NAME}
+# 		fi
+# 	done
+# else
+# 	cd ..
+# 	scp -r ${NAME} ${SSH_LOGIN}:${NSCRATCH}/${DIRECTORY}/${SUBDIRECT}/_experiments
+# fi
 
 echo ''
 echo "--Logging in to ${HPC}--"
