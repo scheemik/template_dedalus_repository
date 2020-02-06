@@ -179,39 +179,40 @@ fi
 # Create (or prepend) log file if running code
 #	if (VER = 0, 1, 2)
 LOG_FILE=${output_dir}/${RUN_NAME}/${RUN_NAME}_Log.txt
-if [ $VER -eq 0 ] || [ $VER -eq 1 ] || [ $VER -eq 2 ]
-then
-	echo ''
-	echo '--Creating experiment log file--'
-	touch $LOG_FILE
-	LINE0="----------------------------------------------"
-	LINE1="Log for: ${RUN_NAME}"
-	LINE2=""
-	LINE3="--Run options--"
-	LINE4=""
-	LINE5="-n, Experiment name = ${NAME}"
-	LINE6="-c, Number of cores = ${CORES}"
-	if [ $LOC -eq 1 ]
-	then
-		LINE7="-l, (${LOC}) Simulation run on local pc"
-	else
-		LINE7="-l, (${LOC}) Simulation run on ${HPC}"
-	fi
-	LINE8="-v, Version of run = ${VER}"
-	LINE9=""
-	# This pre-pends the information to the log file
-	#	This way, the most recent run's information is at the top
-	echo -e "${LINE0}\n${LINE1}\n${LINE2}\n${LINE3}\n${LINE4}\n${LINE5}\n${LINE6}\n${LINE7}\n${LINE8}\n${LINE9}\n$(cat ${LOG_FILE})" > $LOG_FILE
-fi
 if [ $VER -eq 0 ] || [ $VER -eq 1 ] || [ $VER -eq 2 ] || [ $VER -eq 3 ]
 then
+    echo ''
+	echo '--Creating experiment log file--'
+	touch $LOG_FILE
+    # This python script pre-pends the parameters
+	python3 ${modules_o_dir}/${write_out_script} ${NAME} ${RUN_NAME}
+fi
+if [ $VER -eq 0 ] || [ $VER -eq 1 ] || [ $VER -eq 2 ]
+then
 	if [ -e $LOG_FILE ]
-	then
-		python3 ${modules_o_dir}/${write_out_script} ${NAME} ${RUN_NAME}
-		echo 'Done creating log file'
-	else
-		echo 'Log file not found'
-	fi
+    then
+    	LINE0="----------------------------------------------"
+    	LINE1="Log for: ${RUN_NAME} run at ${DATETIME}"
+    	LINE2=""
+    	LINE3="--Run options--"
+    	LINE4=""
+    	LINE5="-n, Experiment name = ${NAME}"
+    	LINE6="-c, Number of cores = ${CORES}"
+    	if [ $LOC -eq 1 ]
+    	then
+    		LINE7="-l, (${LOC}) Simulation run on local pc"
+    	else
+    		LINE7="-l, (${LOC}) Simulation run on ${HPC}"
+    	fi
+    	LINE8="-v, Version of run = ${VER}"
+    	LINE9=""
+    	# This pre-pends the information to the log file
+    	#	This way, the most recent run's information is at the top
+    	echo -e "${LINE0}\n${LINE1}\n${LINE2}\n${LINE3}\n${LINE4}\n${LINE5}\n${LINE6}\n${LINE7}\n${LINE8}\n${LINE9}\n$(cat ${LOG_FILE})" > $LOG_FILE
+        echo 'Done creating log file'
+    else
+        echo 'Log file not found'
+    fi
 fi
 ###############################################################################
 # Sanity check if running script
