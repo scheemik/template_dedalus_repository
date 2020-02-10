@@ -55,13 +55,13 @@ win_lams  = 1
 win_width = lam_x * win_lams
 # Buffer to avoid periodic boundary wrapping
 buff = 0.5*win_width
-# Check if 1/2 window width fits to the left of display domain
+# Check if window width fits to the left of display domain
 Dis_buff_x= sbp.Dis_buff_x
-if (0.5 * win_width + buff < Dis_buff_x):
-    # It will fit, put 1/2 on left, 1/2 on right
+if (win_width + buff < Dis_buff_x):
+    # It will fit, put window just left of zero
     x_0  = sbp.x_0
-    bfl_edge = x_0 - lam_x/2.0
-    bfr_edge = x_0 + lam_x/2.0
+    bfl_edge = x_0 - lam_x
+    bfr_edge = x_0
 else:
     # It will not fit, put as far left as possible
     bfl_edge = sbp.x_0 + buff
