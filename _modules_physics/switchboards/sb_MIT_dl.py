@@ -80,6 +80,15 @@ g           = 9.81          # [m/s^2] Acceleration due to gravity
 ###############################################################################
 # Plotting parameters
 
+# Dark mode on or off (ideally would make plots that have white text and alpha background)
+dark_mode = False
+cmap = 'RdBu_r'
+import colorcet as cc
+cmap = cc.CET_D4
+
+# Presentation mode on or off (increases size of fonts and contrast of colors)
+presenting = False
+
 # Vertical profile and Wave field animation
 # If True, plots b, p, u, and w. If false, plots profile and w
 plot_all_variables = False
